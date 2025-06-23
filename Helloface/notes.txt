@@ -1,0 +1,40 @@
+
+
+
+YR prognose:
+https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=55.5972103&lon=13.0092883
+
+
+YR ocean:
+https://api.met.no/weatherapi/oceanforecast/2.0/documentation
+
+
+cirka afstand (pythagoras dvs. lige linje gennem jorden):
+https://forums.garmin.com/developer/connect-iq/f/discussion/3789/distance-between-2-positions
+
+
+Allabadplatser:
+https://www.allabadplatser.se/a/blekinge-lan/karlskrona/vastersjons/3999
+Källa för satellitavläst vattentemperatur: Copernicus Sentinel satellit data från European Space Agency
+
+
+Fonts:
+https://developer.garmin.com/connect-iq/reference-guides/devices-reference/#instinct%C2%AE2solardualpowerd%C4%93zledition
+
+Guide til custom fonts:
+https://developer.garmin.com/connect-iq/core-topics/resources/#resources
+
+
+musik: kan ikke lade sig gøre
+https://www.reddit.com/r/Garmin/comments/ocwihj/watch_face/
+
+stopur: heller ikke 
+https://forums.garmin.com/developer/connect-iq/f/discussion/298783/possible-to-display-a-timer-data-field-on-watch-face
+
+kalender: tror det ikke
+https://forums.garmin.com/developer/connect-iq/f/app-ideas/280141/calendar-api
+https://forums.garmin.com/developer/connect-iq/i/bug-reports/document-the-api-to-the-calendar
+
+
+Garmins egen bug med vindretning:
+https://forums.garmin.com/outdoor-recreation/outdoor-recreation/f/instinct-2-series/285705/weather-widget-wind-direction-arrow-error
