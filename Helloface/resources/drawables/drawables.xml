@@ -1,0 +1,32 @@
+<drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <bitmap dithering="none" id="LauncherIcon" filename="launcher_icon.png" />
+    <bitmap dithering="none" id="heart" filename="heart-transparent.png" />
+    <bitmap dithering="none" id="heartRest" filename="heart-transparent-rest.png" />
+    <bitmap dithering="none" id="heartStressLow" filename="heart-transparent-stressed-low.png" />
+    <bitmap dithering="none" id="heartStressMedium" filename="heart-transparent-stressed.png" />
+    <bitmap dithering="none" id="heartStressHigh" filename="heart-transparent-stressed-high.png" />
+
+
+    <bitmap dithering="none" id="star" filename="star-small.png" />
+    <bitmap dithering="none" id="stars" filename="stars-small.png" />
+    <bitmap dithering="none" id="steps" filename="steps.png" />
+    <bitmap dithering="none" id="sunrise" filename="sunrise.png" />
+    <bitmap dithering="none" id="alarm" filename="alarm.png" />
+    <bitmap dithering="none" id="battery" filename="battery.png" />
+    <bitmap dithering="none" id="check" filename="check.png" />
+    <bitmap dithering="none" id="minutes" filename="minutes.png" />
+    <bitmap dithering="none" id="waves" filename="waves3.png" />
+    <bitmap dithering="none" id="mountains" filename="mountains.png" />
+    <bitmap dithering="none" id="minutesLinearGrey" filename="minutes-linear-grey.png" />
+    <bitmap dithering="none" id="weatherSun" filename="weather-sun.png" />
+    <bitmap dithering="none" id="weatherCloud" filename="weather-cloud.png" />
+    <bitmap dithering="none" id="weatherMoon" filename="weather-moon.png" />
+    <bitmap dithering="none" id="weatherMoonCloud" filename="weather-moon-cloud.png" />
+    <bitmap dithering="none" id="weatherSunCloud" filename="weather-sun-cloud.png" />
+    <bitmap dithering="none" id="weatherRain" filename="weather-rain.png" />
+    <bitmap dithering="none" id="weatherRainLight" filename="weather-rain-light.png" />
+    <bitmap dithering="none" id="weatherThunder" filename="weather-thunder.png" />
+    <bitmap dithering="none" id="weatherSnow" filename="weather-snow.png" />
+    <bitmap dithering="none" id="weatherFog" filename="weather-fog.png" />
+
+</drawables>
