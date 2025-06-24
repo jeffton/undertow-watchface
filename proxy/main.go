@@ -115,47 +115,44 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var metData MetNoResponse
-	if err := json.Unmarshal(body, &metData); err != nil {
-		// If unmarshaling fails, it might be because the API returned an error as a plain string
-		// as seen in the PHP script.
-		response := ApiResponse{
-			Error: string(body),
-		}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-
 	apiResponse := ApiResponse{
 		RequestPosition: Position{Lat: lat, Lon: lon},
 		RequestTime:     time.Now().Unix(),
 	}
 
-	if len(metData.Geometry.Coordinates) == 2 {
-		apiResponse.ForecastPosition = &Position{
-			Lat: metData.Geometry.Coordinates[1],
-			Lon: metData.Geometry.Coordinates[0],
-		}
-	}
-
-	if metData.Properties.Meta.Error != nil {
-		apiResponse.Error = metData.Properties.Meta.Error
-	} else if len(metData.Properties.Timeseries) > 0 {
-		for _, entry := range metData.Properties.Timeseries {
-			if len(apiResponse.Forecast) >= 24 {
-				break
-			}
-			t, err := time.Parse(time.RFC3339, entry.Time)
-			if err != nil {
-				continue // Skip if time format is invalid
-			}
-			apiResponse.Forecast = append(apiResponse.Forecast, Forecast{
-				Time:        t.Unix(),
-				Temperature: entry.Data.Instant.Details.SeaWaterTemperature,
-			})
-		}
+	var metData MetNoResponse
+	if err := json.Unmarshal(body, &metData); err != nil {
+		// If unmarshaling fails, it might be because the API returned an error as a plain string
+		// as seen in the PHP script.
+		apiResponse.Error = string(body)
 	} else {
-		apiResponse.Error = "No timeseries data available"
+		// Unmarshal was successful, so populate the rest of the response
+		if len(metData.Geometry.Coordinates) == 2 {
+			apiResponse.ForecastPosition = &Position{
+				Lat: metData.Geometry.Coordinates[1],
+				Lon: metData.Geometry.Coordinates[0],
+			}
+		}
+
+		if metData.Properties.Meta.Error != nil {
+			apiResponse.Error = metData.Properties.Meta.Error
+		} else if len(metData.Properties.Timeseries) > 0 {
+			for _, entry := range metData.Properties.Timeseries {
+				if len(apiResponse.Forecast) >= 24 {
+					break
+				}
+				t, err := time.Parse(time.RFC3339, entry.Time)
+				if err != nil {
+					continue // Skip if time format is invalid
+				}
+				apiResponse.Forecast = append(apiResponse.Forecast, Forecast{
+					Time:        t.Unix(),
+					Temperature: entry.Data.Instant.Details.SeaWaterTemperature,
+				})
+			}
+		} else {
+			apiResponse.Error = "No timeseries data available"
+		}
 	}
 
 	if err := json.NewEncoder(w).Encode(apiResponse); err != nil {
