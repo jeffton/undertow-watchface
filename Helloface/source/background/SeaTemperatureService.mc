@@ -76,7 +76,7 @@ class SeaTemperatureService {
     };
 
     Communications.makeWebRequest(
-        "https://yrproxy-418768340557.europe-north2.run.app",
+        "https://yrproxy-418768340557.europe-north2.run.app/",
         params,
         {},
         method(:onResponse)
