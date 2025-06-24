@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-// MetNoResponse matches the structure of the response from the MET Norway API.
-type MetNoResponse struct {
+// YrResponse matches the structure of the response from the MET Norway API.
+type YrResponse struct {
 	Geometry struct {
 		Coordinates []float64 `json:"coordinates"` // [lon, lat]
 	} `json:"geometry"`
@@ -68,9 +68,7 @@ func main() {
 	}
 }
 
-func proxyHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
+func getPosition(r *http.Request) (Position, error) {
 	latStr := r.URL.Query().Get("lat")
 	if latStr == "" {
 		latStr = "55.7121627"
@@ -82,80 +80,110 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 
 	lat, err := strconv.ParseFloat(latStr, 64)
 	if err != nil {
-		http.Error(w, "Invalid latitude", http.StatusBadRequest)
-		return
+		return Position{}, fmt.Errorf("invalid latitude: %w", err)
 	}
 	lon, err := strconv.ParseFloat(lonStr, 64)
 	if err != nil {
-		http.Error(w, "Invalid longitude", http.StatusBadRequest)
-		return
+		return Position{}, fmt.Errorf("invalid longitude: %w", err)
 	}
 
-	apiURL := fmt.Sprintf("https://api.met.no/weatherapi/oceanforecast/2.0/complete?lat=%f&lon=%f", lat, lon)
+	return Position{Lat: lat, Lon: lon}, nil
+}
 
-	client := &http.Client{}
+func getWeatherData(pos Position) (*YrResponse, []byte, error) {
+	apiURL := fmt.Sprintf("https://api.met.no/weatherapi/oceanforecast/2.0/complete?lat=%f&lon=%f", pos.Lat, pos.Lon)
+
 	req, err := http.NewRequest("GET", apiURL, nil)
 	if err != nil {
-		http.Error(w, "Failed to create request", http.StatusInternalServerError)
-		return
+		return nil, nil, fmt.Errorf("failed to create request: %w", err)
 	}
-
 	req.Header.Set("User-Agent", "Helloface/1.0 (davidat@gmail.com)")
 
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		http.Error(w, "Failed to fetch data from MET API", http.StatusInternalServerError)
-		return
+		return nil, nil, fmt.Errorf("failed to fetch data from MET API: %w", err)
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		http.Error(w, "Failed to read response body", http.StatusInternalServerError)
-		return
+		return nil, nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
+	var metData YrResponse
+	if err := json.Unmarshal(body, &metData); err != nil {
+		// Return the raw body on unmarshal error, as it may contain a plain string error from the API.
+		return nil, body, fmt.Errorf("failed to unmarshal MET API response: %w", err)
+	}
+
+	return &metData, nil, nil
+}
+
+func buildApiResponse(yrData *YrResponse, requestPos Position, rawErrorBody []byte) ApiResponse {
 	apiResponse := ApiResponse{
-		RequestPosition: Position{Lat: lat, Lon: lon},
+		RequestPosition: requestPos,
 		RequestTime:     time.Now().Unix(),
 	}
 
-	var metData MetNoResponse
-	if err := json.Unmarshal(body, &metData); err != nil {
-		// If unmarshaling fails, it might be because the API returned an error as a plain string
-		// as seen in the PHP script.
-		apiResponse.Error = string(body)
-	} else {
-		// Unmarshal was successful, so populate the rest of the response
-		if len(metData.Geometry.Coordinates) == 2 {
-			apiResponse.ForecastPosition = &Position{
-				Lat: metData.Geometry.Coordinates[1],
-				Lon: metData.Geometry.Coordinates[0],
-			}
-		}
+	if yrData == nil {
+		apiResponse.Error = string(rawErrorBody)
+		return apiResponse
+	}
 
-		if metData.Properties.Meta.Error != nil {
-			apiResponse.Error = metData.Properties.Meta.Error
-		} else if len(metData.Properties.Timeseries) > 0 {
-			for _, entry := range metData.Properties.Timeseries {
-				if len(apiResponse.Forecast) >= 24 {
-					break
-				}
-				t, err := time.Parse(time.RFC3339, entry.Time)
-				if err != nil {
-					continue // Skip if time format is invalid
-				}
-				apiResponse.Forecast = append(apiResponse.Forecast, Forecast{
-					Time:        t.Unix(),
-					Temperature: entry.Data.Instant.Details.SeaWaterTemperature,
-				})
-			}
-		} else {
-			apiResponse.Error = "No timeseries data available"
+	if len(yrData.Geometry.Coordinates) == 2 {
+		apiResponse.ForecastPosition = &Position{
+			Lat: yrData.Geometry.Coordinates[1],
+			Lon: yrData.Geometry.Coordinates[0],
 		}
 	}
 
+	if yrData.Properties.Meta.Error != nil {
+		apiResponse.Error = yrData.Properties.Meta.Error
+	} else if len(yrData.Properties.Timeseries) > 0 {
+		for _, entry := range yrData.Properties.Timeseries {
+			if len(apiResponse.Forecast) >= 24 {
+				break
+			}
+			t, err := time.Parse(time.RFC3339, entry.Time)
+			if err != nil {
+				log.Printf("Skipping forecast due to invalid time format: %v", err)
+				continue
+			}
+			apiResponse.Forecast = append(apiResponse.Forecast, Forecast{
+				Time:        t.Unix(),
+				Temperature: entry.Data.Instant.Details.SeaWaterTemperature,
+			})
+		}
+	} else {
+		apiResponse.Error = "No timeseries data available"
+	}
+
+	return apiResponse
+}
+
+func proxyHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	pos, err := getPosition(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	yrData, rawBody, err := getWeatherData(pos)
+	// A non-nil rawBody indicates a JSON unmarshaling error, which we handle gracefully.
+	if err != nil && rawBody == nil {
+		log.Printf("Error getting weather data: %v", err)
+		http.Error(w, "Failed to fetch weather data", http.StatusInternalServerError)
+		return
+	}
+
+	apiResponse := buildApiResponse(yrData, pos, rawBody)
+
 	if err := json.NewEncoder(w).Encode(apiResponse); err != nil {
-		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		// The response may have already been partially sent, so we can't send a new HTTP error.
+		// We log the error and hope for the best.
+		log.Printf("Failed to encode response: %v", err)
 	}
 }
