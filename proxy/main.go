@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -71,30 +72,24 @@ type Position struct {
 	Lon float64 `json:"lon"`
 }
 
-// OceanForecast represents a single forecast entry.
-type OceanForecast struct {
-	Time           int64   `json:"time"`
-	SeaTemperature float64 `json:"seaTemperature"`
-}
-
-// WeatherForecast represents a single weather forecast entry.
-type WeatherForecast struct {
-	Time          int64   `json:"time"`
-	Temperature   float64 `json:"temperature"`
-	WindSpeed     float64 `json:"windSpeed"`
-	WindDirection float64 `json:"windDirection"`
-	CloudCover    float64 `json:"cloudCover"`
-	Condition     string  `json:"condition"`
+// Forecast represents a combined forecast entry.
+type Forecast struct {
+	Time           int64    `json:"time"`
+	SeaTemperature *float64 `json:"seaTemperature,omitempty"`
+	Temperature    *float64 `json:"temperature,omitempty"`
+	WindSpeed      *float64 `json:"windSpeed,omitempty"`
+	WindDirection  *float64 `json:"windDirection,omitempty"`
+	CloudCover     *float64 `json:"cloudCover,omitempty"`
+	Condition      *string  `json:"condition,omitempty"`
 }
 
 // ApiResponse is the structure of the JSON response we will serve.
 type ApiResponse struct {
-	RequestPosition  Position          `json:"requestPosition"`
-	ForecastPosition *Position         `json:"forecastPosition"`
-	RequestTime      int64             `json:"requestTime"`
-	OceanForecast    []OceanForecast   `json:"oceanForecast,omitempty"`
-	WeatherForecast  []WeatherForecast `json:"weatherForecast,omitempty"`
-	Error            interface{}       `json:"error,omitempty"`
+	RequestPosition  Position    `json:"requestPosition"`
+	ForecastPosition *Position   `json:"forecastPosition"`
+	RequestTime      int64       `json:"requestTime"`
+	Forecast         []Forecast  `json:"forecast,omitempty"`
+	Error            interface{} `json:"error,omitempty"`
 }
 
 func main() {
@@ -228,6 +223,9 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 		apiResponse.Error = strings.Join(errors, "; ")
 	}
 
+	// Use a map to merge forecasts by timestamp
+	forecasts := make(map[int64]*Forecast)
+
 	if oceanData != nil {
 		if len(oceanData.Geometry.Coordinates) == 2 {
 			apiResponse.ForecastPosition = &Position{
@@ -244,18 +242,17 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 			}
 		} else if len(oceanData.Properties.Timeseries) > 0 {
 			for _, entry := range oceanData.Properties.Timeseries {
-				if len(apiResponse.OceanForecast) >= 24 {
-					break
-				}
 				t, err := time.Parse(time.RFC3339, entry.Time)
 				if err != nil {
 					log.Printf("Skipping ocean forecast due to invalid time format: %v", err)
 					continue
 				}
-				apiResponse.OceanForecast = append(apiResponse.OceanForecast, OceanForecast{
-					Time:           t.Unix(),
-					SeaTemperature: entry.Data.Instant.Details.SeaWaterTemperature,
-				})
+				ts := t.Unix()
+				if _, ok := forecasts[ts]; !ok {
+					forecasts[ts] = &Forecast{Time: ts}
+				}
+				st := entry.Data.Instant.Details.SeaWaterTemperature
+				forecasts[ts].SeaTemperature = &st
 			}
 		}
 	}
@@ -277,27 +274,49 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 			}
 		} else if len(weatherData.Properties.Timeseries) > 0 {
 			for _, entry := range weatherData.Properties.Timeseries {
-				if len(apiResponse.WeatherForecast) >= 24 {
-					break
-				}
 				t, err := time.Parse(time.RFC3339, entry.Time)
 				if err != nil {
 					log.Printf("Skipping weather forecast due to invalid time format: %v", err)
 					continue
 				}
-				apiResponse.WeatherForecast = append(apiResponse.WeatherForecast, WeatherForecast{
-					Time:          t.Unix(),
-					Temperature:   entry.Data.Instant.Details.AirTemperature,
-					WindSpeed:     entry.Data.Instant.Details.WindSpeed,
-					WindDirection: entry.Data.Instant.Details.WindFromDirection,
-					CloudCover:    entry.Data.Instant.Details.CloudAreaFraction,
-					Condition:     mapSymbolToCondition(entry.Data.Next1Hours.Summary.SymbolCode),
-				})
+				ts := t.Unix()
+				if _, ok := forecasts[ts]; !ok {
+					forecasts[ts] = &Forecast{Time: ts}
+				}
+				temp := entry.Data.Instant.Details.AirTemperature
+				forecasts[ts].Temperature = &temp
+				ws := entry.Data.Instant.Details.WindSpeed
+				forecasts[ts].WindSpeed = &ws
+				wd := entry.Data.Instant.Details.WindFromDirection
+				forecasts[ts].WindDirection = &wd
+				cc := entry.Data.Instant.Details.CloudAreaFraction
+				forecasts[ts].CloudCover = &cc
+				cond := mapSymbolToCondition(entry.Data.Next1Hours.Summary.SymbolCode)
+				if cond != "unknown" {
+					forecasts[ts].Condition = &cond
+				}
 			}
 		}
 	}
 
-	if apiResponse.Error == nil && len(apiResponse.OceanForecast) == 0 && len(apiResponse.WeatherForecast) == 0 {
+	// Convert map to slice
+	var forecastSlice []Forecast
+	for _, f := range forecasts {
+		forecastSlice = append(forecastSlice, *f)
+	}
+
+	// Sort slice by time
+	sort.Slice(forecastSlice, func(i, j int) bool {
+		return forecastSlice[i].Time < forecastSlice[j].Time
+	})
+
+	if len(forecastSlice) > 24 {
+		apiResponse.Forecast = forecastSlice[:24]
+	} else {
+		apiResponse.Forecast = forecastSlice
+	}
+
+	if apiResponse.Error == nil && len(apiResponse.Forecast) == 0 {
 		apiResponse.Error = "No timeseries data available from any source"
 	}
 
