@@ -228,18 +228,65 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawWeather(dc as Dc, isDaytime as Boolean) {
-    var weather = self.weatherModel;
-    if (weather.condition != null) {
-      var bitmap = getBitmapForWeatherCondition(weather.condition, isDaytime);
-      dc.drawBitmap(10, 24, bitmap.getBitmap());
+    drawWeatherCondition(dc, isDaytime);
+
+    dc.drawText(
+      30,
+      20,
+      Graphics.FONT_GLANCE,
+      self.weatherModel.temperature,
+      Graphics.TEXT_JUSTIFY_LEFT
+    );
+
+    dc.drawText(
+      80,
+      20,
+      Graphics.FONT_GLANCE,
+      self.weatherModel.windSpeed,
+      Graphics.TEXT_JUSTIFY_LEFT
+    );
+
+    if (self.weatherModel.windDirection != null) {
+      drawWindBearing(dc, 68, 33, self.weatherModel.windDirection);
     }
-    dc.drawText(30, 20, Graphics.FONT_GLANCE, weather.temperature, Graphics.TEXT_JUSTIFY_LEFT);
+  }
 
-    dc.drawText(80, 20, Graphics.FONT_GLANCE, weather.windSpeed, Graphics.TEXT_JUSTIFY_LEFT);
+  function drawWeatherCondition(dc as Dc, isDaytime as Boolean) {
+    var x = 10;
+    var y = 24;
 
-    if (weather.windDirection != null) {
-      drawWindBearing(dc, 68, 33, weather.windDirection);
-    }    
+    if (self.weatherModel.condition != null) {
+      var condition = self.weatherModel.condition as String;
+      var cloudCover = self.weatherModel.cloudCover;
+
+      if (
+        cloudCover != null &&
+        (condition.equals("clear") ||
+          condition.equals("fair") ||
+          condition.equals("partly cloudy") ||
+          condition.equals("cloudy"))
+      ) {
+        if (cloudCover < 80) {
+          // Draw sun or moon
+          var baseBitmap = isDaytime ? weatherSunBitmap : weatherMoonBitmap;
+          dc.drawBitmap(x, y, baseBitmap.getBitmap());
+        }
+
+        // Draw cloud overlay
+        if (cloudCover >= 80) {
+          dc.drawBitmap(x, y, weatherCloudBitmap.getBitmap());
+        } else if (cloudCover >= 60) {
+          dc.drawBitmap(x, y, weatherCloud75Bitmap.getBitmap());
+        } else if (cloudCover >= 40) {
+          dc.drawBitmap(x, y, weatherCloud50Bitmap.getBitmap());
+        } else if (cloudCover >= 20) {
+          dc.drawBitmap(x, y, weatherCloud25Bitmap.getBitmap());
+        }
+      } else {
+        var bitmap = getFallbackWeatherBitmap(condition, isDaytime);
+        dc.drawBitmap(x, y, bitmap.getBitmap());
+      }
+    }
   }
 
   function drawWindBearing(dc as Dc, x, y, angle) {
@@ -268,29 +315,27 @@ class HellofaceView extends WatchUi.WatchFace {
         [x + cos2, y + sin2]]);
   }
 
-  function getBitmapForWeatherCondition(condition as String?, isDaytime as Boolean) as LazyBitmap {
-    if (condition == null) {
-        return weatherCloudBitmap;
-    }
+  function getFallbackWeatherBitmap(condition as String, isDaytime as Boolean) as LazyBitmap {
     switch (condition) {
-        case "clear":
-            return isDaytime ? weatherSunBitmap : weatherMoonBitmap;
-        case "partly cloudy":
-            return isDaytime ? weatherSunCloudBitmap : weatherMoonCloudBitmap;
-        case "light rain":
-            return weatherRainLightBitmap;
-        case "rain":
-        case "hail":
-            return weatherRainBitmap;
-        case "thunder":
-            return weatherThunderBitmap;
-        case "snow":
-            return weatherSnowBitmap;
-        case "fog":
-            return weatherFogBitmap;
-        case "cloudy":
-        default:
-            return weatherCloudBitmap;
+      case "clear":
+      case "fair":
+        return isDaytime ? weatherSunBitmap : weatherMoonBitmap;
+      case "partly cloudy":
+        return weatherCloud50Bitmap;
+      case "light rain":
+        return weatherRainLightBitmap;
+      case "rain":
+      case "hail":
+        return weatherRainBitmap;
+      case "thunder":
+        return weatherThunderBitmap;
+      case "snow":
+        return weatherSnowBitmap;
+      case "fog":
+        return weatherFogBitmap;
+      case "cloudy":
+      default:
+        return weatherCloudBitmap;
     }
   }
 
