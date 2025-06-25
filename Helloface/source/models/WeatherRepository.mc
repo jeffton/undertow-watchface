@@ -58,8 +58,6 @@ class WeatherRepository {
             return hours[i];
           }
         }
-        // if we are past the last forecast, just use the last one
-        return hours[hours.size() - 1];
       }
     }
     return null;
