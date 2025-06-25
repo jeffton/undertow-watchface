@@ -6,6 +6,7 @@ class WeatherModel {
   var windSpeed as String = "-";
   var windDirection as Number?;
   var condition as String?;
+  var waveHeight as String?;
 
   function initialize() {}
 } 

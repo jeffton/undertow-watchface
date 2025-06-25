@@ -41,6 +41,11 @@ class WeatherRepository {
       model.windSpeed = Math.round(wSpeed as Float).format("%i");
     }
 
+    var waveHeight = forecast.get("waveHeight");
+    if (waveHeight != null) {
+      model.waveHeight = (waveHeight as Float).format("%.1f") + "m";
+    }
+
     model.windDirection = forecast.get("windDirection") as Number?;
     model.condition = forecast.get("condition") as String?;
 
