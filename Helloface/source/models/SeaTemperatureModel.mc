@@ -41,7 +41,7 @@ class SeaTemperatureModel {
     for (var i = 0; i < hours.size(); i++) {
       var time = hours[i].get("time");
       if (now <= time) {
-        return hours[i].get("temperature");
+        return hours[i].get("seaTemperature");
       }
     }
     return null;
