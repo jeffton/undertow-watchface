@@ -15,7 +15,6 @@ class MinuteModel {
   var activeMinutes as DailyWeekly;
   var steps as DailyWeekly;
   var battery as Number;
-  var weather as WeatherModel;
   var sunTime as String?;
   var altitude as String;
  
@@ -30,7 +29,6 @@ class MinuteModel {
     self.recoveryTime = getRecoveryTime(activityMonitorInfo);
     self.activeMinutes = getActiveMinutes(activityMonitorInfo);
     self.steps = getSteps(activityMonitorInfo);
-    self.weather = new WeatherModel(tenMinuteModel.isDaytime(now));
     self.battery = getBattery();
     self.sunTime = getNextSunTime(tenMinuteModel, now);
     self.altitude = getAltitude(activityInfo);

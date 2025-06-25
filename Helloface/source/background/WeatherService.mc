@@ -7,7 +7,7 @@ import Toybox.Application.Storage;
 
 
 (:background)
-class SeaTemperatureService {
+class WeatherService {
 
   function onTemporalEvent() {
     var positionInfo = Position.getInfo();
@@ -94,4 +94,4 @@ class SeaTemperatureService {
       Background.exit(null);
     }
   }
-}
+} 
