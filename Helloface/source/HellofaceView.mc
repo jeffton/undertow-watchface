@@ -39,10 +39,11 @@ class HellofaceView extends WatchUi.WatchFace {
   var checkBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.check);
 
   var weatherSunBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSun);
-  var weatherCloudBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud);
   var weatherMoonBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherMoon);
-  var weatherMoonCloudBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherMoonCloud);
-  var weatherSunCloudBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSunCloud);
+  var weatherCloudBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud);
+  var weatherCloud25Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud25);
+  var weatherCloud50Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud50);
+  var weatherCloud75Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud75);
   var weatherRainBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherRain);
   var weatherRainLightBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherRainLight);
   var weatherThunderBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherThunder);

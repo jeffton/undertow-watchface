@@ -21,8 +21,9 @@
     <bitmap dithering="none" id="weatherSun" filename="weather-sun.png" />
     <bitmap dithering="none" id="weatherCloud" filename="weather-cloud.png" />
     <bitmap dithering="none" id="weatherMoon" filename="weather-moon.png" />
-    <bitmap dithering="none" id="weatherMoonCloud" filename="weather-moon-cloud.png" />
-    <bitmap dithering="none" id="weatherSunCloud" filename="weather-sun-cloud.png" />
+    <bitmap dithering="none" id="weatherCloud25" filename="weather-cloud-25.png" />
+    <bitmap dithering="none" id="weatherCloud50" filename="weather-cloud-50.png" />
+    <bitmap dithering="none" id="weatherCloud75" filename="weather-cloud-75.png" />
     <bitmap dithering="none" id="weatherRain" filename="weather-rain.png" />
     <bitmap dithering="none" id="weatherRainLight" filename="weather-rain-light.png" />
     <bitmap dithering="none" id="weatherThunder" filename="weather-thunder.png" />
