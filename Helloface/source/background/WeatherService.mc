@@ -88,7 +88,7 @@ class WeatherService {
     data as Null or Dictionary or String or PersistedContent.Iterator) as Void
   {
     if (data instanceof Dictionary && data.hasKey("forecast")) {
-      Storage.setValue("sea-data", data);
+      Storage.setValue("weather", data);
       Background.exit(data);
     } else {
       Background.exit(null);

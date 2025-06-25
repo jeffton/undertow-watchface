@@ -8,7 +8,7 @@ class WeatherRepository {
   var weatherData as Dictionary?;
 
   function initialize() {
-    self.weatherData = Storage.getValue("sea-data") as Dictionary?;
+    self.weatherData = Storage.getValue("weather") as Dictionary?;
   }
 
   function update() {
