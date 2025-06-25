@@ -192,13 +192,20 @@ func mapSymbolToCondition(symbolCode string) string {
 	switch symbol {
 	case "clearsky":
 		return "clear"
-	case "fair", "partlycloudy", "cloudy":
+	case "fair", "partlycloudy":
+		return "partly cloudy"
+	case "cloudy":
 		return "cloudy"
-	case "lightrain", "rain", "heavyrain":
+	case "lightrain":
+		return "light rain"
+	case "rain", "heavyrain":
 		return "rain"
 	case "lightrainshowers", "rainshowers", "heavyrainshowers":
 		if strings.Contains(symbolCode, "thunder") {
 			return "thunder"
+		}
+		if symbol == "lightrainshowers" {
+			return "light rain"
 		}
 		return "rain"
 	case "lightsleet", "sleet", "heavysleet", "lightsnow", "snow", "heavysnow":
