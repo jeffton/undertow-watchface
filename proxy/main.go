@@ -85,11 +85,12 @@ type Forecast struct {
 
 // ApiResponse is the structure of the JSON response we will serve.
 type ApiResponse struct {
-	RequestPosition  Position    `json:"requestPosition"`
-	ForecastPosition *Position   `json:"forecastPosition"`
-	RequestTime      int64       `json:"requestTime"`
-	Forecast         []Forecast  `json:"forecast,omitempty"`
-	Error            interface{} `json:"error,omitempty"`
+	RequestPosition       Position    `json:"requestPosition"`
+	ForecastPosition      *Position   `json:"forecastPosition,omitempty"`
+	OceanForecastPosition *Position   `json:"oceanForecastPosition,omitempty"`
+	RequestTime           int64       `json:"requestTime"`
+	Forecast              []Forecast  `json:"forecast,omitempty"`
+	Error                 interface{} `json:"error,omitempty"`
 }
 
 func main() {
@@ -227,8 +228,8 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 	forecasts := make(map[int64]*Forecast)
 
 	if oceanData != nil {
-		if len(oceanData.Geometry.Coordinates) == 2 {
-			apiResponse.ForecastPosition = &Position{
+		if len(oceanData.Geometry.Coordinates) >= 2 {
+			apiResponse.OceanForecastPosition = &Position{
 				Lat: oceanData.Geometry.Coordinates[1],
 				Lon: oceanData.Geometry.Coordinates[0],
 			}
@@ -258,8 +259,7 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 	}
 
 	if weatherData != nil {
-		// Prefer forecast position from weather data if available and not already set
-		if apiResponse.ForecastPosition == nil && len(weatherData.Geometry.Coordinates) == 2 {
+		if len(weatherData.Geometry.Coordinates) >= 2 {
 			apiResponse.ForecastPosition = &Position{
 				Lat: weatherData.Geometry.Coordinates[1],
 				Lon: weatherData.Geometry.Coordinates[0],
