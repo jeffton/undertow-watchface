@@ -385,6 +385,13 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 
 	apiResponse := buildApiResponse(oceanData, weatherData, pos, errors)
 
+	responseLog, err := json.Marshal(apiResponse)
+	if err != nil {
+		log.Printf("Failed to marshal response for logging: %v", err)
+	} else {
+		log.Println(string(responseLog))
+	}
+
 	if err := json.NewEncoder(w).Encode(apiResponse); err != nil {
 		log.Printf("Failed to encode response: %v", err)
 	}
