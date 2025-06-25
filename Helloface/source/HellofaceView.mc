@@ -60,6 +60,7 @@ class HellofaceView extends WatchUi.WatchFace {
     self.dayModel = new DayModel(lastUpdateTime);
     self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
     self.weatherRepository = new WeatherRepository();
+    self.weatherRepository.update();
     self.weatherModel = self.weatherRepository.getWeatherModel();
     self.secondModel = new SecondModel(lastUpdateTime);
     self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
@@ -68,6 +69,7 @@ class HellofaceView extends WatchUi.WatchFace {
   function onWeatherUpdated(data as Dictionary) {
     self.weatherRepository.onWeatherUpdated(data);
     self.weatherModel = self.weatherRepository.getWeatherModel();
+    WatchUi.requestUpdate();
   }
 
   // Load your resources here
