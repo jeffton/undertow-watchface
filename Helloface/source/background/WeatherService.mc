@@ -46,9 +46,9 @@ class WeatherService {
     }
     
     var timeSinceLastRequest = Time.now().subtract(new Time.Moment(lastRequestTime)) as Time.Duration;
-    var sixHours = new Time.Duration(21600);
+    var twoHours = new Time.Duration(7200);
 
-    if (timeSinceLastRequest.greaterThan(sixHours)) {
+    if (timeSinceLastRequest.greaterThan(twoHours)) {
       return true;
     }
 
