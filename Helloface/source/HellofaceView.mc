@@ -192,15 +192,14 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     dc.fillRectangle(0, 0, 176, 176);
 
-    var weather = self.weatherModel;
     var isDaytime = self.tenMinuteModel.isDaytime(Time.now());
 
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     // all of these need white on transparent
     drawDate(dc);
-    drawWeather(dc, weather, isDaytime);
+    drawWeather(dc, isDaytime);
     drawSunTime(dc);
-    if (!drawSeaTemperature(dc, weather)) {
+    if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
     }
     drawTime(dc);
@@ -225,7 +224,8 @@ class HellofaceView extends WatchUi.WatchFace {
     );
   }
 
-  function drawWeather(dc as Dc, weather as WeatherModel, isDaytime as Boolean) {
+  function drawWeather(dc as Dc, isDaytime as Boolean) {
+    var weather = self.weatherModel;
     if (weather.condition != null) {
       var bitmap = getBitmapForWeatherCondition(weather.condition, isDaytime);
       dc.drawBitmap(10, 24, bitmap.getBitmap());
@@ -540,8 +540,8 @@ class HellofaceView extends WatchUi.WatchFace {
     );
   }
 
-  function drawSeaTemperature(dc as Dc, weather as WeatherModel) as Boolean {
-    var temperature = weather.seaTemperature;
+  function drawSeaTemperature(dc as Dc) as Boolean {
+    var temperature = self.weatherModel.seaTemperature;
     if (temperature == null) {
       return false;
     }
