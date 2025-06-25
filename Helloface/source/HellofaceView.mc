@@ -257,15 +257,14 @@ class HellofaceView extends WatchUi.WatchFace {
 
     if (self.weatherModel.condition != null) {
       var condition = self.weatherModel.condition as String;
-      var cloudCover = self.weatherModel.cloudCover;
 
       if (
-        cloudCover != null &&
-        (condition.equals("clear") ||
-          condition.equals("fair") ||
-          condition.equals("partly cloudy") ||
-          condition.equals("cloudy"))
+        condition.equals("clear") ||
+        condition.equals("fair") ||
+        condition.equals("partly cloudy") ||
+        condition.equals("cloudy")
       ) {
+        var cloudCover = self.weatherModel.cloudCover as Number;
         if (cloudCover < 80) {
           // Draw sun or moon
           var baseBitmap = isDaytime ? weatherSunBitmap : weatherMoonBitmap;
@@ -283,7 +282,7 @@ class HellofaceView extends WatchUi.WatchFace {
           dc.drawBitmap(x, y, weatherCloud25Bitmap.getBitmap());
         }
       } else {
-        var bitmap = getFallbackWeatherBitmap(condition, isDaytime);
+        var bitmap = getFallbackWeatherBitmap(condition);
         dc.drawBitmap(x, y, bitmap.getBitmap());
       }
     }
@@ -315,13 +314,8 @@ class HellofaceView extends WatchUi.WatchFace {
         [x + cos2, y + sin2]]);
   }
 
-  function getFallbackWeatherBitmap(condition as String, isDaytime as Boolean) as LazyBitmap {
+  function getFallbackWeatherBitmap(condition as String) as LazyBitmap {
     switch (condition) {
-      case "clear":
-      case "fair":
-        return isDaytime ? weatherSunBitmap : weatherMoonBitmap;
-      case "partly cloudy":
-        return weatherCloud50Bitmap;
       case "light rain":
         return weatherRainLightBitmap;
       case "rain":
@@ -333,7 +327,6 @@ class HellofaceView extends WatchUi.WatchFace {
         return weatherSnowBitmap;
       case "fog":
         return weatherFogBitmap;
-      case "cloudy":
       default:
         return weatherCloudBitmap;
     }
