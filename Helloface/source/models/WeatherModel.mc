@@ -19,6 +19,7 @@ class WeatherModel {
   }
 
   function update() {
+    parseWeatherData(); // in case we don't update and the time has changed
     new WeatherService().update(self.weatherData);
   }
 
