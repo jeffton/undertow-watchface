@@ -13,7 +13,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var lastUpdateTime as UpdateTime;
   var dayModel as DayModel;
   var tenMinuteModel as TenMinuteModel;
-  var seaTemperatureModel as SeaTemperatureModel;
+  var weatherModel as WeatherModel;
   var minuteModel as MinuteModel;
   var secondModel as SecondModel;
 
@@ -57,13 +57,13 @@ class HellofaceView extends WatchUi.WatchFace {
     self.lastUpdateTime = new UpdateTime();
     self.dayModel = new DayModel(lastUpdateTime);
     self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-    self.seaTemperatureModel = new SeaTemperatureModel();
+    self.weatherModel = new WeatherModel();
     self.secondModel = new SecondModel(lastUpdateTime);
     self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
   }
 
-  function onSeaDataUpdated(data as Dictionary) {
-    self.seaTemperatureModel.onSeaDataUpdated(data);
+  function onWeatherUpdated(data as Dictionary) {
+    self.weatherModel.onWeatherUpdated(data);
   }
 
   // Load your resources here
@@ -86,7 +86,7 @@ class HellofaceView extends WatchUi.WatchFace {
         self.dayModel = new DayModel(updateTime);
       case UpdateTime.TEN_MINUTES:
         self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-        self.seaTemperatureModel.update();
+        self.weatherModel.update();
       case UpdateTime.MINUTE:
         self.minuteModel = new MinuteModel(updateTime, self.tenMinuteModel);
       case UpdateTime.SECOND:
@@ -218,18 +218,19 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawWeather(dc as Dc) {
-    var weather = self.minuteModel.weather;
+    var weather = self.weatherModel;
 
     if (weather.condition != null) {
-      var bitmap = getBitmapForWeatherCondition(weather.condition, weather.isDaytime);
+      var isDaytime = self.tenMinuteModel.isDaytime(Time.now());
+      var bitmap = getBitmapForWeatherCondition(weather.condition, isDaytime);
       dc.drawBitmap(10, 24, bitmap.getBitmap());
     }
     dc.drawText(30, 20, Graphics.FONT_GLANCE, weather.temperature, Graphics.TEXT_JUSTIFY_LEFT);
 
     dc.drawText(80, 20, Graphics.FONT_GLANCE, weather.windSpeed, Graphics.TEXT_JUSTIFY_LEFT);
 
-    if (weather.windBearing != null) {
-      drawWindBearing(dc, 68, 33, weather.windBearing);
+    if (weather.windDirection != null) {
+      drawWindBearing(dc, 68, 33, weather.windDirection);
     }    
   }
 
@@ -535,7 +536,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSeaTemperature(dc as Dc) as Boolean {
-    var temperature = self.seaTemperatureModel.seaTemperature;
+    var temperature = self.weatherModel.seaTemperature;
     if (temperature == null) {
       return false;
     }
