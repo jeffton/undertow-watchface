@@ -11,6 +11,12 @@ This document specifies a proxy service that sits in front of the MET Norway Oce
 *   **Authentication**: The proxy must include a descriptive `User-Agent` header in its requests to the upstream API.
     *   Example: `User-Agent: Helloface/1.0 (yourapp@example.com)`
 
+##### **Upstream Service: Weather Forecast**
+
+*   **API**: MET Norway Location Forecast API
+*   **Endpoint**: `https://api.met.no/weatherapi/locationforecast/2.0/complete`
+*   **Authentication**: Same `User-Agent` as the Ocean Forecast.
+
 #### **3. Proxy Endpoint**
 
 The proxy exposes a single endpoint.
@@ -44,10 +50,20 @@ The service returns a JSON object.
     "lon": 12.5926
   },
   "requestTime": 1750700771,
-  "forecast": [
+  "oceanForecast": [
     {
       "time": 1750698000,
-      "temperature": 17.0
+      "seaTemperature": 17.0
+    }
+  ],
+  "weatherForecast": [
+    {
+      "time": 1750698000,
+      "temperature": 15.2,
+      "windSpeed": 3.4,
+      "windDirection": 240.1,
+      "cloudCover": 80.5,
+      "condition": "cloudy"
     }
   ],
   "error": null
@@ -63,9 +79,16 @@ The service returns a JSON object.
     *   `lat` (`float`): The forecast latitude.
     *   `lon` (`float`): The forecast longitude.
 *   `requestTime` (`integer`): The Unix timestamp (in seconds) indicating when the proxy processed the request.
-*   `forecast` (`array`): An array of forecast data points, containing a maximum of 24 hourly entries.
+*   `oceanForecast` (`array`): An array of ocean forecast data points, containing a maximum of 24 hourly entries.
     *   `time` (`integer`): The Unix timestamp (in seconds) for the forecast data point.
-    *   `temperature` (`float`): The sea water temperature in degrees Celsius.
+    *   `seaTemperature` (`float`): The sea water temperature in degrees Celsius.
+*   `weatherForecast` (`array`): An array of weather forecast data points, containing a maximum of 24 hourly entries.
+    *   `time` (`integer`): The Unix timestamp (in seconds) for the forecast data point.
+    *   `temperature` (`float`): The air temperature in degrees Celsius.
+    *   `windSpeed` (`float`): The wind speed in meters per second (m/s).
+    *   `windDirection` (`float`): The wind direction in degrees.
+    *   `cloudCover` (`float`): The cloud cover as a percentage.
+    *   `condition` (`string`): A simplified weather condition string. Possible values are: `clear`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
 *   `error` (`object | string | null`): Will be `null` on a successful response.
 
 ##### **4.2. Error Response**
