@@ -46,6 +46,10 @@ The service returns a JSON object.
     "lon": 12.5889604
   },
   "forecastPosition": {
+    "lat": 55.71,
+    "lon": 12.58
+  },
+  "oceanForecastPosition": {
     "lat": 55.7324,
     "lon": 12.5926
   },
@@ -79,9 +83,12 @@ The service returns a JSON object.
 *   `requestPosition` (`object`): An object containing the latitude and longitude sent in the request.
     *   `lat` (`float`): The request latitude.
     *   `lon` (`float`): The request longitude.
-*   `forecastPosition` (`object | null`): An object containing the actual latitude and longitude used by the MET API for the forecast. This may differ slightly from the requested position. It will be `null` if not provided by the upstream API.
+*   `forecastPosition` (`object | null`): The latitude and longitude used by the MET API for the weather forecast.
     *   `lat` (`float`): The forecast latitude.
     *   `lon` (`float`): The forecast longitude.
+*   `oceanForecastPosition` (`object | null`): The latitude and longitude used by the MET API for the ocean forecast. This may differ from the `forecastPosition` as the API snaps to the nearest ocean grid point.
+    *   `lat` (`float`): The ocean forecast latitude.
+    *   `lon` (`float`): The ocean forecast longitude.
 *   `requestTime` (`integer`): The Unix timestamp (in seconds) indicating when the proxy processed the request.
 *   `forecast` (`array`): An array of forecast data points, containing a maximum of 24 hourly entries. Fields that are not applicable for a given time step (e.g., `seaTemperature`) will be omitted from the entry.
     *   `time` (`integer`): The Unix timestamp (in seconds) for the forecast data point.
@@ -106,6 +113,7 @@ If the proxy encounters an internal error or receives an error from the upstream
     "lon": 12.5889604
   },
   "forecastPosition": null,
+  "oceanForecastPosition": null,
   "requestTime": 1750700771,
   "forecast": [],
   "error": "Details about the error go here."
