@@ -7,12 +7,14 @@ import Toybox.Weather;
 import Toybox.ActivityMonitor;
 import Toybox.Media;
 import Toybox.Time.Gregorian;
+import Toybox.Time;
 
 class HellofaceView extends WatchUi.WatchFace {
   
   var lastUpdateTime as UpdateTime;
   var dayModel as DayModel;
   var tenMinuteModel as TenMinuteModel;
+  var weatherRepository as WeatherRepository;
   var weatherModel as WeatherModel;
   var minuteModel as MinuteModel;
   var secondModel as SecondModel;
@@ -57,13 +59,15 @@ class HellofaceView extends WatchUi.WatchFace {
     self.lastUpdateTime = new UpdateTime();
     self.dayModel = new DayModel(lastUpdateTime);
     self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-    self.weatherModel = new WeatherModel();
+    self.weatherRepository = new WeatherRepository();
+    self.weatherModel = self.weatherRepository.getWeatherModel();
     self.secondModel = new SecondModel(lastUpdateTime);
     self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
   }
 
   function onWeatherUpdated(data as Dictionary) {
-    self.weatherModel.onWeatherUpdated(data);
+    self.weatherRepository.onWeatherUpdated(data);
+    self.weatherModel = self.weatherRepository.getWeatherModel();
   }
 
   // Load your resources here
@@ -86,7 +90,8 @@ class HellofaceView extends WatchUi.WatchFace {
         self.dayModel = new DayModel(updateTime);
       case UpdateTime.TEN_MINUTES:
         self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-        self.weatherModel.update();
+        self.weatherRepository.update();
+        self.weatherModel = self.weatherRepository.getWeatherModel();
       case UpdateTime.MINUTE:
         self.minuteModel = new MinuteModel(updateTime, self.tenMinuteModel);
       case UpdateTime.SECOND:
@@ -187,12 +192,15 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     dc.fillRectangle(0, 0, 176, 176);
 
+    var weather = self.weatherModel;
+    var isDaytime = self.tenMinuteModel.isDaytime(Time.now());
+
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     // all of these need white on transparent
     drawDate(dc);
-    drawWeather(dc);
+    drawWeather(dc, weather, isDaytime);
     drawSunTime(dc);
-    if (!drawSeaTemperature(dc)) {
+    if (!drawSeaTemperature(dc, weather)) {
       drawAltitude(dc);
     }
     drawTime(dc);
@@ -217,11 +225,8 @@ class HellofaceView extends WatchUi.WatchFace {
     );
   }
 
-  function drawWeather(dc as Dc) {
-    var weather = self.weatherModel;
-
+  function drawWeather(dc as Dc, weather as WeatherModel, isDaytime as Boolean) {
     if (weather.condition != null) {
-      var isDaytime = self.tenMinuteModel.isDaytime(Time.now());
       var bitmap = getBitmapForWeatherCondition(weather.condition, isDaytime);
       dc.drawBitmap(10, 24, bitmap.getBitmap());
     }
@@ -535,8 +540,8 @@ class HellofaceView extends WatchUi.WatchFace {
     );
   }
 
-  function drawSeaTemperature(dc as Dc) as Boolean {
-    var temperature = self.weatherModel.seaTemperature;
+  function drawSeaTemperature(dc as Dc, weather as WeatherModel) as Boolean {
+    var temperature = weather.seaTemperature;
     if (temperature == null) {
       return false;
     }
