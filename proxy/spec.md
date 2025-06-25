@@ -50,19 +50,23 @@ The service returns a JSON object.
     "lon": 12.5926
   },
   "requestTime": 1750700771,
-  "oceanForecast": [
+  "forecast": [
     {
       "time": 1750698000,
-      "seaTemperature": 17.0
-    }
-  ],
-  "weatherForecast": [
-    {
-      "time": 1750698000,
+      "seaTemperature": 17.0,
       "temperature": 15.2,
       "windSpeed": 3.4,
       "windDirection": 240.1,
       "cloudCover": 80.5,
+      "condition": "cloudy"
+    },
+    {
+      "time": 1750701600,
+      "seaTemperature": 17.0,
+      "temperature": 14.8,
+      "windSpeed": 3.2,
+      "windDirection": 235.0,
+      "cloudCover": 90.1,
       "condition": "cloudy"
     }
   ],
@@ -79,16 +83,14 @@ The service returns a JSON object.
     *   `lat` (`float`): The forecast latitude.
     *   `lon` (`float`): The forecast longitude.
 *   `requestTime` (`integer`): The Unix timestamp (in seconds) indicating when the proxy processed the request.
-*   `oceanForecast` (`array`): An array of ocean forecast data points, containing a maximum of 24 hourly entries.
+*   `forecast` (`array`): An array of forecast data points, containing a maximum of 24 hourly entries. Fields that are not applicable for a given time step (e.g., `seaTemperature`) will be omitted from the entry.
     *   `time` (`integer`): The Unix timestamp (in seconds) for the forecast data point.
-    *   `seaTemperature` (`float`): The sea water temperature in degrees Celsius.
-*   `weatherForecast` (`array`): An array of weather forecast data points, containing a maximum of 24 hourly entries.
-    *   `time` (`integer`): The Unix timestamp (in seconds) for the forecast data point.
-    *   `temperature` (`float`): The air temperature in degrees Celsius.
-    *   `windSpeed` (`float`): The wind speed in meters per second (m/s).
-    *   `windDirection` (`float`): The wind direction in degrees.
-    *   `cloudCover` (`float`): The cloud cover as a percentage.
-    *   `condition` (`string`): A simplified weather condition string. Possible values are: `clear`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
+    *   `seaTemperature` (`float`, optional): The sea water temperature in degrees Celsius.
+    *   `temperature` (`float`, optional): The air temperature in degrees Celsius.
+    *   `windSpeed` (`float`, optional): The wind speed in meters per second (m/s).
+    *   `windDirection` (`float`, optional): The wind direction in degrees.
+    *   `cloudCover` (`float`, optional): The cloud cover as a percentage.
+    *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
 *   `error` (`object | string | null`): Will be `null` on a successful response.
 
 ##### **4.2. Error Response**
@@ -122,10 +124,9 @@ If the proxy encounters an internal error or receives an error from the upstream
 3.  It populates the `requestPosition` and `requestTime` fields for its own response.
 4.  Upon receiving a successful response from the MET API, it parses the JSON.
     *   The `forecastPosition` is extracted from `geometry.coordinates`. Note that the order in the MET API response is `[longitude, latitude]`.
-    *   The proxy iterates through the `properties.timeseries` array.
-    *   For each of the first 24 entries, it creates a `forecast` object by:
-        *   Converting the `time` field (an RFC3339 string) to a Unix timestamp (seconds).
-        *   Extracting the `sea_water_temperature` from `data.instant.details`.
+    *   The proxy fetches data from both the Ocean and Weather APIs and merges their `properties.timeseries` arrays based on the `time` field.
+    *   For each of the first 24 hourly entries, it creates a `forecast` object containing the combined data.
+    *   Time fields (RFC3339 strings) are converted to a Unix timestamp (seconds).
 5.  If the MET API returns a non-successful status code or a non-JSON response, the proxy captures the error content and places it in the `error` field of its own response.
 
 #### **6. Deployment**
