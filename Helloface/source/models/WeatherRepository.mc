@@ -48,6 +48,7 @@ class WeatherRepository {
 
     model.windDirection = forecast.get("windDirection") as Number?;
     model.condition = forecast.get("condition") as String?;
+    model.cloudCover = forecast.get("cloudCover") as Number?;
 
     return model;
   }
