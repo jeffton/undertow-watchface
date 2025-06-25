@@ -14,7 +14,7 @@ class HellofaceBackgroundDelegate extends Toybox.System.ServiceDelegate {
   }
 
   function onTemporalEvent() {
-    new SeaTemperatureService().onTemporalEvent();
+    new WeatherService().onTemporalEvent();
   }
 
   function onActivityCompleted(activity as {

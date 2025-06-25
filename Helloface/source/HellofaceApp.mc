@@ -19,7 +19,7 @@ class HellofaceApp extends Application.AppBase {
   function onBackgroundData(data) {
     if (data instanceof Dictionary) {
       if (self.view != null) {
-        self.view.onSeaDataUpdated(data);
+        self.view.onWeatherUpdated(data);
       }
     }
   }
