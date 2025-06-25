@@ -42,9 +42,7 @@ class WeatherRepository {
     }
 
     model.windDirection = forecast.get("windDirection") as Number?;
-
-    var conditionString = forecast.get("condition") as String?;
-    model.condition = conditionStringToEnum(conditionString);
+    model.condition = forecast.get("condition") as String?;
 
     return model;
   }
@@ -65,33 +63,5 @@ class WeatherRepository {
       }
     }
     return null;
-  }
-
-  private function conditionStringToEnum(condition as String?) as Number? {
-    if (condition == null) {
-      return null;
-    }
-    switch (condition) {
-      case "clear":
-        return Weather.CONDITION_CLEAR;
-      case "partly cloudy":
-        return Weather.CONDITION_PARTLY_CLOUDY;
-      case "cloudy":
-        return Weather.CONDITION_CLOUDY;
-      case "light rain":
-        return Weather.CONDITION_LIGHT_RAIN;
-      case "rain":
-        return Weather.CONDITION_RAIN;
-      case "thunder":
-        return Weather.CONDITION_THUNDERSTORMS;
-      case "snow":
-        return Weather.CONDITION_SNOW;
-      case "hail":
-        return Weather.CONDITION_HAIL;
-      case "fog":
-        return Weather.CONDITION_FOG;
-      default:
-        return Weather.CONDITION_UNKNOWN;
-    }
   }
 } 
