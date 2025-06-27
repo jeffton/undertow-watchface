@@ -333,10 +333,10 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 106;
-    var y = 137;
+    var x = 135;
+    var y = 117;
 
-    var daily = self.dayModel.activityCount;
+    var daily = 2; // self.dayModel.activityCount;
 
     if (daily > 0) {
       dc.drawBitmap(x, y, (daily == 1 ? starBitmap : starsBitmap).getBitmap());
@@ -346,14 +346,14 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSteps(dc as Dc) {
-    var x = 82;
-    var y = 153;
+    var x = 124;
+    var y = 158;
 
-    var steps = self.minuteModel.steps;
+    var steps = new DailyWeekly(24000, 8000, 10000); //self.minuteModel.steps;
 
     drawProgress(dc, x, y, steps.daily, steps.goal);
     if (steps.daily < steps.goal) {
-      dc.drawBitmap(x - 8, y - 7, stepsBitmap.getBitmap());
+      dc.drawBitmap(x - 8, y - 8, stepsBitmap.getBitmap());
     }
   }
 
@@ -363,7 +363,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var width = 91;
     var height = 8;
 
-    var minutes = self.minuteModel.activeMinutes;
+    var minutes = new DailyWeekly(100, 300, 400); //self.minuteModel.activeMinutes;
 
     var value = minutes.weekly;
     var split = minutes.weekly - minutes.daily;
@@ -412,41 +412,49 @@ class HellofaceView extends WatchUi.WatchFace {
     }
   }
 
-  var weekdayPolygon as Array<Point2D>?;
+  function drawRecoveryTime(dc as Dc) {
+    var recoveryTime = 8; // self.minuteModel.recoveryTime;
+    var x = 36;
+    var y = 130;
+    var width = 92;
 
-  function drawWeekdayIndicator(dc as Dc, x, y) {
-    if (weekdayPolygon == null) {
-      var radius = 11;
-      var arrowRadius = 5;
-      var angle = 90 - (self.dayModel.weekday * 360 / 7);
-      var radians = Math.toRadians(angle);
+    if (recoveryTime > 0) {
+      dc.setPenWidth(2);
+      var recoveryTimeAsWidth = recoveryTime * width / 96;
+      dc.fillRectangle(x + (width - recoveryTimeAsWidth), y, recoveryTimeAsWidth, 4);
 
-      var cos0 = radius * Math.cos(radians);
-      var sin0 = - radius * Math.sin(radians);
 
-      var angleArrowLeft = radians - 0.8;
-      var angleArrowRight = radians + 0.8;
+      // var days = recoveryTime / 24;
+      // var hours = recoveryTime % 24;
+    //   if (recoveryTime == 96) {
+    //     hours = 24;
+    //   }
 
-      var cos1 = arrowRadius * Math.cos(angleArrowLeft);
-      var cos2 = arrowRadius * Math.cos(angleArrowRight);
-      var sin1 = - arrowRadius * Math.sin(angleArrowLeft);
-      var sin2 = - arrowRadius * Math.sin(angleArrowRight);
-
-      self.weekdayPolygon = [
-        [x + cos0, y + sin0], 
-        [x + cos1, y + sin1],
-        [x + cos2, y + sin2]];
+    //   dc.setPenWidth(2);
+    //   dc.drawRectangle(x, y, 8, 20);
+    //   var hoursAsHeight = hours * 20 / 24;
+    //   dc.fillRectangle(x, y + 20 - hoursAsHeight, 8, hoursAsHeight);
+      
+    //   if (days > 0) {
+    //     dc.fillRectangle(x - 12, y, 8, 8);
+    //     if (days > 1) { 
+    //       dc.fillRectangle(x - 12, y + 12, 8, 8);
+    //       if (days > 2) {
+    //         dc.fillRectangle(x - 12, y + 24, 8, 8);
+    //       }
+    //     }
+    //   }
     }
-    dc.fillPolygon(weekdayPolygon);
   }
+
 
   function drawProgress(dc as Dc, x as Number, y as Number, value as Number, max as Number) {
     var fullCircles = Math.floor(value / max);
-    var radius = 15;
+    var radius = 7;
     value = value % max;
     var valueAsAngle = 90 - (value * 360 / max);
     if (valueAsAngle != 90) {
-      dc.setPenWidth(6);
+      dc.setPenWidth(15);
       dc.drawArc(x, y, radius, Graphics.ARC_CLOCKWISE, 90, valueAsAngle);
     }
     drawProgressComplete(dc, x, y, fullCircles);
@@ -454,10 +462,10 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawProgressComplete(dc as Dc, x as Number, y as Number, fullCircles as Number) {
     if (fullCircles > 0) {
-      dc.fillCircle(x, y, 10);
       if (fullCircles == 1) {
-        dc.drawBitmap(x - 8, y - 6, checkBitmap.getBitmap());
+        dc.drawBitmap(x - 10, y - 8, checkBitmap.getBitmap());
       } else {
+        dc.fillCircle(x, y, 8);
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
         dc.drawText(x, y - 12, Graphics.FONT_TINY, fullCircles, Graphics.TEXT_JUSTIFY_CENTER);
       }
@@ -495,29 +503,6 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.fillRectangle(x + 2, y + 2, width, 5);
   }
 
-  function drawRecoveryTime(dc as Dc) {
-    var recoveryTime = self.minuteModel.recoveryTime;
-    var x = 151;
-    var y = 133;
-    var radius = 12;
-
-    if (recoveryTime > 0) {
-      dc.setPenWidth(2);
-      dc.drawCircle(x, y, radius);
-
-      if (recoveryTime >= 24) {
-        dc.fillCircle(x, y, radius);
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y, Graphics.FONT_TINY, recoveryTime, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-      } else {
-        var timeAsAngle = 90 + (recoveryTime * 360 / 24);
-        dc.setPenWidth(radius);
-        dc.drawArc(x, y, radius / 2, Graphics.ARC_COUNTER_CLOCKWISE, 90, timeAsAngle);
-      }
-    }
-  }
-
   function drawSunTime(dc as Dc) {
     var x = 10;
     var y = 40;
@@ -543,6 +528,9 @@ class HellofaceView extends WatchUi.WatchFace {
 
     dc.drawText(x, y, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_CENTER);
     dc.drawBitmap(x - 6, y + 25, wavesBitmap.getBitmap());
+    if (self.weatherModel.waveHeight != null) {
+      dc.drawText(x + 12, y + 25, Graphics.FONT_TINY, self.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
+    }
     return true;
   }
 
