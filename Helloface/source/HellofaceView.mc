@@ -422,28 +422,6 @@ class HellofaceView extends WatchUi.WatchFace {
       dc.setPenWidth(2);
       var recoveryTimeAsWidth = recoveryTime * width / 96;
       dc.fillRectangle(x + (width - recoveryTimeAsWidth), y, recoveryTimeAsWidth, 4);
-
-
-      // var days = recoveryTime / 24;
-      // var hours = recoveryTime % 24;
-    //   if (recoveryTime == 96) {
-    //     hours = 24;
-    //   }
-
-    //   dc.setPenWidth(2);
-    //   dc.drawRectangle(x, y, 8, 20);
-    //   var hoursAsHeight = hours * 20 / 24;
-    //   dc.fillRectangle(x, y + 20 - hoursAsHeight, 8, hoursAsHeight);
-      
-    //   if (days > 0) {
-    //     dc.fillRectangle(x - 12, y, 8, 8);
-    //     if (days > 1) { 
-    //       dc.fillRectangle(x - 12, y + 12, 8, 8);
-    //       if (days > 2) {
-    //         dc.fillRectangle(x - 12, y + 24, 8, 8);
-    //       }
-    //     }
-    //   }
     }
   }
 
