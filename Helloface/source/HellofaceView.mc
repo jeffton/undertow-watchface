@@ -336,7 +336,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 135;
     var y = 117;
 
-    var daily = 2; // self.dayModel.activityCount;
+    var daily = self.dayModel.activityCount;
 
     if (daily > 0) {
       dc.drawBitmap(x, y, (daily == 1 ? starBitmap : starsBitmap).getBitmap());
@@ -349,7 +349,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 124;
     var y = 158;
 
-    var steps = new DailyWeekly(24000, 8000, 10000); //self.minuteModel.steps;
+    var steps = self.minuteModel.steps;
 
     drawProgress(dc, x, y, steps.daily, steps.goal);
     if (steps.daily < steps.goal) {
@@ -413,18 +413,44 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawRecoveryTime(dc as Dc) {
-    var recoveryTime = 8; // self.minuteModel.recoveryTime;
-    var x = 36;
+    var recoveryTime = self.minuteModel.recoveryTime;
+    
+    var x = 35;
     var y = 130;
-    var width = 92;
+    var width = 93;
+    var height = 4;
 
-    if (recoveryTime > 0) {
-      dc.setPenWidth(2);
-      var recoveryTimeAsWidth = recoveryTime * width / 96;
-      dc.fillRectangle(x + (width - recoveryTimeAsWidth), y, recoveryTimeAsWidth, 4);
+    var max = 24;
+    if (recoveryTime > 72) {
+        max = 96;
+    } else if (recoveryTime > 48) {
+        max = 72;
+    } else if (recoveryTime > 24) {
+        max = 48;
+    }
+
+    var recoveryTimeAsWidth = recoveryTime * width / max;
+    var barStartX = x + width - recoveryTimeAsWidth;
+
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    dc.fillRectangle(barStartX, y, recoveryTimeAsWidth, height);
+    
+    var segmentCount = max / 24;
+    if (segmentCount > 1) {
+        var segmentWidth = 24 * width / max;
+        var separatorWidth = 2;
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+
+        for (var i = 1; i < segmentCount; i++) {
+            var separatorPosFromRight = i * segmentWidth;
+            var separatorX = x + width - separatorPosFromRight - 1;
+            
+            if (separatorX > barStartX) {
+                 dc.fillRectangle(separatorX, y, separatorWidth, height);
+            }
+        }
     }
   }
-
 
   function drawProgress(dc as Dc, x as Number, y as Number, value as Number, max as Number) {
     var fullCircles = Math.floor(value / max);
