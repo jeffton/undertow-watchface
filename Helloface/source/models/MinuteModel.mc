@@ -17,6 +17,7 @@ class MinuteModel {
   var battery as Number;
   var sunTime as String?;
   var altitude as String;
+  var pressure as String;
  
   function initialize(updateTime as UpdateTime, tenMinuteModel as TenMinuteModel) {
     var now = Time.now();
@@ -32,9 +33,10 @@ class MinuteModel {
     self.battery = getBattery();
     self.sunTime = getNextSunTime(tenMinuteModel, now);
     self.altitude = getAltitude(activityInfo);
+    self.pressure = getPressure(activityInfo);
   }
 
-  function getAltitude(activityInfo as Activity.Info) as Number or String {
+  function getAltitude(activityInfo as Activity.Info) as String {
     var altitude = activityInfo.altitude;
     if (altitude == null) {
       return "-";
@@ -47,6 +49,15 @@ class MinuteModel {
     } else {
       return altitude.format("%i") + "m";
     }
+  }
+
+  function getPressure(activityInfo as Activity.Info) as String {
+    var pressure = activityInfo.meanSeaLevelPressure;
+    if (pressure == null) {
+      return "-";
+    }
+    // convert Pa to hPa with one decimal, rounded.
+    return (Math.round(pressure / 10.0) / 10.0).format("%.1f") + " hPa";
   }
 
   private function getTime(clockTime as ClockTime) {
