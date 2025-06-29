@@ -51,8 +51,7 @@ class MinuteModel {
     if (pressure == null) {
       return "-";
     }
-    // convert Pa to hPa with one decimal, rounded.
-    return (Math.round(pressure / 10.0) / 10.0).format("%.1f") + " hPa";
+    return Math.round(pressure / 100.0).format("%i") + "hPa";
   }
 
   private function getTime(clockTime as ClockTime) {
