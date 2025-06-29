@@ -351,7 +351,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawSteps(dc as Dc) {
     var x = 124;
-    var y = 157;
+    var y = 156;
 
     var steps = self.minuteModel.steps;
 
@@ -532,7 +532,7 @@ class HellofaceView extends WatchUi.WatchFace {
     }
     
     var x = 18;
-    var y = 140;
+    var y = 141;
 
     dc.drawBitmap(x + 6, y + 2, wavesBitmap.getBitmap());
     dc.drawText(x + 18 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
@@ -546,7 +546,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawAltitude(dc as Dc) {
     var x = 18;
-    var y = 140;
+    var y = 141;
     dc.drawBitmap(x, y, mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
     dc.drawText(x + 17, y + 12, Graphics.FONT_TINY, self.minuteModel.pressure, Graphics.TEXT_JUSTIFY_LEFT);
