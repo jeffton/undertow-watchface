@@ -59,6 +59,7 @@ The service returns a JSON object.
       "time": 1750698000,
       "seaTemperature": 17.0,
       "waveHeight": 2.5,
+      "waveDirection": 180.0,
       "temperature": 15.2,
       "windSpeed": 3.4,
       "windDirection": 240.1,
@@ -69,6 +70,7 @@ The service returns a JSON object.
       "time": 1750701600,
       "seaTemperature": 17.0,
       "waveHeight": 2.3,
+      "waveDirection": 175.0,
       "temperature": 14.8,
       "windSpeed": 3.2,
       "windDirection": 235.0,
@@ -96,6 +98,7 @@ The service returns a JSON object.
     *   `time` (`integer`): The Unix timestamp (in seconds) for the forecast data point.
     *   `seaTemperature` (`float`, optional): The sea water temperature in degrees Celsius.
     *   `waveHeight` (`float`, optional): The significant wave height in meters.
+    *   `waveDirection` (`float`, optional): The direction the waves are coming from in degrees.
     *   `temperature` (`float`, optional): The air temperature in degrees Celsius.
     *   `windSpeed` (`float`, optional): The wind speed in meters per second (m/s).
     *   `windDirection` (`float`, optional): The wind direction in degrees.

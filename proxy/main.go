@@ -28,8 +28,9 @@ type OceanYrResponse struct {
 			Data struct {
 				Instant struct {
 					Details struct {
-						SeaWaterTemperature  float64 `json:"sea_water_temperature"`
-						SeaSurfaceWaveHeight float64 `json:"sea_surface_wave_height"`
+						SeaWaterTemperature         float64 `json:"sea_water_temperature"`
+						SeaSurfaceWaveHeight        float64 `json:"sea_surface_wave_height"`
+						SeaSurfaceWaveFromDirection float64 `json:"sea_surface_wave_from_direction"`
 					} `json:"details"`
 				} `json:"instant"`
 			} `json:"data"`
@@ -78,6 +79,7 @@ type Forecast struct {
 	Time           int64    `json:"time"`
 	SeaTemperature *float64 `json:"seaTemperature,omitempty"`
 	WaveHeight     *float64 `json:"waveHeight,omitempty"`
+	WaveDirection  *float64 `json:"waveDirection,omitempty"`
 	Temperature    *float64 `json:"temperature,omitempty"`
 	WindSpeed      *float64 `json:"windSpeed,omitempty"`
 	WindDirection  *float64 `json:"windDirection,omitempty"`
@@ -265,6 +267,8 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 				forecasts[ts].SeaTemperature = &st
 				wh := entry.Data.Instant.Details.SeaSurfaceWaveHeight
 				forecasts[ts].WaveHeight = &wh
+				wd := entry.Data.Instant.Details.SeaSurfaceWaveFromDirection
+				forecasts[ts].WaveDirection = &wd
 			}
 		}
 	}
