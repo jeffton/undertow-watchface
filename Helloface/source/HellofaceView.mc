@@ -41,9 +41,10 @@ class HellofaceView extends WatchUi.WatchFace {
   var weatherSunBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSun);
   var weatherMoonBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherMoon);
   var weatherCloudBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud);
-  var weatherCloud25Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud25);
-  var weatherCloud50Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud50);
-  var weatherCloud75Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud75);
+  var weatherCloud20Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud20);
+  var weatherCloud40Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud40);
+  var weatherCloud60Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud60);
+  var weatherCloud80Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud80);
   var weatherRainBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherRain);
   var weatherRainLightBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherRainLight);
   var weatherThunderBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherThunder);
@@ -265,21 +266,24 @@ class HellofaceView extends WatchUi.WatchFace {
         condition.equals("cloudy")
       ) {
         var cloudCover = self.weatherModel.cloudCover as Number;
-        if (cloudCover < 80) {
+        
+        if (cloudCover >= 90) {
+          dc.drawBitmap(x, y, weatherCloudBitmap.getBitmap());
+        } else {
           // Draw sun or moon
           var baseBitmap = isDaytime ? weatherSunBitmap : weatherMoonBitmap;
           dc.drawBitmap(x, y, baseBitmap.getBitmap());
-        }
 
-        // Draw cloud overlay
-        if (cloudCover >= 80) {
-          dc.drawBitmap(x, y, weatherCloudBitmap.getBitmap());
-        } else if (cloudCover >= 60) {
-          dc.drawBitmap(x, y, weatherCloud75Bitmap.getBitmap());
-        } else if (cloudCover >= 40) {
-          dc.drawBitmap(x, y, weatherCloud50Bitmap.getBitmap());
-        } else if (cloudCover >= 20) {
-          dc.drawBitmap(x, y, weatherCloud25Bitmap.getBitmap());
+          // Draw cloud overlay
+          if (cloudCover >= 70) {
+            dc.drawBitmap(x, y, weatherCloud80Bitmap.getBitmap());
+          } else if (cloudCover >= 50) {
+            dc.drawBitmap(x, y, weatherCloud60Bitmap.getBitmap());
+          } else if (cloudCover >= 30) {
+            dc.drawBitmap(x, y, weatherCloud40Bitmap.getBitmap());
+          } else if (cloudCover >= 10) {
+            dc.drawBitmap(x, y, weatherCloud20Bitmap.getBitmap());
+          }
         }
       } else {
         var bitmap = getFallbackWeatherBitmap(condition);
