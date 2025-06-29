@@ -367,7 +367,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var width = 91;
     var height = 8;
 
-    var minutes = new DailyWeekly(100, 300, 400); //self.minuteModel.activeMinutes;
+    var minutes = self.minuteModel.activeMinutes;
 
     var value = minutes.weekly;
     var split = minutes.weekly - minutes.daily;
