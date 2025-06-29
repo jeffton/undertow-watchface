@@ -532,9 +532,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     dc.drawBitmap(x, y + 2, wavesBitmap.getBitmap());
     dc.drawText(x + 18, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
-    if (self.weatherModel.waveHeight != null) {
-      dc.drawText(x + 22, y + 12, Graphics.FONT_TINY, self.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
-    }
+    dc.drawText(x + 22, y + 12, Graphics.FONT_TINY, self.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
     return true;
   }
 
