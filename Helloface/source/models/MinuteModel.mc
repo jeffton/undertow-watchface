@@ -43,12 +43,7 @@ class MinuteModel {
     }
 
     altitude = Math.round(altitude);
-
-    if (altitude <= -100 || altitude >= 1000) {
-      return altitude.format("%i");
-    } else {
-      return altitude.format("%i") + "m";
-    }
+    return altitude.format("%i") + "m";
   }
 
   function getPressure(activityInfo as Activity.Info) as String {
