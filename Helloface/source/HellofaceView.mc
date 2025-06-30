@@ -208,7 +208,7 @@ class HellofaceView extends WatchUi.WatchFace {
     }
     drawTime(dc);
     drawAlarm(dc);
-    // drawBattery(dc);
+    drawBattery(dc);
     drawRecoveryTime(dc);
 
     // these set varying colors
@@ -258,7 +258,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawUvIndex(dc as Dc) {
     if (self.weatherModel.uvIndex != null) {
-      var x = 88;
+      var x = 78;
       var y = 40;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
@@ -519,16 +519,16 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBattery(dc as Dc) {
-    var x = 80;
-    var y = 49;
+    var x = 94;
+    var y = 44;
 
     dc.drawBitmap(x, y, batteryBitmap.getBitmap());
-    var width = Math.round(self.minuteModel.battery / 10.0);
-    dc.fillRectangle(x + 2, y + 2, width, 5);
+    var height = Math.round(self.minuteModel.battery / 10.0);
+    dc.fillRectangle(x + 2, y + 4 + 10 - height, 3, height);
   }
 
   function drawSunTime(dc as Dc) {
-    var x = 10;
+    var x = 4;
     var y = 40;
   
     dc.drawBitmap(x, y + 8, sunriseBitmap.getBitmap());
