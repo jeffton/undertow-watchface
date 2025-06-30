@@ -9,6 +9,7 @@ class WeatherModel {
   var waveHeight as String = "-";
   var waveDirection as Number?;
   var cloudCover as Number?;
+  var uvIndex as String?;
 
   function initialize() {}
 } 
