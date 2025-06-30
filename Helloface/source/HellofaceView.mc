@@ -257,9 +257,15 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawUvIndex(dc as Dc) {
-    var x = 88;
-    var y = 40;
-    dc.drawText(x, y, Graphics.FONT_TINY, self.weatherModel.uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
+    if (self.weatherModel.uvIndex != null) {
+      var x = 88;
+      var y = 40;
+
+      dc.fillRectangle(x-10, y+4, 20, 17);
+      dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+      dc.drawText(x, y, Graphics.FONT_TINY, self.weatherModel.uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
+      dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    }
   }
 
   function drawWeatherCondition(dc as Dc, isDaytime as Boolean) {
