@@ -208,7 +208,7 @@ class HellofaceView extends WatchUi.WatchFace {
     }
     drawTime(dc);
     drawAlarm(dc);
-    drawBattery(dc);
+    // drawBattery(dc);
     drawRecoveryTime(dc);
 
     // these set varying colors
@@ -250,6 +250,16 @@ class HellofaceView extends WatchUi.WatchFace {
     if (self.weatherModel.windDirection != null) {
       drawWindBearing(dc, 68, 33, self.weatherModel.windDirection);
     }
+
+    if (self.weatherModel.uvIndex != null) {
+      drawUvIndex(dc);
+    }
+  }
+
+  function drawUvIndex(dc as Dc) {
+    var x = 88;
+    var y = 40;
+    dc.drawText(x, y, Graphics.FONT_TINY, self.weatherModel.uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
   }
 
   function drawWeatherCondition(dc as Dc, isDaytime as Boolean) {

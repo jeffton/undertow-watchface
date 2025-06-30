@@ -50,6 +50,10 @@ class WeatherRepository {
     model.windDirection = forecast.get("windDirection") as Number?;
     model.condition = forecast.get("condition") as String?;
     model.cloudCover = forecast.get("cloudCover") as Number?;
+    var uvIndex = forecast.get("uvIndex") as Number?;
+    if (uvIndex != null) {
+      model.uvIndex = Math.round(uvIndex).format("%i");
+    }
 
     return model;
   }
