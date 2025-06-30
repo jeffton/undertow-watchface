@@ -198,7 +198,9 @@ func mapSymbolToCondition(symbolCode string) string {
 	switch symbol {
 	case "clearsky":
 		return "clear"
-	case "fair", "partlycloudy":
+	case "fair":
+		return "fair"
+	case "partlycloudy":
 		return "partly cloudy"
 	case "cloudy":
 		return "cloudy"

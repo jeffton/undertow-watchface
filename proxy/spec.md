@@ -105,7 +105,7 @@ The service returns a JSON object.
     *   `windSpeed` (`float`, optional): The wind speed in meters per second (m/s).
     *   `windDirection` (`float`, optional): The wind direction in degrees.
     *   `cloudCover` (`float`, optional): The cloud cover as a percentage.
-    *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `partly cloudy`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
+    *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `fair`, `partly cloudy`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
     *   `uvIndex` (`float`, optional): The UV index, from 0 to 11+.
 *   `error` (`object | string | null`): Will be `null` on a successful response.
 
