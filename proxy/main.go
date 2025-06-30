@@ -52,10 +52,11 @@ type WeatherYrResponse struct {
 			Data struct {
 				Instant struct {
 					Details struct {
-						AirTemperature    float64 `json:"air_temperature"`
-						CloudAreaFraction float64 `json:"cloud_area_fraction"`
-						WindFromDirection float64 `json:"wind_from_direction"`
-						WindSpeed         float64 `json:"wind_speed"`
+						AirTemperature           float64 `json:"air_temperature"`
+						CloudAreaFraction        float64 `json:"cloud_area_fraction"`
+						WindFromDirection        float64 `json:"wind_from_direction"`
+						WindSpeed                float64 `json:"wind_speed"`
+						UltravioletIndexClearSky float64 `json:"ultraviolet_index_clear_sky"`
 					} `json:"details"`
 				} `json:"instant"`
 				Next1Hours struct {
@@ -85,6 +86,7 @@ type Forecast struct {
 	WindDirection  *float64 `json:"windDirection,omitempty"`
 	CloudCover     *float64 `json:"cloudCover,omitempty"`
 	Condition      *string  `json:"condition,omitempty"`
+	UvIndex        *float64 `json:"uvIndex,omitempty"`
 }
 
 // ApiResponse is the structure of the JSON response we will serve.
@@ -306,6 +308,8 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 				forecasts[ts].WindDirection = &wd
 				cc := entry.Data.Instant.Details.CloudAreaFraction
 				forecasts[ts].CloudCover = &cc
+				uv := entry.Data.Instant.Details.UltravioletIndexClearSky
+				forecasts[ts].UvIndex = &uv
 				cond := mapSymbolToCondition(entry.Data.Next1Hours.Summary.SymbolCode)
 				if cond != "unknown" {
 					forecasts[ts].Condition = &cond

@@ -64,7 +64,8 @@ The service returns a JSON object.
       "windSpeed": 3.4,
       "windDirection": 240.1,
       "cloudCover": 80.5,
-      "condition": "cloudy"
+      "condition": "cloudy",
+      "uvIndex": 5.0
     },
     {
       "time": 1750701600,
@@ -75,7 +76,8 @@ The service returns a JSON object.
       "windSpeed": 3.2,
       "windDirection": 235.0,
       "cloudCover": 90.1,
-      "condition": "cloudy"
+      "condition": "cloudy",
+      "uvIndex": 4.5
     }
   ],
   "error": null
@@ -104,6 +106,7 @@ The service returns a JSON object.
     *   `windDirection` (`float`, optional): The wind direction in degrees.
     *   `cloudCover` (`float`, optional): The cloud cover as a percentage.
     *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `partly cloudy`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
+    *   `uvIndex` (`float`, optional): The UV index, from 0 to 11+.
 *   `error` (`object | string | null`): Will be `null` on a successful response.
 
 ##### **4.2. Error Response**
