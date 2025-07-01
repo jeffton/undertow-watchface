@@ -475,6 +475,9 @@ class HellofaceView extends WatchUi.WatchFace {
   function drawProgress(dc as Dc, x as Number, y as Number, value as Number, max as Number) {
     var fullCircles = Math.floor(value / max);
     var radius = 7;
+    dc.setPenWidth(2);
+    dc.drawCircle(x, y, radius + 6);
+
     value = value % max;
     var valueAsAngle = 90 - (value * 360 / max);
     if (valueAsAngle != 90) {
