@@ -65,8 +65,7 @@ The service returns a JSON object.
       "windDirection": 240.1,
       "cloudCover": 80.5,
       "condition": "cloudy",
-      "uvIndex": 5.0,
-      "dewPoint": 12.3
+      "uvIndex": 5.0
     },
     {
       "time": 1750701600,
@@ -78,8 +77,7 @@ The service returns a JSON object.
       "windDirection": 235.0,
       "cloudCover": 90.1,
       "condition": "cloudy",
-      "uvIndex": 4.5,
-      "dewPoint": 12.1
+      "uvIndex": 4.5
     }
   ],
   "error": null
@@ -109,7 +107,6 @@ The service returns a JSON object.
     *   `cloudCover` (`float`, optional): The cloud cover as a percentage.
     *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `fair`, `partly cloudy`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
     *   `uvIndex` (`float`, optional): The UV index, from 0 to 11+.
-    *   `dewPoint` (`float`, optional): The dew point temperature in degrees Celsius.
 *   `error` (`object | string | null`): Will be `null` on a successful response.
 
 ##### **4.2. Error Response**
