@@ -2,6 +2,7 @@ import Toybox.Time;
 import Toybox.Lang;
 import Toybox.Application.Storage;
 import Toybox.Time.Gregorian;
+import Toybox.SensorHistory;
 
 class TenMinuteModel {
 
@@ -11,6 +12,7 @@ class TenMinuteModel {
   var sunrise as String;
   var sunriseTomorrow as String;
   var sunset as String;
+  var pressureChange as Float or Null;
 
   function initialize(today as Moment) {
     var here = Position.getInfo().position;
@@ -23,6 +25,8 @@ class TenMinuteModel {
     self.sunrise = Utils.formatTimeMoment(self.sunriseMoment);
     self.sunriseTomorrow = Utils.formatTimeMoment(self.sunriseTomorrowMoment);
     self.sunset = Utils.formatTimeMoment(self.sunsetMoment);
+
+    self.pressureChange = getPressureChange();
   }
 
   function isDaytime(now as Moment) {
@@ -52,4 +56,39 @@ class TenMinuteModel {
     return self.sunriseTomorrow;
   }
 
+  function getPressureChange() as Float or Null {
+    var oneHour = new Time.Duration(Gregorian.SECONDS_PER_HOUR);
+    var pressureIterator = SensorHistory.getPressureHistory({
+        :period => oneHour
+    });
+
+    var halfAnHourAgo = Time.now().subtract(new Time.Duration(1800));
+
+    var firstHalfSum = 0.0f;
+    var firstHalfCount = 0;
+    var secondHalfSum = 0.0f;
+    var secondHalfCount = 0;
+
+    var sample = pressureIterator.next();
+    while (sample != null) {
+        if (sample.data != null) {
+            if (sample.when.lessThan(halfAnHourAgo)) {
+                firstHalfSum += sample.data;
+                firstHalfCount++;
+            } else {
+                secondHalfSum += sample.data;
+                secondHalfCount++;
+            }
+        }
+        sample = pressureIterator.next();
+    }
+
+    if (firstHalfCount > 0 && secondHalfCount > 0) {
+        var firstHalfAvg = firstHalfSum / firstHalfCount;
+        var secondHalfAvg = secondHalfSum / secondHalfCount;
+        // convert from Pa to hPa
+        return (secondHalfAvg - firstHalfAvg) / 100.0;
+    }
+    return null;
+  }
 }
