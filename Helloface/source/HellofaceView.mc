@@ -258,7 +258,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawUvIndex(dc as Dc) {
     if (self.weatherModel.uvIndex != null) {
-      var x = 78;
+      var x = 76;
       var y = 40;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
@@ -522,8 +522,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBattery(dc as Dc) {
-    var x = 94;
-    var y = 44;
+    var x = 18;
+    var y = 138;
 
     dc.drawBitmap(x, y, batteryBitmap.getBitmap());
     var height = Math.round(self.minuteModel.battery / 10.0);
@@ -531,7 +531,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSunTime(dc as Dc) {
-    var x = 4;
+    var x = 3;
     var y = 40;
   
     dc.drawBitmap(x, y + 8, sunriseBitmap.getBitmap());
@@ -550,7 +550,7 @@ class HellofaceView extends WatchUi.WatchFace {
       return false;
     }
     
-    var x = 18;
+    var x = 32;
     var y = 141;
 
     dc.drawBitmap(x + 6, y + 2, wavesBitmap.getBitmap());
@@ -564,7 +564,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawAltitude(dc as Dc) {
-    var x = 18;
+    var x = 32;
     var y = 141;
     dc.drawBitmap(x, y, mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
