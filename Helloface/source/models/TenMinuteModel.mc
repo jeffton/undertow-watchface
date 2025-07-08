@@ -62,32 +62,36 @@ class TenMinuteModel {
         :period => oneHour
     });
 
-    var halfAnHourAgo = Time.now().subtract(new Time.Duration(1800));
+    // We will compare the first 15 minutes of the hour period with the last 15 minutes.
+    var startOfLast15Mins = Time.now().subtract(new Time.Duration(900));
+    var endOfFirst15Mins = Time.now().subtract(new Time.Duration(2700)); // 45 mins ago
 
-    var firstHalfSum = 0.0f;
-    var firstHalfCount = 0;
-    var secondHalfSum = 0.0f;
-    var secondHalfCount = 0;
+    var firstIntervalSum = 0.0f;
+    var firstIntervalCount = 0;
+    var lastIntervalSum = 0.0f;
+    var lastIntervalCount = 0;
 
+    // compare the average of the first 15 minutes of the hour-long period with 
+    // the average of the last 15 minutes
     var sample = pressureIterator.next();
     while (sample != null) {
         if (sample.data != null) {
-            if (sample.when.lessThan(halfAnHourAgo)) {
-                firstHalfSum += sample.data;
-                firstHalfCount++;
-            } else {
-                secondHalfSum += sample.data;
-                secondHalfCount++;
+            if (sample.when.greaterThan(startOfLast15Mins)) {
+                lastIntervalSum += sample.data;
+                lastIntervalCount++;
+            } else if (sample.when.lessThan(endOfFirst15Mins)) {
+                firstIntervalSum += sample.data;
+                firstIntervalCount++;
             }
         }
         sample = pressureIterator.next();
     }
 
-    if (firstHalfCount > 0 && secondHalfCount > 0) {
-        var firstHalfAvg = firstHalfSum / firstHalfCount;
-        var secondHalfAvg = secondHalfSum / secondHalfCount;
+    if (firstIntervalCount > 0 && lastIntervalCount > 0) {
+        var firstIntervalAvg = firstIntervalSum / firstIntervalCount;
+        var lastIntervalAvg = lastIntervalSum / lastIntervalCount;
         // convert from Pa to hPa
-        return (secondHalfAvg - firstHalfAvg) / 100.0;
+        return (lastIntervalAvg - firstIntervalAvg) / 100.0;
     }
     return null;
   }
