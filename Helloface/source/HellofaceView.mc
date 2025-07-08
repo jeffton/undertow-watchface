@@ -568,7 +568,6 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 141;
     dc.drawBitmap(x, y, mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(x + 17, y + 12, Graphics.FONT_TINY, self.minuteModel.pressure, Graphics.TEXT_JUSTIFY_LEFT);
   }
 
   function drawNotifications(dc as Dc) {
