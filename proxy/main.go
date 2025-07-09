@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"sort"
@@ -116,11 +117,11 @@ func main() {
 func getPosition(r *http.Request) (Position, error) {
 	latStr := r.URL.Query().Get("lat")
 	if latStr == "" {
-		latStr = "55.7121627"
+		latStr = "55.7122"
 	}
 	lonStr := r.URL.Query().Get("lon")
 	if lonStr == "" {
-		lonStr = "12.5889604"
+		lonStr = "12.5890"
 	}
 
 	lat, err := strconv.ParseFloat(latStr, 64)
@@ -132,11 +133,14 @@ func getPosition(r *http.Request) (Position, error) {
 		return Position{}, fmt.Errorf("invalid longitude: %w", err)
 	}
 
+	lat = math.Round(lat*10000) / 10000
+	lon = math.Round(lon*10000) / 10000
+
 	return Position{Lat: lat, Lon: lon}, nil
 }
 
 func getOceanData(pos Position) (*OceanYrResponse, []byte, error) {
-	apiURL := fmt.Sprintf("https://api.met.no/weatherapi/oceanforecast/2.0/complete?lat=%f&lon=%f", pos.Lat, pos.Lon)
+	apiURL := fmt.Sprintf("https://api.met.no/weatherapi/oceanforecast/2.0/complete?lat=%.4f&lon=%.4f", pos.Lat, pos.Lon)
 
 	req, err := http.NewRequest("GET", apiURL, nil)
 	if err != nil {
@@ -166,7 +170,7 @@ func getOceanData(pos Position) (*OceanYrResponse, []byte, error) {
 }
 
 func getWeatherForecastData(pos Position) (*WeatherYrResponse, []byte, error) {
-	apiURL := fmt.Sprintf("https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=%f&lon=%f", pos.Lat, pos.Lon)
+	apiURL := fmt.Sprintf("https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=%.4f&lon=%.4f", pos.Lat, pos.Lon)
 	req, err := http.NewRequest("GET", apiURL, nil)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create request for weather data: %w", err)

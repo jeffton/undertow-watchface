@@ -24,10 +24,10 @@ The proxy exposes a single endpoint.
 *   **Method**: `GET`
 *   **Path**: `/`
 *   **Query Parameters**:
-    *   `lat` (float, optional): The latitude for the forecast.
-        *   **Default**: `55.7121627`
-    *   `lon` (float, optional): The longitude for the forecast.
-        *   **Default**: `12.5889604`
+    *   `lat` (float, optional): The latitude for the forecast. The value is rounded to four decimal places.
+        *   **Default**: `55.7122`
+    *   `lon` (float, optional): The longitude for the forecast. The value is rounded to four decimal places.
+        *   **Default**: `12.5890`
 
 #### **4. Response Payload**
 
@@ -42,8 +42,8 @@ The service returns a JSON object.
 ```json
 {
   "requestPosition": {
-    "lat": 55.7121627,
-    "lon": 12.5889604
+    "lat": 55.7122,
+    "lon": 12.5890
   },
   "forecastPosition": {
     "lat": 55.71,
@@ -118,8 +118,8 @@ If the proxy encounters an internal error or receives an error from the upstream
 ```json
 {
   "requestPosition": {
-    "lat": 55.7121627,
-    "lon": 12.5889604
+    "lat": 55.7122,
+    "lon": 12.5890
   },
   "forecastPosition": null,
   "oceanForecastPosition": null,
@@ -136,7 +136,7 @@ If the proxy encounters an internal error or receives an error from the upstream
 
 #### **5. Data Transformation Logic**
 
-1.  The proxy receives a request and parses the `lat` and `lon` query parameters, using default values if they are not provided.
+1.  The proxy receives a request and parses the `lat` and `lon` query parameters, using default values if they are not provided. The coordinates are rounded to four decimal places.
 2.  It constructs the request URL for the upstream MET API.
 3.  It populates the `requestPosition` and `requestTime` fields for its own response.
 4.  Upon receiving a successful response from the MET API, it parses the JSON.
