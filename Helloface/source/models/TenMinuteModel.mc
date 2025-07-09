@@ -10,9 +10,8 @@ class TenMinuteModel {
   var sunrise as String;
   var sunriseTomorrow as String;
   var sunset as String;
-  var pressureChange as Float?;
 
-  function initialize(today as Moment, pressureRepository as PressureRepository) {
+  function initialize(today as Moment) {
     var here = Position.getInfo().position;
     var tomorrow = today.add(new Time.Duration(Gregorian.SECONDS_PER_DAY));
 
@@ -23,8 +22,6 @@ class TenMinuteModel {
     self.sunrise = Utils.formatTimeMoment(self.sunriseMoment);
     self.sunriseTomorrow = Utils.formatTimeMoment(self.sunriseTomorrowMoment);
     self.sunset = Utils.formatTimeMoment(self.sunsetMoment);
-
-    self.pressureChange = pressureRepository.getPressureChange();
   }
 
   function isDaytime(now as Moment) {

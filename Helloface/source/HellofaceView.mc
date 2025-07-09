@@ -19,6 +19,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var weatherModel as WeatherModel;
   var minuteModel as MinuteModel;
   var secondModel as SecondModel;
+  var pressureChange as Float?;
 
   var previousSecond as SecondModel?;
 
@@ -69,8 +70,8 @@ class HellofaceView extends WatchUi.WatchFace {
     self.lastUpdateTime = new UpdateTime();
     self.dayModel = new DayModel(lastUpdateTime);
     self.pressureRepository = new PressureRepository();
-    self.pressureRepository.update();
-    self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, self.pressureRepository);
+    self.pressureChange = self.pressureRepository.getPressureChange();
+    self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
     self.weatherRepository = new WeatherRepository();
     self.weatherRepository.update();
     self.weatherModel = self.weatherRepository.getWeatherModel();
@@ -103,8 +104,8 @@ class HellofaceView extends WatchUi.WatchFace {
       case UpdateTime.DAY:
         self.dayModel = new DayModel(updateTime);
       case UpdateTime.TEN_MINUTES:
-        self.pressureRepository.update();
-        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, self.pressureRepository);
+        self.pressureChange = self.pressureRepository.getPressureChange();
+        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
         self.weatherRepository.update();
         self.weatherModel = self.weatherRepository.getWeatherModel();
       case UpdateTime.MINUTE:
@@ -280,7 +281,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawPressureChange(dc as Dc) {
-    var pressureChange = self.tenMinuteModel.pressureChange;
+    var pressureChange = self.pressureChange;
     if (pressureChange != null) {
       var x = 92;
       var y = 44;
