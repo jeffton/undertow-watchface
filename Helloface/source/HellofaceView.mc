@@ -52,6 +52,13 @@ class HellofaceView extends WatchUi.WatchFace {
   var weatherFogBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherFog);
   var wavesBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.waves);
   var mountainsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.mountains);
+  var pressurePlus3Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus3);
+  var pressurePlus2Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus2);
+  var pressurePlus1Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus1);
+  var pressure0Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressure0);
+  var pressureMinus1Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus1);
+  var pressureMinus2Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus2);
+  var pressureMinus3Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus3);
 
   var isHighPowerMode = true;
 
@@ -251,20 +258,47 @@ class HellofaceView extends WatchUi.WatchFace {
       drawWindBearing(dc, 68, 33, self.weatherModel.windDirection);
     }
 
-    if (self.weatherModel.uvIndex != null) {
-      drawUvIndex(dc);
-    }
+    drawUvIndex(dc);
+
+    drawPressureChange(dc);
   }
 
   function drawUvIndex(dc as Dc) {
     if (self.weatherModel.uvIndex != null) {
-      var x = 76;
+      var x = 77;
       var y = 40;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
       dc.drawText(x, y, Graphics.FONT_TINY, self.weatherModel.uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    }
+  }
+
+  function drawPressureChange(dc as Dc) {
+    var pressureChange = self.tenMinuteModel.pressureChange;
+    if (pressureChange != null) {
+      var x = 92;
+      var y = 44;
+
+      var bitmap;
+      if (pressureChange >= 2) {
+        bitmap = pressurePlus3Bitmap;
+      } else if (pressureChange >= 1) {
+        bitmap = pressurePlus2Bitmap;
+      } else if (pressureChange >= 0.1) {
+        bitmap = pressurePlus1Bitmap;
+      } else if (pressureChange <= -2) {
+        bitmap = pressureMinus3Bitmap;
+      } else if (pressureChange <= -1) {
+        bitmap = pressureMinus2Bitmap;
+      } else if (pressureChange <= -0.1) {
+        bitmap = pressureMinus1Bitmap;
+      } else {
+        bitmap = pressure0Bitmap;
+      }
+      
+      dc.drawBitmap(x, y, bitmap.getBitmap());
     }
   }
 
