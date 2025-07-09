@@ -11,11 +11,11 @@ class PressureRepository {
         cachedData = Storage.getValue("pressure") as Dictionary?;
     }
 
-    function getPressureChange() as Float? {
+    function getPressureChangeOnInit() as Float? {
         var now = Time.now();
         var needsUpdate = true;
 
-        if (cachedData instanceof Dictionary) {
+        if (cachedData != null) {
             var calculatedAt = cachedData.get("calculatedAt") as Number?;
             if (calculatedAt != null) {
                 var tenMinutes = new Time.Duration(600);
@@ -27,14 +27,25 @@ class PressureRepository {
         }
         
         if (needsUpdate) {
-            var newPressureChange = calculatePressureChange(now);
-            if (newPressureChange != null) {
-                cachedData = {
-                    "pressureChange" => newPressureChange,
-                    "calculatedAt" => now.value()
-                };
-                Storage.setValue("pressure", cachedData);
-            }
+            return updateAndGetPressureChange();
+        }
+        
+        if (cachedData != null) {
+            return cachedData.get("pressureChange") as Float?;
+        }
+        return null;
+    }
+
+    function updateAndGetPressureChange() as Float? {
+        var now = Time.now();
+        var newPressureChange = calculatePressureChange(now);
+
+        if (newPressureChange != null) {
+            cachedData = {
+                "pressureChange" => newPressureChange,
+                "calculatedAt" => now.value()
+            };
+            Storage.setValue("pressure", cachedData);
         }
         
         if (cachedData != null) {
