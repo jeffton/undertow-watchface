@@ -11,42 +11,36 @@ class PressureRepository {
         cachedData = Storage.getValue("pressure") as Dictionary?;
     }
 
-    function update() {
-        var now = Time.now();
-        if (cachedData == null || !(cachedData instanceof Dictionary)) {
-             calculateAndStore(now);
-             return;
-        }
-        
-        var calculatedAt = cachedData.get("calculatedAt") as Number?;
-        if (calculatedAt == null) {
-            calculateAndStore(now);
-            return;
-        }
-        
-        var tenMinutes = new Time.Duration(600);
-        var age = now.subtract(new Time.Moment(calculatedAt));
-        if (age.value() > tenMinutes.value()) {
-            calculateAndStore(now);
-        }
-    }
-
     function getPressureChange() as Float? {
+        var now = Time.now();
+        var needsUpdate = true;
+
+        if (cachedData instanceof Dictionary) {
+            var calculatedAt = cachedData.get("calculatedAt") as Number?;
+            if (calculatedAt != null) {
+                var tenMinutes = new Time.Duration(600);
+                var age = now.subtract(new Time.Moment(calculatedAt));
+                if (age.value() <= tenMinutes.value()) {
+                    needsUpdate = false;
+                }
+            }
+        }
+        
+        if (needsUpdate) {
+            var newPressureChange = calculatePressureChange(now);
+            if (newPressureChange != null) {
+                cachedData = {
+                    "pressureChange" => newPressureChange,
+                    "calculatedAt" => now.value()
+                };
+                Storage.setValue("pressure", cachedData);
+            }
+        }
+        
         if (cachedData != null) {
             return cachedData.get("pressureChange") as Float?;
         }
         return null;
-    }
-
-    private function calculateAndStore(now as Moment) {
-        var newPressureChange = calculatePressureChange(now);
-        if (newPressureChange != null) {
-            cachedData = {
-                "pressureChange" => newPressureChange,
-                "calculatedAt" => now.value()
-            };
-            Storage.setValue("pressure", cachedData);
-        }
     }
 
     private function calculatePressureChange(now as Moment) as Float? {
