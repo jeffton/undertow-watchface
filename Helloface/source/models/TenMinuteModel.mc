@@ -2,7 +2,6 @@ import Toybox.Time;
 import Toybox.Lang;
 import Toybox.Application.Storage;
 import Toybox.Time.Gregorian;
-import Toybox.SensorHistory;
 
 class TenMinuteModel {
   private var sunriseMoment as Moment?;
@@ -13,7 +12,7 @@ class TenMinuteModel {
   var sunset as String;
   var pressureChange as Float?;
 
-  function initialize(today as Moment) {
+  function initialize(today as Moment, pressureRepository as PressureRepository) {
     var here = Position.getInfo().position;
     var tomorrow = today.add(new Time.Duration(Gregorian.SECONDS_PER_DAY));
 
@@ -25,7 +24,7 @@ class TenMinuteModel {
     self.sunriseTomorrow = Utils.formatTimeMoment(self.sunriseTomorrowMoment);
     self.sunset = Utils.formatTimeMoment(self.sunsetMoment);
 
-    self.pressureChange = getPressureChange();
+    self.pressureChange = pressureRepository.getPressureChange();
   }
 
   function isDaytime(now as Moment) {
@@ -57,45 +56,5 @@ class TenMinuteModel {
       return self.sunset;
     }
     return self.sunriseTomorrow;
-  }
-
-  function getPressureChange() as Float? {
-    var oneHour = new Time.Duration(Gregorian.SECONDS_PER_HOUR);
-    var pressureIterator = SensorHistory.getPressureHistory({
-      :period => oneHour,
-    });
-
-    // We will compare the first 10 minutes of the hour period with the last 10 minutes.
-    var startOfLast10Mins = Time.now().subtract(new Time.Duration(600)); // 10 minutes ago
-    var endOfFirst10Mins = Time.now().subtract(new Time.Duration(3000)); // 50 mins ago
-
-    var firstIntervalSum = 0.0f;
-    var firstIntervalCount = 0;
-    var lastIntervalSum = 0.0f;
-    var lastIntervalCount = 0;
-
-    // compare the average of the first 10 minutes of the hour-long period with
-    // the average of the last 10 minutes
-    var sample = pressureIterator.next();
-    while (sample != null) {
-      if (sample.data != null) {
-        if (sample.when.greaterThan(startOfLast10Mins)) {
-          lastIntervalSum += sample.data;
-          lastIntervalCount++;
-        } else if (sample.when.lessThan(endOfFirst10Mins)) {
-          firstIntervalSum += sample.data;
-          firstIntervalCount++;
-        }
-      }
-      sample = pressureIterator.next();
-    }
-
-    if (firstIntervalCount > 0 && lastIntervalCount > 0) {
-      var firstIntervalAvg = firstIntervalSum / firstIntervalCount;
-      var lastIntervalAvg = lastIntervalSum / lastIntervalCount;
-      // convert from Pa to hPa
-      return (lastIntervalAvg - firstIntervalAvg) / 100.0;
-    }
-    return null;
   }
 }
