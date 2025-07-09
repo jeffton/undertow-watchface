@@ -14,6 +14,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var lastUpdateTime as UpdateTime;
   var dayModel as DayModel;
   var tenMinuteModel as TenMinuteModel;
+  var pressureRepository as PressureRepository;
   var weatherRepository as WeatherRepository;
   var weatherModel as WeatherModel;
   var minuteModel as MinuteModel;
@@ -67,7 +68,9 @@ class HellofaceView extends WatchUi.WatchFace {
 
     self.lastUpdateTime = new UpdateTime();
     self.dayModel = new DayModel(lastUpdateTime);
-    self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
+    self.pressureRepository = new PressureRepository();
+    self.pressureRepository.update();
+    self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, self.pressureRepository);
     self.weatherRepository = new WeatherRepository();
     self.weatherRepository.update();
     self.weatherModel = self.weatherRepository.getWeatherModel();
@@ -100,7 +103,8 @@ class HellofaceView extends WatchUi.WatchFace {
       case UpdateTime.DAY:
         self.dayModel = new DayModel(updateTime);
       case UpdateTime.TEN_MINUTES:
-        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
+        self.pressureRepository.update();
+        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, self.pressureRepository);
         self.weatherRepository.update();
         self.weatherModel = self.weatherRepository.getWeatherModel();
       case UpdateTime.MINUTE:
