@@ -30,5 +30,11 @@
     <bitmap dithering="none" id="weatherThunder" filename="weather-thunder.png" />
     <bitmap dithering="none" id="weatherSnow" filename="weather-snow.png" />
     <bitmap dithering="none" id="weatherFog" filename="weather-fog.png" />
-
+    <bitmap dithering="none" id="pressureMinus3" filename="pressure-3.png" />
+    <bitmap dithering="none" id="pressureMinus2" filename="pressure-2.png" />
+    <bitmap dithering="none" id="pressureMinus1" filename="pressure-1.png" />
+    <bitmap dithering="none" id="pressure0" filename="pressure0.png" />
+    <bitmap dithering="none" id="pressurePlus1" filename="pressure+1.png" />
+    <bitmap dithering="none" id="pressurePlus2" filename="pressure+2.png" />
+    <bitmap dithering="none" id="pressurePlus3" filename="pressure+3.png" />
 </drawables>
