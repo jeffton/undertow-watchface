@@ -561,7 +561,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     dc.drawBitmap(x, y, batteryBitmap.getBitmap());
     var height = Math.round(self.minuteModel.battery / 10.0);
-    dc.fillRectangle(x + 2, y + 4 + 10 - height, 3, height);
+    dc.fillRectangle(x + 2, y + 4 + 10 - height, 5, height);
   }
 
   function drawSunTime(dc as Dc) {
