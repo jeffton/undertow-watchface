@@ -20,7 +20,7 @@ class PressureRepository {
             if (calculatedAt != null) {
                 var tenMinutes = new Time.Duration(600);
                 var age = now.subtract(new Time.Moment(calculatedAt));
-                if (age.value() <= tenMinutes.value()) {
+                if (age.value() < tenMinutes.value()) {
                     needsUpdate = false;
                 }
             }
