@@ -557,7 +557,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawBattery(dc as Dc) {
     var x = 18;
-    var y = 138;
+    var y = 139;
 
     dc.drawBitmap(x, y, batteryBitmap.getBitmap());
     var height = Math.round(self.minuteModel.battery / 10.0);
@@ -584,22 +584,22 @@ class HellofaceView extends WatchUi.WatchFace {
       return false;
     }
     
-    var x = 32;
-    var y = 141;
+    var x = 34;
+    var y = 140;
 
-    dc.drawBitmap(x + 6, y + 2, wavesBitmap.getBitmap());
-    dc.drawText(x + 18 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawBitmap(x, y + 2, wavesBitmap.getBitmap());
+    dc.drawText(x + 12 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
     if (self.weatherModel.waveDirection != null) {
-      drawWindBearing(dc, x + 30, y + 26, self.weatherModel.waveDirection);
+      drawWindBearing(dc, x + 8, y + 26, self.weatherModel.waveDirection);
     }
-    dc.drawText(x + 42, y + 12, Graphics.FONT_TINY, self.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(x + 21, y + 12, Graphics.FONT_TINY, self.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
     
     return true;
   }
 
   function drawAltitude(dc as Dc) {
     var x = 32;
-    var y = 141;
+    var y = 142;
     dc.drawBitmap(x, y, mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
   }
