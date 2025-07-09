@@ -12,21 +12,7 @@ class PressureRepository {
     }
 
     function getPressureChangeOnInit() as Float? {
-        var now = Time.now();
-        var needsUpdate = true;
-
-        if (cachedData != null) {
-            var calculatedAt = cachedData.get("calculatedAt") as Number?;
-            if (calculatedAt != null) {
-                var tenMinutes = new Time.Duration(600);
-                var age = now.subtract(new Time.Moment(calculatedAt));
-                if (age.value() < tenMinutes.value()) {
-                    needsUpdate = false;
-                }
-            }
-        }
-        
-        if (needsUpdate) {
+        if (needsUpdate()) {
             return updateAndGetPressureChange();
         }
         
@@ -34,6 +20,21 @@ class PressureRepository {
             return cachedData.get("pressureChange") as Float?;
         }
         return null;
+    }
+
+    private function needsUpdate() as Boolean {
+        var now = Time.now();
+        if (cachedData instanceof Dictionary) {
+            var calculatedAt = cachedData.get("calculatedAt") as Number?;
+            if (calculatedAt != null) {
+                var tenMinutes = new Time.Duration(600);
+                var age = now.subtract(new Time.Moment(calculatedAt));
+                if (age.value() < tenMinutes.value()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     function updateAndGetPressureChange() as Float? {
