@@ -39,7 +39,7 @@ class PressureRepository {
     }
 
     private function calculateAndStore(now as Moment) {
-        var newPressureChange = calculatePressureChange();
+        var newPressureChange = calculatePressureChange(now);
         if (newPressureChange != null) {
             cachedData = {
                 "pressureChange" => newPressureChange,
@@ -49,15 +49,15 @@ class PressureRepository {
         }
     }
 
-    private function calculatePressureChange() as Float? {
+    private function calculatePressureChange(now as Moment) as Float? {
         var oneHour = new Time.Duration(Gregorian.SECONDS_PER_HOUR);
         var pressureIterator = SensorHistory.getPressureHistory({
             :period => oneHour,
         });
 
         // We will compare the first 10 minutes of the hour period with the last 10 minutes.
-        var startOfLast10Mins = Time.now().subtract(new Time.Duration(600)); // 10 minutes ago
-        var endOfFirst10Mins = Time.now().subtract(new Time.Duration(3000)); // 50 mins ago
+        var startOfLast10Mins = now.subtract(new Time.Duration(600)); // 10 minutes ago
+        var endOfFirst10Mins = now.subtract(new Time.Duration(3000)); // 50 mins ago
 
         var firstIntervalSum = 0.0f;
         var firstIntervalCount = 0;
