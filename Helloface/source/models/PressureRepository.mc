@@ -41,18 +41,13 @@ class PressureRepository {
     var now = Time.now();
     var newPressureChange = calculatePressureChange(now);
 
-    if (newPressureChange != null) {
-      cachedData = {
-        "pressureChange" => newPressureChange,
-        "calculatedAt" => now.value(),
-      };
-      Storage.setValue("pressure", cachedData);
-    }
+    cachedData = {
+      "pressureChange" => newPressureChange,
+      "calculatedAt" => now.value(),
+    };
+    Storage.setValue("pressure", cachedData);
 
-    if (cachedData != null) {
-      return cachedData.get("pressureChange") as Float?;
-    }
-    return null;
+    return newPressureChange;
   }
 
   private function calculatePressureChange(now as Moment) as Float? {
