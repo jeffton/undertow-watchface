@@ -31,7 +31,7 @@ class WeatherService {
   }
 
   function shouldUpdateForecast(position as Position.Location?, lastData as Dictionary?) as Boolean {
-    if (position == null) {
+    if (position == null || !System.getDeviceSettings().phoneConnected) {
       return false;
     }
     if (!(lastData instanceof Dictionary)) {
@@ -46,7 +46,7 @@ class WeatherService {
     }
     
     var timeSinceLastRequest = Time.now().subtract(new Time.Moment(lastRequestTime)) as Time.Duration;
-    var oneHour = new Time.Duration(3600);
+    var oneHour = new Time.Duration(3540); // 59 minutes really
 
     if (timeSinceLastRequest.greaterThan(oneHour)) {
       return true;
