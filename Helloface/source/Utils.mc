@@ -1,6 +1,7 @@
 import Toybox.Lang;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
+import Toybox.Math;
 
 class Utils {
 
@@ -17,6 +18,10 @@ class Utils {
       hour,
       minute.format("%02d"),
     ]);
+  }
+
+  static function scaleValue(value as Numeric, oldScale as Numeric, newScale as Number) {
+    return Math.round(value.toFloat() * newScale / oldScale).toNumber();
   }
 
 }
