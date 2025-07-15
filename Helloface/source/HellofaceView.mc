@@ -349,7 +349,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawWindBearing(dc as Dc, x, y, angle) {
     angle = -angle - 90; // wind bearing is 0 = North and clockwise, also it's actually direction so we flip it 180 (-90 instead of +90)
-    var radians = angle * Math.PI / 180.0;
+    var radians = Math.toRadians(angle);
     var radius = 8;
     var cos = (radius - 3) * Math.cos(radians);
     var sin = - (radius - 3) * Math.sin(radians); // y axis is inverted
@@ -417,9 +417,9 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActiveMinutes(dc as Dc) {
-    var x = 36;
+    var x = 35;
     var y = 120;
-    var width = 91;
+    var width = 92;
     var height = 8;
 
     var minutes = self.minuteModel.activeMinutes;
@@ -436,24 +436,24 @@ class HellofaceView extends WatchUi.WatchFace {
 
     dc.setPenWidth(2);
 
-    var splitAsX = split * width / max;
+    var splitAsX = Utils.scaleValue(split, max, width);
     if (split > 0) {
       dc.drawBitmap(x, y, minutesLinearGreyBitmap.getBitmap());
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-      dc.drawRectangle(x, y, splitAsX, height);
+      dc.drawRectangle(x + 1, y, splitAsX - 1, height); // pixel adjustments compensate for 2px penwidth
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
       dc.fillRectangle(x + splitAsX, y, width - splitAsX, height);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     }
-    var valueAsX = value * width / max;
+    var valueAsX = Utils.scaleValue(value, max, width);
     if (valueAsX > splitAsX) {
       dc.fillRectangle(x + splitAsX, y-1, valueAsX - splitAsX, height+1);
     }
 
     for (var i = 0; i <= 7; i++) {
-      var weekdayAsX = i * width / 7;
+      var weekdayAsX = 1 + Utils.scaleValue(i, 7, width - 2);
       if (weekdayAsX >= valueAsX) {
-        dc.drawLine(x+weekdayAsX, y+2, x+weekdayAsX, y+height-2);
+        dc.drawLine(x+weekdayAsX, y+2, x+weekdayAsX, y+height-2); // pixel adjustments compensate for 2px penwidth
       }
       if (i == dayModel.weekday && fullBars == 0) {
         dc.fillPolygon([
@@ -476,7 +476,7 @@ class HellofaceView extends WatchUi.WatchFace {
     
     var x = 35;
     var y = 130;
-    var width = 93;
+    var width = 92;
     var height = 4;
 
     var max = 24;
@@ -488,7 +488,7 @@ class HellofaceView extends WatchUi.WatchFace {
         max = 48;
     }
 
-    var recoveryTimeAsWidth = recoveryTime * width / max;
+    var recoveryTimeAsWidth = Utils.scaleValue(recoveryTime, max, width);
     var barStartX = x + width - recoveryTimeAsWidth;
 
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -496,7 +496,7 @@ class HellofaceView extends WatchUi.WatchFace {
     
     var segmentCount = max / 24;
     if (segmentCount > 1) {
-        var segmentWidth = 24 * width / max;
+        var segmentWidth = Utils.scaleValue(24, max, width);
         var separatorWidth = 2;
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
 
@@ -518,7 +518,7 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.drawCircle(x, y, radius + 6);
 
     value = value % max;
-    var valueAsAngle = 90 - (value * 360 / max);
+    var valueAsAngle = 90 - Utils.scaleValue(value, max, 360);
     if (valueAsAngle != 90) {
       dc.setPenWidth(15);
       dc.drawArc(x, y, radius, Graphics.ARC_CLOCKWISE, 90, valueAsAngle);
@@ -565,7 +565,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 139;
 
     dc.drawBitmap(x, y, batteryBitmap.getBitmap());
-    var height = Math.round(self.minuteModel.battery / 10.0);
+    var height = Utils.scaleValue(self.minuteModel.battery, 100, 10);
     dc.fillRectangle(x + 2, y + 4 + 10 - height, 5, height);
   }
 
@@ -664,7 +664,7 @@ class HellofaceView extends WatchUi.WatchFace {
     // 16 pixels height in heart to fill. Just filling 15 because magic.
     var stress = self.minuteModel.stress;
     var rest = stress == null ? 100 : (100 - stress);
-    var heartFill = (rest * 15) / 100;
+    var heartFill = Utils.scaleValue(rest, 100, 15);
 
     dc.fillRectangle(
       subscreen.x + 31 - 11,
@@ -692,7 +692,7 @@ class HellofaceView extends WatchUi.WatchFace {
       if (bodyBattery == 100) {
         dc.drawCircle(subscreen.x + radius, subscreen.y + radius, radius - 3);
       } else {
-        var valueAsDegrees = 90 - (bodyBattery * 360 / 100);
+        var valueAsDegrees = 90 - Utils.scaleValue(bodyBattery, 100, 360);
         dc.drawArc(
           subscreen.x + radius,
           subscreen.y + radius,
