@@ -198,6 +198,9 @@ func getWeatherForecastData(pos Position) (*WeatherYrResponse, []byte, error) {
 }
 
 func mapSymbolToCondition(symbolCode string) string {
+	if strings.Contains(symbolCode, "thunder") {
+		return "thunder"
+	}
 	symbol := strings.Split(symbolCode, "_")[0]
 	switch symbol {
 	case "clearsky":
@@ -208,22 +211,14 @@ func mapSymbolToCondition(symbolCode string) string {
 		return "partly cloudy"
 	case "cloudy":
 		return "cloudy"
-	case "lightrain":
+	case "lightrain", "lightrainshowers":
 		return "light rain"
-	case "rain", "heavyrain":
+	case "rain", "heavyrain", "rainshowers", "heavyrainshowers":
 		return "rain"
-	case "lightrainshowers", "rainshowers", "heavyrainshowers":
-		if strings.Contains(symbolCode, "thunder") {
-			return "thunder"
-		}
-		if symbol == "lightrainshowers" {
-			return "light rain"
-		}
-		return "rain"
-	case "lightsleet", "sleet", "heavysleet", "lightsnow", "snow", "heavysnow":
+	case "lightsleet", "sleet", "heavysleet", "lightsnow", "snow", "heavysnow",
+		"lightsleetshowers", "sleetshowers", "heavysleetshowers",
+		"lightsnowshowers", "snowshowers", "heavysnowshowers":
 		return "snow"
-	case "lightssleetandthunder", "sleetandthunder", "heavysleetandthunder", "lightssnowandthunder", "snowandthunder", "heavysnowandthunder":
-		return "thunder"
 	case "fog":
 		return "fog"
 	case "hail", "lighthail", "heavyhail":
