@@ -508,6 +508,7 @@ class HellofaceView extends WatchUi.WatchFace {
                  dc.fillRectangle(separatorX, y, separatorWidth, height);
             }
         }
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     }
   }
 
