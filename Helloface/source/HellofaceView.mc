@@ -496,19 +496,19 @@ class HellofaceView extends WatchUi.WatchFace {
     
     var segmentCount = max / 24;
     if (segmentCount > 1) {
-        var segmentWidth = Utils.scaleValue(24, max, width);
-        var separatorWidth = 3;
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+      var segmentWidth = Utils.scaleValue(24, max, width);
+      var separatorWidth = 3;
+      dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
 
-        for (var i = 1; i < segmentCount; i++) {
-            var separatorPosFromRight = i * segmentWidth;
-            var separatorX = x + width - separatorPosFromRight - 1;
-            
-            if (separatorX > barStartX) {
-                 dc.fillRectangle(separatorX, y, separatorWidth, height);
-            }
+      for (var i = 1; i < segmentCount; i++) {
+        var separatorPosFromRight = i * segmentWidth;
+        var separatorX = x + width - separatorPosFromRight - 1;
+        
+        if (separatorX > barStartX) {
+          dc.fillRectangle(separatorX, y, separatorWidth, height);
         }
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+      }
+      dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     }
   }
 
