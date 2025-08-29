@@ -20,53 +20,16 @@ class HellofaceView extends WatchUi.WatchFace {
   var minuteModel as MinuteModel;
   var secondModel as SecondModel;
   var pressureChange as Float?;
+  var bitmaps as Bitmaps;
 
   var previousSecond as SecondModel?;
-
-  var heartBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.heart);
-  var heartRestBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.heartRest);
-  var heartStressLowBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.heartStressLow);
-  var heartStressMediumBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.heartStressMedium);
-  var heartStressHighBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.heartStressHigh);
-
-  var stepsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.steps);
-  var starBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.star);
-  var starsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.stars);
-
-  var sunriseBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.sunrise);
-  var alarmBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.alarm);
-  var batteryBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.battery);
-  var minutesBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.minutes);
-  var minutesLinearGreyBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.minutesLinearGrey);
-  var checkBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.check);
-
-  var weatherSunBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSun);
-  var weatherMoonBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherMoon);
-  var weatherCloudBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud);
-  var weatherCloud20Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud20);
-  var weatherCloud40Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud40);
-  var weatherCloud60Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud60);
-  var weatherCloud80Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud80);
-  var weatherRainBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherRain);
-  var weatherRainLightBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherRainLight);
-  var weatherThunderBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherThunder);
-  var weatherSnowBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSnow);
-  var weatherFogBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherFog);
-  var wavesBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.waves);
-  var mountainsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.mountains);
-  var pressurePlus3Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus3);
-  var pressurePlus2Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus2);
-  var pressurePlus1Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus1);
-  var pressure0Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressure0);
-  var pressureMinus1Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus1);
-  var pressureMinus2Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus2);
-  var pressureMinus3Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus3);
 
   var isHighPowerMode = true;
 
   function initialize() {
     WatchFace.initialize();
 
+    self.bitmaps = new Bitmaps();
     self.lastUpdateTime = new UpdateTime();
     self.dayModel = new DayModel(lastUpdateTime);
     self.pressureRepository = new PressureRepository();
@@ -288,19 +251,19 @@ class HellofaceView extends WatchUi.WatchFace {
 
       var bitmap;
       if (pressureChange >= 2) {
-        bitmap = pressurePlus3Bitmap;
+        bitmap = bitmaps.pressurePlus3Bitmap;
       } else if (pressureChange >= 1) {
-        bitmap = pressurePlus2Bitmap;
+        bitmap = bitmaps.pressurePlus2Bitmap;
       } else if (pressureChange >= 0.1) {
-        bitmap = pressurePlus1Bitmap;
+        bitmap = bitmaps.pressurePlus1Bitmap;
       } else if (pressureChange <= -2) {
-        bitmap = pressureMinus3Bitmap;
+        bitmap = bitmaps.pressureMinus3Bitmap;
       } else if (pressureChange <= -1) {
-        bitmap = pressureMinus2Bitmap;
+        bitmap = bitmaps.pressureMinus2Bitmap;
       } else if (pressureChange <= -0.1) {
-        bitmap = pressureMinus1Bitmap;
+        bitmap = bitmaps.pressureMinus1Bitmap;
       } else {
-        bitmap = pressure0Bitmap;
+        bitmap = bitmaps.pressure0Bitmap;
       }
       
       dc.drawBitmap(x, y, bitmap.getBitmap());
@@ -323,21 +286,21 @@ class HellofaceView extends WatchUi.WatchFace {
         var cloudCover = self.weatherModel.cloudCover as Number;
         
         if (cloudCover >= 90) {
-          dc.drawBitmap(x, y, weatherCloudBitmap.getBitmap());
+          dc.drawBitmap(x, y, bitmaps.weatherCloudBitmap.getBitmap());
         } else {
           // Draw sun or moon
-          var baseBitmap = isDaytime ? weatherSunBitmap : weatherMoonBitmap;
+          var baseBitmap = isDaytime ? bitmaps.weatherSunBitmap : bitmaps.weatherMoonBitmap;
           dc.drawBitmap(x, y, baseBitmap.getBitmap());
 
           // Draw cloud overlay
           if (cloudCover >= 70) {
-            dc.drawBitmap(x, y, weatherCloud80Bitmap.getBitmap());
+            dc.drawBitmap(x, y, bitmaps.weatherCloud80Bitmap.getBitmap());
           } else if (cloudCover >= 50) {
-            dc.drawBitmap(x, y, weatherCloud60Bitmap.getBitmap());
+            dc.drawBitmap(x, y, bitmaps.weatherCloud60Bitmap.getBitmap());
           } else if (cloudCover >= 30) {
-            dc.drawBitmap(x, y, weatherCloud40Bitmap.getBitmap());
+            dc.drawBitmap(x, y, bitmaps.weatherCloud40Bitmap.getBitmap());
           } else if (cloudCover >= 10) {
-            dc.drawBitmap(x, y, weatherCloud20Bitmap.getBitmap());
+            dc.drawBitmap(x, y, bitmaps.weatherCloud20Bitmap.getBitmap());
           }
         }
       } else {
@@ -376,18 +339,18 @@ class HellofaceView extends WatchUi.WatchFace {
   function getFallbackWeatherBitmap(condition as String) as LazyBitmap {
     switch (condition) {
       case "light rain":
-        return weatherRainLightBitmap;
+        return bitmaps.weatherRainLightBitmap;
       case "rain":
       case "hail":
-        return weatherRainBitmap;
+        return bitmaps.weatherRainBitmap;
       case "thunder":
-        return weatherThunderBitmap;
+        return bitmaps.weatherThunderBitmap;
       case "snow":
-        return weatherSnowBitmap;
+        return bitmaps.weatherSnowBitmap;
       case "fog":
-        return weatherFogBitmap;
+        return bitmaps.weatherFogBitmap;
       default:
-        return weatherCloudBitmap;
+        return bitmaps.weatherCloudBitmap;
     }
   }
 
@@ -398,7 +361,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var daily = self.dayModel.activityCount;
 
     if (daily > 0) {
-      dc.drawBitmap(x, y, (daily == 1 ? starBitmap : starsBitmap).getBitmap());
+      dc.drawBitmap(x, y, (daily == 1 ? bitmaps.starBitmap : bitmaps.starsBitmap).getBitmap());
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
       dc.drawText(x + 14, y + 2, Graphics.FONT_TINY, daily, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -412,7 +375,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     drawProgress(dc, x, y, steps.daily, steps.goal);
     if (steps.daily < steps.goal) {
-      dc.drawBitmap(x - 8, y - 8, stepsBitmap.getBitmap());
+      dc.drawBitmap(x - 8, y - 8, bitmaps.stepsBitmap.getBitmap());
     }
   }
 
@@ -438,7 +401,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     var splitAsX = Utils.scaleValue(split, max, width);
     if (split > 0) {
-      dc.drawBitmap(x, y, minutesLinearGreyBitmap.getBitmap());
+      dc.drawBitmap(x, y, bitmaps.minutesLinearGreyBitmap.getBitmap());
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
       dc.drawRectangle(x + 1, y, splitAsX - 1, height); // pixel adjustments compensate for 2px penwidth
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
@@ -465,7 +428,7 @@ class HellofaceView extends WatchUi.WatchFace {
     }
 
     if (fullBars == 0) {
-      dc.drawBitmap(x-25, y-4, minutesBitmap.getBitmap());
+      dc.drawBitmap(x-25, y-4, bitmaps.minutesBitmap.getBitmap());
     } else {
       drawProgressComplete(dc, x-19 ,y+3, fullBars);
     }
@@ -530,7 +493,7 @@ class HellofaceView extends WatchUi.WatchFace {
   function drawProgressComplete(dc as Dc, x as Number, y as Number, fullCircles as Number) {
     if (fullCircles > 0) {
       if (fullCircles == 1) {
-        dc.drawBitmap(x - 10, y - 8, checkBitmap.getBitmap());
+        dc.drawBitmap(x - 10, y - 8, bitmaps.checkBitmap.getBitmap());
       } else {
         dc.fillCircle(x, y, 8);
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
@@ -557,7 +520,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawAlarm(dc) {
     if (self.dayModel.alarm) {
-      dc.drawBitmap(176-61, 73, alarmBitmap.getBitmap());
+      dc.drawBitmap(176-61, 73, bitmaps.alarmBitmap.getBitmap());
     }
   }
 
@@ -565,7 +528,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 18;
     var y = 139;
 
-    dc.drawBitmap(x, y, batteryBitmap.getBitmap());
+    dc.drawBitmap(x, y, bitmaps.batteryBitmap.getBitmap());
     var height = Utils.scaleValue(self.minuteModel.battery, 100, 10);
     dc.fillRectangle(x + 2, y + 4 + 10 - height, 5, height);
   }
@@ -574,7 +537,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 3;
     var y = 40;
   
-    dc.drawBitmap(x, y + 8, sunriseBitmap.getBitmap());
+    dc.drawBitmap(x, y + 8, bitmaps.sunriseBitmap.getBitmap());
     dc.drawText(
       x + 19,
       y,
@@ -593,7 +556,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 34;
     var y = 140;
 
-    dc.drawBitmap(x, y + 2, wavesBitmap.getBitmap());
+    dc.drawBitmap(x, y + 2, bitmaps.wavesBitmap.getBitmap());
     dc.drawText(x + 12 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
     if (self.weatherModel.waveDirection != null) {
       drawWindBearing(dc, x + 8, y + 26, self.weatherModel.waveDirection);
@@ -606,7 +569,7 @@ class HellofaceView extends WatchUi.WatchFace {
   function drawAltitude(dc as Dc) {
     var x = 32;
     var y = 142;
-    dc.drawBitmap(x, y, mountainsBitmap.getBitmap());
+    dc.drawBitmap(x, y, bitmaps.mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
   }
 
@@ -709,18 +672,18 @@ class HellofaceView extends WatchUi.WatchFace {
   function getHeartBitmap() as LazyBitmap {
     var stress = self.minuteModel.stress;
     if (stress == null) {
-      return heartBitmap;
+      return bitmaps.heartBitmap;
     }
     if (stress > 75) {
-      return heartStressHighBitmap;
+      return bitmaps.heartStressHighBitmap;
     }
     if (stress > 50) {
-      return heartStressMediumBitmap;
+      return bitmaps.heartStressMediumBitmap;
     }
     if (stress > 25) {
-      return heartStressLowBitmap;
+      return bitmaps.heartStressLowBitmap;
     }
-    return heartRestBitmap;
+    return bitmaps.heartRestBitmap;
   }
 
   // Called when this View is removed from the screen. Save the
