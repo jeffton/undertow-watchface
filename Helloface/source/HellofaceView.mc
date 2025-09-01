@@ -10,16 +10,7 @@ import Toybox.Time.Gregorian;
 import Toybox.Time;
 
 class HellofaceView extends WatchUi.WatchFace {
-  
-  var lastUpdateTime as UpdateTime;
-  var dayModel as DayModel;
-  var tenMinuteModel as TenMinuteModel;
-  var pressureRepository as PressureRepository;
-  var weatherRepository as WeatherRepository;
-  var weatherModel as WeatherModel;
-  var minuteModel as MinuteModel;
-  var secondModel as SecondModel;
-  var pressureChange as Float?;
+  var models as ModelsRepository;
   var bitmaps as Bitmaps;
 
   var previousSecond as SecondModel?;
@@ -30,21 +21,11 @@ class HellofaceView extends WatchUi.WatchFace {
     WatchFace.initialize();
 
     self.bitmaps = new Bitmaps();
-    self.lastUpdateTime = new UpdateTime();
-    self.dayModel = new DayModel(lastUpdateTime);
-    self.pressureRepository = new PressureRepository();
-    self.pressureChange = self.pressureRepository.getPressureChangeOnInit();
-    self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-    self.weatherRepository = new WeatherRepository();
-    self.weatherRepository.update();
-    self.weatherModel = self.weatherRepository.getWeatherModel();
-    self.secondModel = new SecondModel(lastUpdateTime);
-    self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
+    self.models = new ModelsRepository();
   }
 
   function onWeatherUpdated(data as Dictionary) {
-    self.weatherRepository.onWeatherUpdated(data);
-    self.weatherModel = self.weatherRepository.getWeatherModel();
+    self.models.onWeatherUpdated(data);
     WatchUi.requestUpdate();
   }
 
@@ -54,65 +35,27 @@ class HellofaceView extends WatchUi.WatchFace {
   // Called when this View is brought to the foreground. Restore
   // the state of this View and prepare it to be shown. This includes
   // loading resources into memory.
-  function onShow() as Void {
-  }
-
-  function updateModels() as Boolean {
-    var updateTime = new UpdateTime();
-    var diff = updateTime.compare(lastUpdateTime);
-    lastUpdateTime = updateTime;
-
-    switch (diff) {
-      // Cases intentionally fall through
-      case UpdateTime.DAY:
-        self.dayModel = new DayModel(updateTime);
-      case UpdateTime.TEN_MINUTES:
-        self.pressureChange = self.pressureRepository.updateAndGetPressureChange();
-        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-        self.weatherRepository.update();
-        self.weatherModel = self.weatherRepository.getWeatherModel();
-      case UpdateTime.MINUTE:
-        self.minuteModel = new MinuteModel(updateTime, self.tenMinuteModel);
-      case UpdateTime.SECOND:
-        self.secondModel = new SecondModel(updateTime);
-        return true;
-      default: // that's case EQUAL
-        return false;
-    }
-  }
-
-  function updateModelsPartial() as Boolean {
-    var updateTime = new UpdateTime();
-    var diff = updateTime.compareSeconds(lastUpdateTime);
-    lastUpdateTime = updateTime;
-
-    if (diff == UpdateTime.SECOND) {
-      self.secondModel = new SecondModel(updateTime);
-      return true;
-    } else {
-      return false;
-    }
-  }
+  function onShow() as Void {}
 
   // Update the view
   function onUpdate(dc as Dc) as Void {
-    updateModels();
+    models.updateModels();
 
     dc.setClip(0, 0, 176, 176);
 
     drawMainScreen(dc);
     drawSubScreen(dc);
 
-    previousSecond = secondModel;
+    previousSecond = models.secondModel;
   }
 
   function onPartialUpdate(dc as Graphics.Dc) as Void {
-    if (!updateModelsPartial()) {
+    if (!models.updateModelsPartial()) {
       return;
     }
 
-    var diff = self.secondModel.compare(previousSecond);
-    previousSecond = self.secondModel;
+    var diff = self.models.secondModel.compare(previousSecond);
+    previousSecond = self.models.secondModel;
     
     switch (diff) {
       case SecondModel.UPDATE_DIFF_SECONDS:
@@ -161,7 +104,7 @@ class HellofaceView extends WatchUi.WatchFace {
       x,
       y,
       Graphics.FONT_GLANCE_NUMBER,
-      self.secondModel.seconds,
+      self.models.secondModel.seconds,
       Graphics.TEXT_JUSTIFY_LEFT
     );
   }
@@ -171,7 +114,7 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     dc.fillRectangle(0, 0, 176, 176);
 
-    var isDaytime = self.tenMinuteModel.isDaytime(Time.now());
+    var isDaytime = self.models.tenMinuteModel.isDaytime(Time.now());
 
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     // all of these need white on transparent
@@ -198,7 +141,7 @@ class HellofaceView extends WatchUi.WatchFace {
       68,
       0,
       Graphics.FONT_GLANCE,
-      self.dayModel.date,
+      self.models.dayModel.date,
       Graphics.TEXT_JUSTIFY_CENTER
     );
   }
@@ -210,7 +153,7 @@ class HellofaceView extends WatchUi.WatchFace {
       30,
       20,
       Graphics.FONT_GLANCE,
-      self.weatherModel.temperature,
+      self.models.weatherModel.temperature,
       Graphics.TEXT_JUSTIFY_LEFT
     );
 
@@ -218,12 +161,12 @@ class HellofaceView extends WatchUi.WatchFace {
       80,
       20,
       Graphics.FONT_GLANCE,
-      self.weatherModel.windSpeed,
+      self.models.weatherModel.windSpeed,
       Graphics.TEXT_JUSTIFY_LEFT
     );
 
-    if (self.weatherModel.windDirection != null) {
-      drawWindBearing(dc, 68, 33, self.weatherModel.windDirection);
+    if (self.models.weatherModel.windDirection != null) {
+      drawWindBearing(dc, 68, 33, self.models.weatherModel.windDirection);
     }
 
     drawUvIndex(dc);
@@ -232,19 +175,19 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawUvIndex(dc as Dc) {
-    if (self.weatherModel.uvIndex != null) {
+    if (self.models.weatherModel.uvIndex != null) {
       var x = 77;
       var y = 40;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
-      dc.drawText(x, y, Graphics.FONT_TINY, self.weatherModel.uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
+      dc.drawText(x, y, Graphics.FONT_TINY, self.models.weatherModel.uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     }
   }
 
   function drawPressureChange(dc as Dc) {
-    var pressureChange = self.pressureChange;
+    var pressureChange = self.models.pressureChange;
     if (pressureChange != null) {
       var x = 92;
       var y = 44;
@@ -274,8 +217,8 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 10;
     var y = 24;
 
-    if (self.weatherModel.condition != null) {
-      var condition = self.weatherModel.condition as String;
+    if (self.models.weatherModel.condition != null) {
+      var condition = self.models.weatherModel.condition as String;
 
       if (
         condition.equals("clear") ||
@@ -283,7 +226,7 @@ class HellofaceView extends WatchUi.WatchFace {
         condition.equals("partly cloudy") ||
         condition.equals("cloudy")
       ) {
-        var cloudCover = self.weatherModel.cloudCover as Number;
+        var cloudCover = self.models.weatherModel.cloudCover as Number;
         
         if (cloudCover >= 90) {
           dc.drawBitmap(x, y, bitmaps.weatherCloudBitmap.getBitmap());
@@ -358,7 +301,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 135;
     var y = 117;
 
-    var daily = self.dayModel.activityCount;
+    var daily = self.models.dayModel.activityCount;
 
     if (daily > 0) {
       dc.drawBitmap(x, y, (daily == 1 ? bitmaps.starBitmap : bitmaps.starsBitmap).getBitmap());
@@ -371,7 +314,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 124;
     var y = 156;
 
-    var steps = self.minuteModel.steps;
+    var steps = self.models.minuteModel.steps;
 
     drawProgress(dc, x, y, steps.daily, steps.goal);
     if (steps.daily < steps.goal) {
@@ -385,7 +328,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var width = 92;
     var height = 8;
 
-    var minutes = self.minuteModel.activeMinutes;
+    var minutes = self.models.minuteModel.activeMinutes;
 
     var value = minutes.weekly;
     var split = minutes.weekly - minutes.daily;
@@ -418,7 +361,7 @@ class HellofaceView extends WatchUi.WatchFace {
       if (weekdayAsX >= valueAsX) {
         dc.drawLine(x+weekdayAsX, y+2, x+weekdayAsX, y+height-2); // pixel adjustments compensate for 2px penwidth
       }
-      if (i == dayModel.weekday && fullBars == 0) {
+      if (i == models.dayModel.weekday && fullBars == 0) {
         dc.fillPolygon([
           [x+weekdayAsX, y-2],
           [x+weekdayAsX - 4, y-7],
@@ -435,7 +378,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawRecoveryTime(dc as Dc) {
-    var recoveryTime = self.minuteModel.recoveryTime;
+    var recoveryTime = self.models.minuteModel.recoveryTime;
     
     var x = 35;
     var y = 130;
@@ -503,7 +446,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawTime(dc as Dc) {
-    var clockTime = self.secondModel.clockTime;
+    var clockTime = self.models.secondModel.clockTime;
     var timeString = Lang.format("$1$:$2$", [
       clockTime.hour,
       clockTime.min.format("%02d"),
@@ -519,7 +462,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawAlarm(dc) {
-    if (self.dayModel.alarm) {
+    if (self.models.dayModel.alarm) {
       dc.drawBitmap(176-61, 73, bitmaps.alarmBitmap.getBitmap());
     }
   }
@@ -529,7 +472,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 139;
 
     dc.drawBitmap(x, y, bitmaps.batteryBitmap.getBitmap());
-    var height = Utils.scaleValue(self.minuteModel.battery, 100, 10);
+    var height = Utils.scaleValue(self.models.minuteModel.battery, 100, 10);
     dc.fillRectangle(x + 2, y + 4 + 10 - height, 5, height);
   }
 
@@ -542,13 +485,13 @@ class HellofaceView extends WatchUi.WatchFace {
       x + 19,
       y,
       Graphics.FONT_TINY,
-      self.minuteModel.sunTime,
+      self.models.minuteModel.sunTime,
       Graphics.TEXT_JUSTIFY_LEFT
     );
   }
 
   function drawSeaTemperature(dc as Dc) as Boolean {
-    var temperature = self.weatherModel.seaTemperature;
+    var temperature = self.models.weatherModel.seaTemperature;
     if (temperature == null) {
       return false;
     }
@@ -558,10 +501,10 @@ class HellofaceView extends WatchUi.WatchFace {
 
     dc.drawBitmap(x, y + 2, bitmaps.wavesBitmap.getBitmap());
     dc.drawText(x + 12 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
-    if (self.weatherModel.waveDirection != null) {
-      drawWindBearing(dc, x + 8, y + 26, self.weatherModel.waveDirection);
+    if (self.models.weatherModel.waveDirection != null) {
+      drawWindBearing(dc, x + 8, y + 26, self.models.weatherModel.waveDirection);
     }
-    dc.drawText(x + 21, y + 12, Graphics.FONT_TINY, self.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(x + 21, y + 12, Graphics.FONT_TINY, self.models.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
     
     return true;
   }
@@ -570,7 +513,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 32;
     var y = 142;
     dc.drawBitmap(x, y, bitmaps.mountainsBitmap.getBitmap());
-    dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.models.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
   }
 
   function drawNotifications(dc as Dc) {
@@ -578,12 +521,12 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 94;
     var radius = 18;
 
-    var notifications = self.secondModel.notificationCount;
-    if (secondModel.doNotDisturb) {
+    var notifications = self.models.secondModel.notificationCount;
+    if (models.secondModel.doNotDisturb) {
       notifications = "-";
     } 
 
-    if (secondModel.isPhoneConnected) {
+    if (models.secondModel.isPhoneConnected) {
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
       dc.fillCircle(x, y, radius);
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
@@ -614,7 +557,7 @@ class HellofaceView extends WatchUi.WatchFace {
       113 + 31,
       26,
       Graphics.FONT_GLANCE_NUMBER,
-      self.secondModel.heartRate,
+      self.models.secondModel.heartRate,
       Graphics.TEXT_JUSTIFY_CENTER
     );
   }
@@ -626,7 +569,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     // Stress. Heart is 22w x 17h. 3 pixels from bottom, 2 from top are edges.
     // 16 pixels height in heart to fill. Just filling 15 because magic.
-    var stress = self.minuteModel.stress;
+    var stress = self.models.minuteModel.stress;
     var rest = stress == null ? 100 : (100 - stress);
     var heartFill = Utils.scaleValue(rest, 100, 15);
 
@@ -649,7 +592,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     // Body battery
 
-    var bodyBattery = self.minuteModel.bodyBattery;
+    var bodyBattery = self.models.minuteModel.bodyBattery;
     if (bodyBattery != null) {
       dc.setPenWidth(6);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -670,7 +613,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function getHeartBitmap() as LazyBitmap {
-    var stress = self.minuteModel.stress;
+    var stress = self.models.minuteModel.stress;
     if (stress == null) {
       return bitmaps.heartBitmap;
     }
