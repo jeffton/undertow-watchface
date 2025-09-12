@@ -29,10 +29,10 @@ class TenMinuteModel {
       return true; // best guess
     }
 
-    var sunriseInPast = self.sunriseMoment.lessThan(now);
-    var sunsetInFuture = self.sunsetMoment.greaterThan(now);
+    var timeSinceSunrise = now.subtract(self.sunriseMoment);
+    var timeToSunset = self.sunsetMoment.subtract(now);
 
-    return sunriseInPast && sunsetInFuture;
+    return (timeSinceSunrise.value() >= 0 && timeToSunset.value() > 0);
   }
 
   function getNextSunTime(now as Moment) as String {
