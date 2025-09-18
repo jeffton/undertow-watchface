@@ -565,20 +565,6 @@ class HellofaceView extends WatchUi.WatchFace {
   function drawSubScreen(dc as Dc) {    
     var subscreen = WatchUi.getSubscreen(); // 113,0  62x62
     var radius = subscreen.width / 2;
-    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-
-    // Stress. Heart is 22w x 17h. 3 pixels from bottom, 2 from top are edges.
-    // 16 pixels height in heart to fill. Just filling 15 because magic.
-    var stress = self.models.minuteModel.stress;
-    var rest = stress == null ? 100 : (100 - stress);
-    var heartFill = Utils.scaleValue(rest, 100, 15);
-
-    dc.fillRectangle(
-      subscreen.x + 31 - 11,
-      subscreen.y + 11 + 2 + 15 - heartFill,
-      22,
-      heartFill
-    );
 
     var heart = getHeartBitmap();
 
