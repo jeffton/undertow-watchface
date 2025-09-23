@@ -1,11 +1,10 @@
 <drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
     <bitmap dithering="none" id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap dithering="none" id="heart" filename="heart-transparent.png" />
-    <bitmap dithering="none" id="heartRest" filename="heart-transparent-rest.png" />
-    <bitmap dithering="none" id="heartStressLow" filename="heart-transparent-stressed-low.png" />
-    <bitmap dithering="none" id="heartStressMedium" filename="heart-transparent-stressed.png" />
-    <bitmap dithering="none" id="heartStressHigh" filename="heart-transparent-stressed-high.png" />
-
+    <bitmap dithering="none" id="heart" filename="heart.png" />
+    <bitmap dithering="none" id="heartRest" filename="heart-rest.png" />
+    <bitmap dithering="none" id="heartStressLow" filename="heart-stressed-low.png" />
+    <bitmap dithering="none" id="heartStressMedium" filename="heart-stressed.png" />
+    <bitmap dithering="none" id="heartStressHigh" filename="heart-stressed-high.png" />
 
     <bitmap dithering="none" id="star" filename="star-small.png" />
     <bitmap dithering="none" id="stars" filename="stars-small.png" />

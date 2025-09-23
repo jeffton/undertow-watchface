@@ -577,7 +577,6 @@ class HellofaceView extends WatchUi.WatchFace {
     drawPulse(dc);
 
     // Body battery
-
     var bodyBattery = self.models.minuteModel.bodyBattery;
     if (bodyBattery != null) {
       dc.setPenWidth(6);
