@@ -2,9 +2,9 @@
     <bitmap dithering="none" id="LauncherIcon" filename="launcher_icon.png" />
     <bitmap dithering="none" id="heart" filename="heart.png" />
     <bitmap dithering="none" id="heartRest" filename="heart-rest.png" />
-    <bitmap dithering="none" id="heartStressLow" filename="heart-stressed-low.png" />
-    <bitmap dithering="none" id="heartStressMedium" filename="heart-stressed.png" />
-    <bitmap dithering="none" id="heartStressHigh" filename="heart-stressed-high.png" />
+    <bitmap dithering="none" id="heartStressLow" filename="heart-stressed.png" />
+    <bitmap dithering="none" id="heartStressMedium" filename="heart-stressed-high.png" />
+    <bitmap dithering="none" id="heartStressHigh" filename="heart-stressed-higher.png" />
 
     <bitmap dithering="none" id="star" filename="star-small.png" />
     <bitmap dithering="none" id="stars" filename="stars-small.png" />
