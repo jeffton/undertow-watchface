@@ -5,18 +5,14 @@ class ModelsRepository {
     var lastUpdateTime as UpdateTime;
     var dayModel as DayModel;
     var tenMinuteModel as TenMinuteModel;
-    var pressureRepository as PressureRepository;
     var weatherRepository as WeatherRepository;
     var weatherModel as WeatherModel;
     var minuteModel as MinuteModel;
     var secondModel as SecondModel;
-    var pressureChange as Float?;
 
     function initialize() {
         self.lastUpdateTime = new UpdateTime();
         self.dayModel = new DayModel(lastUpdateTime);
-        self.pressureRepository = new PressureRepository();
-        self.pressureChange = self.pressureRepository.getPressureChangeOnInit();
         self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
         self.weatherRepository = new WeatherRepository();
         self.weatherRepository.update();
@@ -40,7 +36,6 @@ class ModelsRepository {
         case UpdateTime.DAY:
             self.dayModel = new DayModel(updateTime);
         case UpdateTime.TEN_MINUTES:
-            self.pressureChange = self.pressureRepository.updateAndGetPressureChange();
             self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
             self.weatherRepository.update();
             self.weatherModel = self.weatherRepository.getWeatherModel();
