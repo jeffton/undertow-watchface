@@ -33,11 +33,4 @@ class Bitmaps {
   var weatherFogBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherFog);
   var wavesBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.waves);
   var mountainsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.mountains);
-  var pressurePlus3Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus3);
-  var pressurePlus2Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus2);
-  var pressurePlus1Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressurePlus1);
-  var pressure0Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressure0);
-  var pressureMinus1Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus1);
-  var pressureMinus2Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus2);
-  var pressureMinus3Bitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.pressureMinus3);
 }

@@ -170,8 +170,6 @@ class HellofaceView extends WatchUi.WatchFace {
     }
 
     drawUvIndex(dc);
-
-    drawPressureChange(dc);
   }
 
   function drawUvIndex(dc as Dc) {
@@ -186,32 +184,6 @@ class HellofaceView extends WatchUi.WatchFace {
     }
   }
 
-  function drawPressureChange(dc as Dc) {
-    var pressureChange = self.models.pressureChange;
-    if (pressureChange != null) {
-      var x = 92;
-      var y = 44;
-
-      var bitmap;
-      if (pressureChange >= 2) {
-        bitmap = bitmaps.pressurePlus3Bitmap;
-      } else if (pressureChange >= 1) {
-        bitmap = bitmaps.pressurePlus2Bitmap;
-      } else if (pressureChange >= 0.1) {
-        bitmap = bitmaps.pressurePlus1Bitmap;
-      } else if (pressureChange <= -2) {
-        bitmap = bitmaps.pressureMinus3Bitmap;
-      } else if (pressureChange <= -1) {
-        bitmap = bitmaps.pressureMinus2Bitmap;
-      } else if (pressureChange <= -0.1) {
-        bitmap = bitmaps.pressureMinus1Bitmap;
-      } else {
-        bitmap = bitmaps.pressure0Bitmap;
-      }
-      
-      dc.drawBitmap(x, y, bitmap.getBitmap());
-    }
-  }
 
   function drawWeatherCondition(dc as Dc, isDaytime as Boolean) {
     var x = 10;
@@ -468,8 +440,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBattery(dc as Dc) {
-    var x = 18;
-    var y = 139;
+    var x = 92;
+    var y = 44;
 
     dc.drawBitmap(x, y, bitmaps.batteryBitmap.getBitmap());
     var height = Utils.scaleValue(self.models.minuteModel.battery, 100, 10);
