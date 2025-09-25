@@ -283,7 +283,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawSteps(dc as Dc) {
     var x = 154;
-    var y = 129;
+    var y = 130;
 
     var steps = self.models.minuteModel.steps;
 
