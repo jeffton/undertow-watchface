@@ -6,8 +6,8 @@
     <bitmap dithering="none" id="heartStressMedium" filename="heart-stress-medium.png" />
     <bitmap dithering="none" id="heartStressHigh" filename="heart-stress-high.png" />
 
-    <bitmap dithering="none" id="star" filename="star-small.png" />
-    <bitmap dithering="none" id="stars" filename="stars-small.png" />
+    <bitmap dithering="none" id="star" filename="star.png" />
+    <bitmap dithering="none" id="stars" filename="stars.png" />
     <bitmap dithering="none" id="steps" filename="steps.png" />
     <bitmap dithering="none" id="sunrise" filename="sunrise.png" />
     <bitmap dithering="none" id="alarm" filename="alarm.png" />

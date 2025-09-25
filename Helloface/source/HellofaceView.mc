@@ -124,6 +124,7 @@ class HellofaceView extends WatchUi.WatchFace {
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
     }
+    drawBarometer(dc);
     drawTime(dc);
     drawAlarm(dc);
     drawBattery(dc);
@@ -270,21 +271,19 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 135;
-    var y = 117;
+    var x = 130;
+    var y = 140;
 
-    var daily = self.models.dayModel.activityCount;
+    var daily = 2; //self.models.dayModel.activityCount;
 
     if (daily > 0) {
       dc.drawBitmap(x, y, (daily == 1 ? bitmaps.starBitmap : bitmaps.starsBitmap).getBitmap());
-      dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
-      dc.drawText(x + 14, y + 2, Graphics.FONT_TINY, daily, Graphics.TEXT_JUSTIFY_CENTER);
     }
   }
 
   function drawSteps(dc as Dc) {
-    var x = 124;
-    var y = 156;
+    var x = 154;
+    var y = 129;
 
     var steps = self.models.minuteModel.steps;
 
@@ -487,6 +486,16 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.drawBitmap(x, y, bitmaps.mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.models.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
   }
+
+  function drawBarometer(dc as Dc) {
+    var x = 92;
+    var y = 140;
+
+    var pressure = self.models.minuteModel.pressure;
+    // draw barometer, top is 1013, scale goes from 960-1060
+
+  }
+
 
   function drawNotifications(dc as Dc) {
     var x = 154;
