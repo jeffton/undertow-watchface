@@ -497,8 +497,8 @@ class HellofaceView extends WatchUi.WatchFace {
         return;
     }
 
-    var r = 11;
-    var rOpposite = 8;
+    var r = 11.0;
+    var rOpposite = 8.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.setPenWidth(2);
     dc.drawCircle(x, y, r);
@@ -523,9 +523,9 @@ class HellofaceView extends WatchUi.WatchFace {
     var p2Y = y - rOpposite * Math.cos(p2Rad);
 
     dc.fillPolygon([
-        [needleX, needleY],
-        [p1X, p1Y],
-        [p2X, p2Y]
+        [Math.round(needleX), Math.round(needleY)],
+        [Math.round(p1X), Math.round(p1Y)],
+        [Math.round(p2X), Math.round(p2Y)]
     ]);
 }
 
