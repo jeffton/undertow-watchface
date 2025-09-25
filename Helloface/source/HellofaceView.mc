@@ -488,13 +488,46 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 92;
-    var y = 140;
+    var x = 115;
+    var y = 155;
 
-    var pressure = self.models.minuteModel.pressure;
+    var pressure = 1013; // self.models.minuteModel.pressure;
     // draw barometer, top is 1013, scale goes from 960-1060
+    if (pressure == null) {
+        return;
+    }
 
-  }
+    var r = 11;
+    var rOpposite = 8;
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    dc.setPenWidth(2);
+    dc.drawCircle(x, y, r);
+
+    // Uniform scale: 240 degrees over 100 hPa -> 2.4 deg/hPa
+    // 1013 hPa is at 0 degrees.
+    var angleDeg = (pressure - 1013.0) * 2.4;
+    var angleRad = Math.toRadians(angleDeg);
+
+    // Needle points to value
+    var needleX = x - r * Math.sin(angleRad);
+    var needleY = y - r * Math.cos(angleRad);
+
+    // Thicker end is opposite
+    var endRad = angleRad + Math.PI; // 180 degrees opposite
+    var p1Rad = endRad - Math.PI / 20;
+    var p2Rad = endRad + Math.PI / 20;
+
+    var p1X = x - rOpposite * Math.sin(p1Rad);
+    var p1Y = y - rOpposite * Math.cos(p1Rad);
+    var p2X = x - rOpposite * Math.sin(p2Rad);
+    var p2Y = y - rOpposite * Math.cos(p2Rad);
+
+    dc.fillPolygon([
+        [needleX, needleY],
+        [p1X, p1Y],
+        [p2X, p2Y]
+    ]);
+}
 
 
   function drawNotifications(dc as Dc) {
