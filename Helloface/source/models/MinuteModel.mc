@@ -47,7 +47,11 @@ class MinuteModel {
   }
 
   private function getPressure(activityInfo as Activity.Info) as Float? {
-    return activityInfo.meanSeaLevelPressure;
+    var pressurePa = activityInfo.meanSeaLevelPressure;
+    if (pressurePa == null) {
+      return null;
+    }
+    return pressurePa / 100.0;
   }
 
   private function getTime(clockTime as ClockTime) {

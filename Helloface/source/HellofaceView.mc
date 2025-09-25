@@ -271,8 +271,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 128;
-    var y = 140;
+    var x = 126;
+    var y = 141;
 
     var daily = 2; //self.models.dayModel.activityCount;
 
@@ -283,7 +283,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawSteps(dc as Dc) {
     var x = 154;
-    var y = 130;
+    var y = 132;
 
     var steps = self.models.minuteModel.steps;
 
@@ -488,7 +488,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 112;
+    var x = 111;
     var y = 155;
 
     var pressure = self.models.minuteModel.pressure;
@@ -497,15 +497,15 @@ class HellofaceView extends WatchUi.WatchFace {
         return;
     }
 
-    var r = 10.0;
-    var rOpposite = 6.0;
+    var r = 11.0;
+    var rOpposite = 4.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.setPenWidth(2);
     dc.drawCircle(x, y, r);
 
     // Uniform scale: 240 degrees over 100 hPa -> 2.4 deg/hPa
     // 1013 hPa is at 0 degrees.
-    var angleDeg = (pressure - 1013.0) * 2.4;
+    var angleDeg = (pressure - 1013.0) * -2.4;
     var angleRad = Math.toRadians(angleDeg);
 
     // Needle points to value
@@ -514,8 +514,8 @@ class HellofaceView extends WatchUi.WatchFace {
 
     // Thicker end is opposite
     var endRad = angleRad + Math.PI; // 180 degrees opposite
-    var p1Rad = endRad - Math.PI / 12;
-    var p2Rad = endRad + Math.PI / 12;
+    var p1Rad = endRad - Math.PI / 8;
+    var p2Rad = endRad + Math.PI / 8;
 
     var p1X = x - rOpposite * Math.sin(p1Rad);
     var p1Y = y - rOpposite * Math.cos(p1Rad);
