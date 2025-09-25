@@ -235,7 +235,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var cos0 = radius * Math.cos(radians);
     var sin0 = - radius * Math.sin(radians); // y axis is inverted
     dc.setPenWidth(3);
-    dc.drawLine(x - cos0, y - sin0, x + cos, y + sin);
+    dc.drawLine(Math.round(x - cos0), Math.round(y - sin0), Math.round(x + cos), Math.round(y + sin));
 
     var angleArrowLeft = radians - 1.5;
     var angleArrowRight = radians + 1.5;
@@ -247,9 +247,9 @@ class HellofaceView extends WatchUi.WatchFace {
     var sin2 = - arrowRadius * Math.sin(angleArrowRight);
 
     dc.fillPolygon([
-        [x + cos0, y + sin0], 
-        [x + cos1, y + sin1],
-        [x + cos2, y + sin2]]);
+        [Math.round(x + cos0), Math.round(y + sin0)], 
+        [Math.round(x + cos1), Math.round(y + sin1)],
+        [Math.round(x + cos2), Math.round(y + sin2)]]);
   }
 
   function getFallbackWeatherBitmap(condition as String) as LazyBitmap {
@@ -271,7 +271,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 130;
+    var x = 128;
     var y = 140;
 
     var daily = 2; //self.models.dayModel.activityCount;
@@ -488,17 +488,17 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 115;
+    var x = 112;
     var y = 155;
 
-    var pressure = 1013; // self.models.minuteModel.pressure;
+    var pressure = self.models.minuteModel.pressure;
     // draw barometer, top is 1013, scale goes from 960-1060
     if (pressure == null) {
         return;
     }
 
-    var r = 11.0;
-    var rOpposite = 8.0;
+    var r = 10.0;
+    var rOpposite = 6.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.setPenWidth(2);
     dc.drawCircle(x, y, r);
@@ -514,8 +514,8 @@ class HellofaceView extends WatchUi.WatchFace {
 
     // Thicker end is opposite
     var endRad = angleRad + Math.PI; // 180 degrees opposite
-    var p1Rad = endRad - Math.PI / 20;
-    var p2Rad = endRad + Math.PI / 20;
+    var p1Rad = endRad - Math.PI / 12;
+    var p2Rad = endRad + Math.PI / 12;
 
     var p1X = x - rOpposite * Math.sin(p1Rad);
     var p1Y = y - rOpposite * Math.cos(p1Rad);
