@@ -274,7 +274,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 126;
     var y = 141;
 
-    var daily = 2; //self.models.dayModel.activityCount;
+    var daily = self.models.dayModel.activityCount;
 
     if (daily > 0) {
       dc.drawBitmap(x, y, (daily == 1 ? bitmaps.starBitmap : bitmaps.starsBitmap).getBitmap());
