@@ -492,7 +492,6 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 155;
 
     var pressure = self.models.minuteModel.pressure;
-    // draw barometer, top is 1013, scale goes from 960-1060
     if (pressure == null) {
         return;
     }
@@ -503,12 +502,11 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.setPenWidth(2);
     dc.drawCircle(x, y, r);
 
-    // Uniform scale: 240 degrees over 100 hPa -> 2.4 deg/hPa
-    // 1013 hPa is at 0 degrees.
-    var angleDeg = (pressure - 1013.0) * -2.4;
+    // 3 deg/hPa, 1013 hPa is at 0 degrees. 
+    var angleDeg = (pressure - 1013.0) * -3;
     var angleRad = Math.toRadians(angleDeg);
 
-    // Needle points to value
+    // cos and sin are swapped and negated, fixes 90 degree rotation + inverted y axis
     var needleX = x - r * Math.sin(angleRad);
     var needleY = y - r * Math.cos(angleRad);
 
