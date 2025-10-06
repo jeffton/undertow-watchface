@@ -124,11 +124,11 @@ class HellofaceView extends WatchUi.WatchFace {
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
     }
-    drawBarometer(dc);
     drawTime(dc);
     drawAlarm(dc);
     drawBattery(dc);
     drawRecoveryTime(dc);
+    drawBarometer(dc);
 
     // these set varying colors
     drawSteps(dc);
@@ -391,14 +391,13 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawProgress(dc as Dc, x as Number, y as Number, value as Number, max as Number) {
     var fullCircles = Math.floor(value / max);
-    var radius = 7;
-    dc.setPenWidth(2);
-    dc.drawCircle(x, y, radius + 6);
+    var radius = 6;
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 
     value = value % max;
     var valueAsAngle = 90 - Utils.scaleValue(value, max, 360);
     if (valueAsAngle != 90) {
-      dc.setPenWidth(15);
+      dc.setPenWidth(14);
       dc.drawArc(x, y, radius, Graphics.ARC_CLOCKWISE, 90, valueAsAngle);
     }
     drawProgressComplete(dc, x, y, fullCircles);
@@ -497,18 +496,18 @@ class HellofaceView extends WatchUi.WatchFace {
     }
 
     var r = 11.0;
+    var rNeedle = 10.0;
     var rOpposite = 4.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-    dc.setPenWidth(2);
-    dc.drawCircle(x, y, r);
+    dc.fillCircle(x, y, r);
 
     // 3 deg/hPa, 1013.25 hPa is at 0 degrees. 
     var angleDeg = (pressure - 1013.25) * -3;
     var angleRad = Math.toRadians(angleDeg);
 
     // cos and sin are swapped and negated, fixes 90 degree rotation + inverted y axis
-    var needleX = x - r * Math.sin(angleRad);
-    var needleY = y - r * Math.cos(angleRad);
+    var needleX = x - rNeedle * Math.sin(angleRad);
+    var needleY = y - rNeedle * Math.cos(angleRad);
 
     // Thicker end is opposite
     var endRad = angleRad + Math.PI; // 180 degrees opposite
@@ -520,12 +519,13 @@ class HellofaceView extends WatchUi.WatchFace {
     var p2X = x - rOpposite * Math.sin(p2Rad);
     var p2Y = y - rOpposite * Math.cos(p2Rad);
 
+    dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
     dc.fillPolygon([
         [Math.round(needleX), Math.round(needleY)],
         [Math.round(p1X), Math.round(p1Y)],
         [Math.round(p2X), Math.round(p2Y)]
     ]);
-}
+  }
 
 
   function drawNotifications(dc as Dc) {
