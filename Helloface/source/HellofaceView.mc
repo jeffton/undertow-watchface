@@ -496,7 +496,7 @@ class HellofaceView extends WatchUi.WatchFace {
     }
 
     var r = 11.0;
-    var rOpposite = 4.0;
+    var rOpposite = 6.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.fillCircle(x, y, r);
 
@@ -510,8 +510,8 @@ class HellofaceView extends WatchUi.WatchFace {
 
     // Thicker end is opposite
     var endRad = angleRad + Math.PI; // 180 degrees opposite
-    var p1Rad = endRad - Math.PI / 8;
-    var p2Rad = endRad + Math.PI / 8;
+    var p1Rad = endRad - Math.PI / 6;
+    var p2Rad = endRad + Math.PI / 6;
 
     var p1X = x - rOpposite * Math.sin(p1Rad);
     var p1Y = y - rOpposite * Math.cos(p1Rad);
