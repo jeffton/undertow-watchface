@@ -496,7 +496,6 @@ class HellofaceView extends WatchUi.WatchFace {
     }
 
     var r = 11.0;
-    var rNeedle = 10.0;
     var rOpposite = 4.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.fillCircle(x, y, r);
@@ -506,8 +505,8 @@ class HellofaceView extends WatchUi.WatchFace {
     var angleRad = Math.toRadians(angleDeg);
 
     // cos and sin are swapped and negated, fixes 90 degree rotation + inverted y axis
-    var needleX = x - rNeedle * Math.sin(angleRad);
-    var needleY = y - rNeedle * Math.cos(angleRad);
+    var needleX = x - r * Math.sin(angleRad);
+    var needleY = y - r * Math.cos(angleRad);
 
     // Thicker end is opposite
     var endRad = angleRad + Math.PI; // 180 degrees opposite
