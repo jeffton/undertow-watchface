@@ -326,22 +326,17 @@ class HellofaceView extends WatchUi.WatchFace {
     if (valueAsX > splitAsX) {
       dc.fillRectangle(x + splitAsX, y-1, valueAsX - splitAsX, height+1);
     }
-
-    for (var i = 0; i <= 7; i++) {
-      var weekdayAsX = 1 + Utils.scaleValue(i, 7, width - 2);
-      if (weekdayAsX >= valueAsX) {
-        dc.drawLine(x+weekdayAsX, y+2, x+weekdayAsX, y+height-2); // pixel adjustments compensate for 2px penwidth
-      }
-      if (i == models.dayModel.weekday && fullBars == 0) {
-        dc.fillPolygon([
-          [x+weekdayAsX, y-2],
-          [x+weekdayAsX - 4, y-7],
-          [x+weekdayAsX + 4, y-7]
-        ]);
-      }
-    }
+    // Note the pixels overlap with minutesLinearGreyBitmap, allowing us to draw the background on top
+    dc.drawBitmap(x, y-1, bitmaps.minutesLinearBackgroundBitmap.getBitmap());
 
     if (fullBars == 0) {
+      var weekdayAsX = 1 + Utils.scaleValue(models.dayModel.weekday, 7, width - 2);
+      dc.fillPolygon([
+        [x+weekdayAsX, y-2],
+        [x+weekdayAsX - 5, y-8],
+        [x+weekdayAsX + 5, y-8]
+      ]);
+
       dc.drawBitmap(x-25, y-4, bitmaps.minutesBitmap.getBitmap());
     } else {
       drawProgressComplete(dc, x-19 ,y+3, fullBars);

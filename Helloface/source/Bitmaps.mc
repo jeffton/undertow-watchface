@@ -17,6 +17,8 @@ class Bitmaps {
   var batteryBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.battery);
   var minutesBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.minutes);
   var minutesLinearGreyBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.minutesLinearGrey);
+  var minutesLinearBackgroundBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.minutesLinearBackground);
+
   var checkBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.check);
 
   var weatherSunBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSun);
