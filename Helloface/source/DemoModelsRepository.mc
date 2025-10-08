@@ -1,0 +1,68 @@
+import Toybox.Time;
+import Toybox.Lang;
+import Toybox.System;
+
+class DemoModelsRepository {
+    var lastUpdateTime as UpdateTime;
+    var dayModel as DayModel;
+    var tenMinuteModel as TenMinuteModel;
+    var weatherRepository as WeatherRepository?;
+    var weatherModel as WeatherModel;
+    var minuteModel as MinuteModel;
+    var secondModel as SecondModel;
+
+    function initialize() {
+        self.weatherRepository = null;
+        self.lastUpdateTime = new UpdateTime();
+        self.dayModel = new DayModel(self.lastUpdateTime);
+        self.dayModel.activityCount = 2;
+        self.dayModel.date = "ONS 8";
+        self.dayModel.alarm = true;
+        self.dayModel.weekday = 3;
+
+        self.tenMinuteModel = new TenMinuteModel(self.lastUpdateTime.today);
+        self.tenMinuteModel.sunrise = "6:30";
+        self.tenMinuteModel.sunriseTomorrow = "6:31";
+        self.tenMinuteModel.sunset = "18:30";
+
+        self.weatherModel = new WeatherModel();
+        self.weatherModel.seaTemperature = "12.3°";
+        self.weatherModel.temperature = "15°";
+        self.weatherModel.windSpeed = "12";
+        self.weatherModel.windDirection = 45;
+        self.weatherModel.condition = "clear";
+        self.weatherModel.waveHeight = "1.2m";
+        self.weatherModel.waveDirection = 60;
+        self.weatherModel.cloudCover = 10;
+        self.weatherModel.uvIndex = "3";
+
+        self.secondModel = new SecondModel(self.lastUpdateTime);
+        // self.secondModel.seconds = "00";
+        self.secondModel.heartRate = 69;
+        self.secondModel.notificationCount = 2;
+        self.secondModel.isPhoneConnected = true;
+        self.secondModel.doNotDisturb = false;
+
+        self.minuteModel = new MinuteModel(self.lastUpdateTime, self.tenMinuteModel);
+        // self.minuteModel.time = "10:09";
+        self.minuteModel.bodyBattery = 88;
+        self.minuteModel.stress = 33;
+        self.minuteModel.recoveryTime = 36;
+        self.minuteModel.activeMinutes = new DailyWeekly(50, 150, 300);
+        self.minuteModel.steps = new DailyWeekly(6000, 6000, 10000);
+        self.minuteModel.battery = 88;
+        self.minuteModel.sunTime = "18:30";
+        self.minuteModel.altitude = "123m";
+        self.minuteModel.pressure = 1030.0;
+    }
+
+    function onWeatherUpdated(data as Dictionary) as Void {}
+
+    function updateModels() as Boolean {
+        return false;
+    }
+    
+    function updateModelsPartial() as Boolean {
+        return false;
+    }
+}
