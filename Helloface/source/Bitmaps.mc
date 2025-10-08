@@ -11,6 +11,7 @@ class Bitmaps {
   var stepsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.steps);
   var starBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.star);
   var starsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.stars);
+  var starTinyBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.starTiny);
 
   var sunriseBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.sunrise);
   var alarmBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.alarm);

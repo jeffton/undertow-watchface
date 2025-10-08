@@ -8,6 +8,8 @@
 
     <bitmap dithering="none" id="star" filename="star.png" />
     <bitmap dithering="none" id="stars" filename="stars.png" />
+    <bitmap dithering="none" id="starTiny" filename="star-tiny.png" />
+
     <bitmap dithering="none" id="steps" filename="steps.png" />
     <bitmap dithering="none" id="sunrise" filename="sunrise.png" />
     <bitmap dithering="none" id="alarm" filename="alarm.png" />
