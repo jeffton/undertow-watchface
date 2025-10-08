@@ -294,7 +294,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActiveMinutes(dc as Dc) {
-    var x = 35;
+    var x = 8;
     var y = 120;
     var width = 92;
     var height = 8;
@@ -333,20 +333,22 @@ class HellofaceView extends WatchUi.WatchFace {
       var weekdayAsX = 1 + Utils.scaleValue(models.dayModel.weekday, 7, width - 2);
       dc.fillPolygon([
         [x+weekdayAsX, y-2],
-        [x+weekdayAsX - 5, y-8],
-        [x+weekdayAsX + 5, y-8]
+        [x+weekdayAsX - 6, y-8],
+        [x+weekdayAsX + 6, y-8]
       ]);
-
-      dc.drawBitmap(x-25, y-4, bitmaps.minutesBitmap.getBitmap());
     } else {
-      drawProgressComplete(dc, x-19 ,y+3, fullBars);
+      for (var i = 0; i < fullBars; i++) {
+        dc.drawBitmap(x + i * 10, y-10, bitmaps.starTinyBitmap.getBitmap());
+      }
+      
+
     }
   }
 
   function drawRecoveryTime(dc as Dc) {
     var recoveryTime = self.models.minuteModel.recoveryTime;
     
-    var x = 35;
+    var x = 8;
     var y = 130;
     var width = 92;
     var height = 4;
