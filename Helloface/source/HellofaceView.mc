@@ -10,18 +10,23 @@ import Toybox.Time.Gregorian;
 import Toybox.Time;
 
 class HellofaceView extends WatchUi.WatchFace {
-  var models as ModelsRepository;
+  var models as IModelsRepository;
   var bitmaps as Bitmaps;
 
   var previousSecond as SecondModel?;
 
   var isHighPowerMode = true;
+  var useDemoRepo = true;
 
   function initialize() {
     WatchFace.initialize();
 
     self.bitmaps = new Bitmaps();
-    self.models = new ModelsRepository();
+    if (useDemoRepo) {
+      self.models = new DemoModelsRepository() as IModelsRepository;
+    } else {
+      self.models = new ModelsRepository() as IModelsRepository;
+    }
   }
 
   function onWeatherUpdated(data as Dictionary) {
