@@ -44,10 +44,9 @@ class DemoModelsRepository {
         self.secondModel.doNotDisturb = false;
 
         self.minuteModel = new MinuteModel(self.lastUpdateTime, self.tenMinuteModel);
-        // self.minuteModel.time = "10:09";
         self.minuteModel.bodyBattery = 88;
         self.minuteModel.stress = 33;
-        self.minuteModel.recoveryTime = 36;
+        self.minuteModel.recoveryTime = 24;
         self.minuteModel.activeMinutes = new DailyWeekly(50, 150, 300);
         self.minuteModel.steps = new DailyWeekly(6000, 6000, 10000);
         self.minuteModel.battery = 88;
