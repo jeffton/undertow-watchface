@@ -16,7 +16,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var previousSecond as SecondModel?;
 
   var isHighPowerMode = true;
-  var useDemoRepo = true;
+  var useDemoRepo = false;
 
   function initialize() {
     WatchFace.initialize();
@@ -276,8 +276,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 126;
-    var y = 141;
+    var x = 140;
+    var y = 120;
 
     var daily = self.models.dayModel.activityCount;
 
@@ -287,8 +287,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSteps(dc as Dc) {
-    var x = 154;
-    var y = 132;
+    var x = 120;
+    var y = 130;
 
     var steps = self.models.minuteModel.steps;
 
@@ -299,8 +299,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActiveMinutes(dc as Dc) {
-    var x = 8;
-    var y = 120;
+    var x = 42;
+    var y = 160;
     var width = 92;
     var height = 8;
 
@@ -342,19 +342,17 @@ class HellofaceView extends WatchUi.WatchFace {
         [x+weekdayAsX + 6, y-8]
       ]);
     } else {
-      for (var i = 0; i < fullBars; i++) {
+      for (var i = 0; i < fullBars && i <= 10; i++) {
         dc.drawBitmap(x + i * 10, y-10, bitmaps.starTinyBitmap.getBitmap());
       }
-      
-
     }
   }
 
   function drawRecoveryTime(dc as Dc) {
     var recoveryTime = self.models.minuteModel.recoveryTime;
     
-    var x = 8;
-    var y = 130;
+    var x = 42;
+    var y = 170;
     var width = 92;
     var height = 4;
 
@@ -468,8 +466,8 @@ class HellofaceView extends WatchUi.WatchFace {
       return false;
     }
     
-    var x = 34;
-    var y = 140;
+    var x = 8;
+    var y = 116;
 
     dc.drawBitmap(x, y + 2, bitmaps.wavesBitmap.getBitmap());
     dc.drawText(x + 12 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
@@ -482,19 +480,19 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawAltitude(dc as Dc) {
-    var x = 32;
-    var y = 142;
+    var x = 8;
+    var y = 124;
     dc.drawBitmap(x, y, bitmaps.mountainsBitmap.getBitmap());
     dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.models.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 111;
-    var y = 155;
+    var x = 88;
+    var y = 130;
 
     var pressure = self.models.minuteModel.pressure;
     if (pressure == null) {
-        return;
+      return;
     }
 
     var r = 11.0;
