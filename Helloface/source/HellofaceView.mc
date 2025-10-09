@@ -276,8 +276,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 140;
-    var y = 120;
+    var x = 144;
+    var y = 118;
 
     var daily = self.models.dayModel.activityCount;
 
@@ -287,7 +287,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSteps(dc as Dc) {
-    var x = 120;
+    var x = 121;
     var y = 130;
 
     var steps = self.models.minuteModel.steps;
