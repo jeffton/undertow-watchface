@@ -65,6 +65,14 @@ type WeatherYrResponse struct {
 						SymbolCode string `json:"symbol_code"`
 					} `json:"summary"`
 				} `json:"next_1_hours"`
+				Next12Hours struct {
+					Summary struct {
+						SymbolCode string `json:"symbol_code"`
+					} `json:"summary"`
+					Details struct {
+						ProbabilityOfPrecipitation *float64 `json:"probability_of_precipitation"`
+					} `json:"details"`
+				} `json:"next_12_hours"`
 			} `json:"data"`
 		} `json:"timeseries"`
 	} `json:"properties"`
@@ -78,16 +86,17 @@ type Position struct {
 
 // Forecast represents a combined forecast entry.
 type Forecast struct {
-	Time           int64    `json:"time"`
-	SeaTemperature *float64 `json:"seaTemperature,omitempty"`
-	WaveHeight     *float64 `json:"waveHeight,omitempty"`
-	WaveDirection  *float64 `json:"waveDirection,omitempty"`
-	Temperature    *float64 `json:"temperature,omitempty"`
-	WindSpeed      *float64 `json:"windSpeed,omitempty"`
-	WindDirection  *float64 `json:"windDirection,omitempty"`
-	CloudCover     *float64 `json:"cloudCover,omitempty"`
-	Condition      *string  `json:"condition,omitempty"`
-	UvIndex        *float64 `json:"uvIndex,omitempty"`
+	Time                        int64    `json:"time"`
+	SeaTemperature              *float64 `json:"seaTemperature,omitempty"`
+	WaveHeight                  *float64 `json:"waveHeight,omitempty"`
+	WaveDirection               *float64 `json:"waveDirection,omitempty"`
+	Temperature                 *float64 `json:"temperature,omitempty"`
+	WindSpeed                   *float64 `json:"windSpeed,omitempty"`
+	WindDirection               *float64 `json:"windDirection,omitempty"`
+	CloudCover                  *float64 `json:"cloudCover,omitempty"`
+	Condition                   *string  `json:"condition,omitempty"`
+	UvIndex                     *float64 `json:"uvIndex,omitempty"`
+	Precipitation12hProbability *float64 `json:"precipitation12hProbability,omitempty"`
 }
 
 // ApiResponse is the structure of the JSON response we will serve.
@@ -314,6 +323,9 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 				cond := mapSymbolToCondition(entry.Data.Next1Hours.Summary.SymbolCode)
 				if cond != "unknown" {
 					forecasts[ts].Condition = &cond
+				}
+				if entry.Data.Next12Hours.Details.ProbabilityOfPrecipitation != nil {
+					forecasts[ts].Precipitation12hProbability = entry.Data.Next12Hours.Details.ProbabilityOfPrecipitation
 				}
 			}
 		}
