@@ -33,4 +33,6 @@
     <bitmap dithering="none" id="weatherThunder" filename="weather-thunder.png" />
     <bitmap dithering="none" id="weatherSnow" filename="weather-snow.png" />
     <bitmap dithering="none" id="weatherFog" filename="weather-fog.png" />
+    <bitmap dithering="none" id="umbrella" filename="umbrella.png" />
+
 </drawables>
