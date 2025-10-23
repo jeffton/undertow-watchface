@@ -34,6 +34,7 @@ class Bitmaps {
   var weatherThunderBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherThunder);
   var weatherSnowBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSnow);
   var weatherFogBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherFog);
+  var umbrellaBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.umbrella);
   var wavesBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.waves);
   var mountainsBitmap as LazyBitmap = new LazyBitmap(Rez.Drawables.mountains);
 }
