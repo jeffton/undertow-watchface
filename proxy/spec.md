@@ -66,7 +66,7 @@ The service returns a JSON object.
       "cloudCover": 80.5,
       "condition": "cloudy",
       "uvIndex": 5.0,
-      "precipitation12hProbability": 45.5
+      "precipitation": 45.5
     },
     {
       "time": 1750701600,
@@ -79,7 +79,7 @@ The service returns a JSON object.
       "cloudCover": 90.1,
       "condition": "cloudy",
       "uvIndex": 4.5,
-      "precipitation12hProbability": 38.2
+      "precipitation": 38.2
     }
   ],
   "error": null
@@ -109,7 +109,7 @@ The service returns a JSON object.
     *   `cloudCover` (`float`, optional): The cloud cover as a percentage.
     *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `fair`, `partly cloudy`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
     *   `uvIndex` (`float`, optional): The UV index, from 0 to 11+.
-    *   `precipitation12hProbability` (`float`, optional): Probability of precipitation over the next 12 hours as a percentage.
+    *   `precipitation` (`float`, optional): Probability of precipitation over the next 12 hours as a percentage.
 *   `error` (`object | string | null`): Will be `null` on a successful response.
 
 ##### **4.2. Error Response**
@@ -146,7 +146,7 @@ If the proxy encounters an internal error or receives an error from the upstream
     *   The `forecastPosition` is extracted from `geometry.coordinates`. Note that the order in the MET API response is `[longitude, latitude]`.
     *   The proxy fetches data from both the Ocean and Weather APIs and merges their `properties.timeseries` arrays based on the `time` field.
     *   For each of the first 24 hourly entries, it creates a `forecast` object containing the combined data.
-    *   The `precipitation12hProbability` value is sourced from the Location Forecast `next_12_hours.details` block when available.
+    *   The `precipitation` value is sourced from the Location Forecast `next_12_hours.details` block when available.
     *   Time fields (RFC3339 strings) are converted to a Unix timestamp (seconds).
 5.  If the MET API returns a non-successful status code or a non-JSON response, the proxy captures the error content and places it in the `error` field of its own response.
 
