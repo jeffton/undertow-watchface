@@ -35,6 +35,7 @@ class DemoModelsRepository {
         self.weatherModel.waveDirection = 60;
         self.weatherModel.cloudCover = 10;
         self.weatherModel.uvIndex = "3";
+        self.weatherModel.precipitation = 40.2;
 
         self.secondModel = new SecondModel(self.lastUpdateTime);
         // self.secondModel.seconds = "00";
