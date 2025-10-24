@@ -16,7 +16,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var previousSecond as SecondModel?;
 
   var isHighPowerMode = true;
-  var useDemoRepo = true;
+  var useDemoRepo = false;
 
   function initialize() {
     WatchFace.initialize();
@@ -126,7 +126,6 @@ class HellofaceView extends WatchUi.WatchFace {
     drawDate(dc);
     drawWeather(dc, isDaytime);
     drawSunTime(dc);
-    drawPrecipitation(dc);
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
     }
@@ -177,6 +176,7 @@ class HellofaceView extends WatchUi.WatchFace {
     }
 
     drawUvIndex(dc);
+    drawPrecipitation(dc);
   }
 
   function drawUvIndex(dc as Dc) {
@@ -451,7 +451,12 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 2;
     var y = 48;
 
-    dc.drawBitmap(x, y, bitmaps.umbrellaBitmap.getBitmap());
+    var precipitation = self.models.weatherModel.precipitation;
+    if (precipitation > 0) {
+      dc.drawBitmap(x, y, bitmaps.umbrellaBitmap.getBitmap());
+      var height = Utils.scaleValue(precipitation, 100, 10);
+      dc.fillRectangle(x + 12, y + 10 - height, 3, height);
+    }
   }
 
   function drawSunTime(dc as Dc) {

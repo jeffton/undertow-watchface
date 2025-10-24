@@ -46,10 +46,11 @@ class WeatherRepository {
       model.waveHeight = (waveHeight as Float).format("%.1f") + "m";
     }
 
-    model.waveDirection = forecast.get("waveDirection") as Number?;
-    model.windDirection = forecast.get("windDirection") as Number?;
+    model.waveDirection = forecast.get("waveDirection") as Numeric?;
+    model.windDirection = forecast.get("windDirection") as Numeric?;
     model.condition = forecast.get("condition") as String?;
-    model.cloudCover = forecast.get("cloudCover") as Number?;
+    model.cloudCover = forecast.get("cloudCover") as Numeric?;
+    model.precipitation = forecast.get("precipitation") as Numeric?;
     var uvIndex = forecast.get("uvIndex") as Number?;
     if (uvIndex != null) {
       model.uvIndex = Math.round(uvIndex).format("%i");
