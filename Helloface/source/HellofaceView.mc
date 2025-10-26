@@ -181,7 +181,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawUvIndex(dc as Dc) {
     if (self.models.weatherModel.uvIndex != null) {
-      var x = 93;
+      var x = 92;
       var y = 40;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
@@ -277,7 +277,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 134;
+    var x = 132;
     var y = 118;
 
     var daily = self.models.dayModel.activityCount;
@@ -288,7 +288,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSteps(dc as Dc) {
-    var x = 116;
+    var x = 114;
     var y = 130;
 
     var steps = self.models.minuteModel.steps;
@@ -439,7 +439,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBattery(dc as Dc) {
-    var x = 164;
+    var x = 162;
     var y = 121;
 
     dc.drawBitmap(x, y, bitmaps.batteryBitmap.getBitmap());
@@ -448,19 +448,17 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawPrecipitation(dc as Dc) {
-    var x = 2;
+    var x = 4;
     var y = 48;
 
     var precipitation = self.models.weatherModel.precipitation;
-    if (precipitation > 0) {
+    if (precipitation != null && precipitation >= 80) {
       dc.drawBitmap(x, y, bitmaps.umbrellaBitmap.getBitmap());
-      var height = Utils.scaleValue(precipitation, 100, 10);
-      dc.fillRectangle(x + 12, y + 10 - height, 3, height);
     }
   }
 
   function drawSunTime(dc as Dc) {
-    var x = 20;
+    var x = 17;
     var y = 40;
   
     dc.drawBitmap(x, y + 8, bitmaps.sunriseBitmap.getBitmap());
@@ -500,7 +498,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 88;
+    var x = 84;
     var y = 130;
 
     var pressure = self.models.minuteModel.pressure;

@@ -35,7 +35,7 @@ class DemoModelsRepository {
         self.weatherModel.waveDirection = 60;
         self.weatherModel.cloudCover = 10;
         self.weatherModel.uvIndex = "3";
-        self.weatherModel.precipitation = 40.2;
+        self.weatherModel.precipitation = 85.3;
 
         self.secondModel = new SecondModel(self.lastUpdateTime);
         // self.secondModel.seconds = "00";
@@ -49,7 +49,7 @@ class DemoModelsRepository {
         self.minuteModel.stress = 33;
         self.minuteModel.recoveryTime = 24;
         self.minuteModel.activeMinutes = new DailyWeekly(50, 150, 300);
-        self.minuteModel.steps = new DailyWeekly(6000, 6000, 10000);
+        self.minuteModel.steps = new DailyWeekly(8000, 8000, 10000);
         self.minuteModel.battery = 88;
         self.minuteModel.sunTime = "18:30";
         self.minuteModel.altitude = "123m";
