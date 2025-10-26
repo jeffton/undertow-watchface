@@ -342,8 +342,8 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 		return forecastSlice[i].Time < forecastSlice[j].Time
 	})
 
-	if len(forecastSlice) > 24 {
-		apiResponse.Forecast = forecastSlice[:24]
+	if len(forecastSlice) > 12 {
+		apiResponse.Forecast = forecastSlice[:12]
 	} else {
 		apiResponse.Forecast = forecastSlice
 	}
