@@ -17,7 +17,8 @@ class HellofaceApp extends Application.AppBase {
   }
 
   function onBackgroundData(data) {
-    if (data instanceof Dictionary) {
+    if (data instanceof Dictionary && data.hasKey("forecast")) {
+      Storage.setValue("weather", data);
       if (self.view != null) {
         self.view.onWeatherUpdated(data);
       }
