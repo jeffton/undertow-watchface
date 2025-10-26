@@ -3,7 +3,6 @@ import Toybox.Time;
 import Toybox.Lang;
 import Toybox.PersistedContent;
 import Toybox.Application;
-import Toybox.Application.Storage;
 
 
 (:background)
@@ -88,7 +87,6 @@ class WeatherService {
     data as Null or Dictionary or String or PersistedContent.Iterator) as Void
   {
     if (data instanceof Dictionary && data.hasKey("forecast")) {
-      Storage.setValue("weather", data);
       Background.exit(data);
     } else {
       Background.exit(null);
