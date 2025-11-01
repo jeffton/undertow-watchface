@@ -501,7 +501,12 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 84;
     var y = 130;
 
-    var pressure = self.models.minuteModel.pressure;
+    /* If close to the sea (where sea temperature is available), use absolute pressure. Altitude is often
+    inaccurate so we're better off assuming it's close to zero.
+    If we're far from the sea, eg in the mountains, sea level pressure is more useful on a barometer display. */
+    var useSeaLevelPresure = (self.models.weatherModel.seaTemperature == null);
+    var pressure = useSeaLevelPresure ? self.models.minuteModel.seaLevelPressure : 
+                                        self.models.minuteModel.pressure;
     if (pressure == null) {
       return;
     }

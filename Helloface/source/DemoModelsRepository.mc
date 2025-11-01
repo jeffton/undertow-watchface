@@ -54,6 +54,7 @@ class DemoModelsRepository {
         self.minuteModel.sunTime = "18:30";
         self.minuteModel.altitude = "2200m";
         self.minuteModel.pressure = 1030.0;
+        self.minuteModel.seaLevelPressure = 1030.0;
     }
 
     function onWeatherUpdated(data as Dictionary) as Void {}
