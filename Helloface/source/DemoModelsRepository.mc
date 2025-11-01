@@ -52,7 +52,7 @@ class DemoModelsRepository {
         self.minuteModel.steps = new DailyWeekly(8000, 8000, 10000);
         self.minuteModel.battery = 88;
         self.minuteModel.sunTime = "18:30";
-        self.minuteModel.altitude = "123m";
+        self.minuteModel.altitude = "2200m";
         self.minuteModel.pressure = 1030.0;
     }
 
