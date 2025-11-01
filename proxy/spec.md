@@ -146,7 +146,7 @@ If the proxy encounters an internal error or receives an error from the upstream
     *   The `forecastPosition` is extracted from `geometry.coordinates`. Note that the order in the MET API response is `[longitude, latitude]`.
     *   The proxy fetches data from both the Ocean and Weather APIs and merges their `properties.timeseries` arrays based on the `time` field.
     *   For each of the first 24 hourly entries, it creates a `forecast` object containing the combined data.
-    *   The `precipitation` value is sourced from the Location Forecast `next_12_hours.details` block when available.
+    *   The `precipitation` value is sourced from the Location Forecast `next_12_hours.details` block when available. When the upstream data omits a precipitation probability, the proxy inspects the 12-hour `symbol_code`: if it contains precipitation keywords (`rain`, `sleet`, `snow`, `shower`, `thunder`, `hail`) the probability is set to `100`; otherwise it is set to `0`.
     *   Time fields (RFC3339 strings) are converted to a Unix timestamp (seconds).
 5.  If the MET API returns a non-successful status code or a non-JSON response, the proxy captures the error content and places it in the `error` field of its own response.
 

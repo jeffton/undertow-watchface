@@ -237,6 +237,28 @@ func mapSymbolToCondition(symbolCode string) string {
 	}
 }
 
+func symbolImpliesPrecipitation(symbolCode string) bool {
+	if symbolCode == "" {
+		return false
+	}
+
+	lowerSymbol := strings.ToLower(symbolCode)
+	keywords := []string{
+		"rain",
+		"sleet",
+		"snow",
+		"shower",
+		"thunder",
+		"hail",
+	}
+	for _, kw := range keywords {
+		if strings.Contains(lowerSymbol, kw) {
+			return true
+		}
+	}
+	return false
+}
+
 func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse, requestPos Position, errors []string) ApiResponse {
 	apiResponse := ApiResponse{
 		RequestPosition: requestPos,
@@ -324,9 +346,17 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 				if cond != "unknown" {
 					forecasts[ts].Condition = &cond
 				}
-				if entry.Data.Next12Hours.Details.ProbabilityOfPrecipitation != nil {
-					forecasts[ts].Precipitation = entry.Data.Next12Hours.Details.ProbabilityOfPrecipitation
+				prob := entry.Data.Next12Hours.Details.ProbabilityOfPrecipitation
+				if prob != nil {
+					forecasts[ts].Precipitation = prob
+					continue
 				}
+
+				fallback := 0.0
+				if symbolImpliesPrecipitation(entry.Data.Next12Hours.Summary.SymbolCode) {
+					fallback = 100.0
+				}
+				forecasts[ts].Precipitation = &fallback
 			}
 		}
 	}
