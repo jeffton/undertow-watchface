@@ -518,6 +518,12 @@ class HellofaceView extends WatchUi.WatchFace {
 
     // 3 deg/hPa, 1013.25 hPa is at 0 degrees. 
     var angleDeg = (pressure - 1013.25) * -3;
+    var maxAngle = 170; // keep extremes just either side of 6 o'clock to avoid wraparound
+    if (angleDeg > maxAngle) {
+      angleDeg = maxAngle;
+    } else if (angleDeg < -maxAngle) {
+      angleDeg = -maxAngle;
+    }
     var angleRad = Math.toRadians(angleDeg);
 
     // cos and sin are swapped and negated, fixes 90 degree rotation + inverted y axis
