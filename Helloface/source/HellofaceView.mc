@@ -491,10 +491,10 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawAltitude(dc as Dc) {
-    var x = 8;
-    var y = 124;
+    var x = 34;
+    var y = 118;
     dc.drawBitmap(x, y, bitmaps.mountainsBitmap.getBitmap());
-    dc.drawText(x + 17, y - 6, Graphics.FONT_TINY, self.models.minuteModel.altitude, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(x + 7, y + 10, Graphics.FONT_TINY, self.models.minuteModel.altitude, Graphics.TEXT_JUSTIFY_CENTER);
   }
 
   function drawBarometer(dc as Dc) {
