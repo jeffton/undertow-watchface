@@ -18,6 +18,7 @@ class MinuteModel {
   var sunTime as String?;
   var altitude as String;
   var pressure as Float?;
+  var seaLevelPressure as Float?;
  
   function initialize(updateTime as UpdateTime, tenMinuteModel as TenMinuteModel) {
     var now = Time.now();
@@ -34,6 +35,7 @@ class MinuteModel {
     self.sunTime = getNextSunTime(tenMinuteModel, now);
     self.altitude = getAltitude(activityInfo);
     self.pressure = getPressure(activityInfo);
+    self.seaLevelPressure = getSeaLevelPressure(activityInfo);
   }
 
   function getAltitude(activityInfo as Activity.Info) as String {
@@ -48,6 +50,14 @@ class MinuteModel {
 
   private function getPressure(activityInfo as Activity.Info) as Float? {
     var pressurePa = activityInfo.ambientPressure;
+    if (pressurePa == null) {
+      return null;
+    }
+    return pressurePa / 100.0;
+  }
+
+  private function getSeaLevelPressure(activityInfo as Activity.Info) as Float? {
+    var pressurePa = activityInfo.meanSeaLevelPressure;
     if (pressurePa == null) {
       return null;
     }
