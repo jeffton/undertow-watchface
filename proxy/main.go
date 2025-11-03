@@ -53,11 +53,14 @@ type WeatherYrResponse struct {
 			Data struct {
 				Instant struct {
 					Details struct {
-						AirTemperature           float64 `json:"air_temperature"`
-						CloudAreaFraction        float64 `json:"cloud_area_fraction"`
-						WindFromDirection        float64 `json:"wind_from_direction"`
-						WindSpeed                float64 `json:"wind_speed"`
-						UltravioletIndexClearSky float64 `json:"ultraviolet_index_clear_sky"`
+						AirTemperature           float64  `json:"air_temperature"`
+						CloudAreaFraction        float64  `json:"cloud_area_fraction"`
+						CloudAreaFractionLow     *float64 `json:"cloud_area_fraction_low"`
+						CloudAreaFractionMedium  *float64 `json:"cloud_area_fraction_medium"`
+						CloudAreaFractionHigh    *float64 `json:"cloud_area_fraction_high"`
+						WindFromDirection        float64  `json:"wind_from_direction"`
+						WindSpeed                float64  `json:"wind_speed"`
+						UltravioletIndexClearSky float64  `json:"ultraviolet_index_clear_sky"`
 					} `json:"details"`
 				} `json:"instant"`
 				Next1Hours struct {
@@ -86,17 +89,17 @@ type Position struct {
 
 // Forecast represents a combined forecast entry.
 type Forecast struct {
-	Time           int64    `json:"time"`
-	SeaTemperature *float64 `json:"seaTemperature,omitempty"`
-	WaveHeight     *float64 `json:"waveHeight,omitempty"`
-	WaveDirection  *float64 `json:"waveDirection,omitempty"`
-	Temperature    *float64 `json:"temperature,omitempty"`
-	WindSpeed      *float64 `json:"windSpeed,omitempty"`
-	WindDirection  *float64 `json:"windDirection,omitempty"`
-	CloudCover     *float64 `json:"cloudCover,omitempty"`
-	Condition      *string  `json:"condition,omitempty"`
-	UvIndex        *float64 `json:"uvIndex,omitempty"`
-	Precipitation  *float64 `json:"precipitation,omitempty"`
+	Time           int64     `json:"time"`
+	SeaTemperature *float64  `json:"seaTemperature,omitempty"`
+	WaveHeight     *float64  `json:"waveHeight,omitempty"`
+	WaveDirection  *float64  `json:"waveDirection,omitempty"`
+	Temperature    *float64  `json:"temperature,omitempty"`
+	WindSpeed      *float64  `json:"windSpeed,omitempty"`
+	WindDirection  *float64  `json:"windDirection,omitempty"`
+	CloudCover     []float64 `json:"cloudCover,omitempty"`
+	Condition      *string   `json:"condition,omitempty"`
+	UvIndex        *float64  `json:"uvIndex,omitempty"`
+	Precipitation  *float64  `json:"precipitation,omitempty"`
 }
 
 // ApiResponse is the structure of the JSON response we will serve.
@@ -338,8 +341,17 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 				forecasts[ts].WindSpeed = &ws
 				wd := entry.Data.Instant.Details.WindFromDirection
 				forecasts[ts].WindDirection = &wd
-				cc := entry.Data.Instant.Details.CloudAreaFraction
-				forecasts[ts].CloudCover = &cc
+				cc := []float64{entry.Data.Instant.Details.CloudAreaFraction}
+				if entry.Data.Instant.Details.CloudAreaFractionLow != nil &&
+					entry.Data.Instant.Details.CloudAreaFractionMedium != nil &&
+					entry.Data.Instant.Details.CloudAreaFractionHigh != nil {
+					cc = append(cc,
+						*entry.Data.Instant.Details.CloudAreaFractionLow,
+						*entry.Data.Instant.Details.CloudAreaFractionMedium,
+						*entry.Data.Instant.Details.CloudAreaFractionHigh,
+					)
+				}
+				forecasts[ts].CloudCover = cc
 				uv := entry.Data.Instant.Details.UltravioletIndexClearSky
 				forecasts[ts].UvIndex = &uv
 				cond := mapSymbolToCondition(entry.Data.Next1Hours.Summary.SymbolCode)

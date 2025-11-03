@@ -63,7 +63,7 @@ The service returns a JSON object.
       "temperature": 15.2,
       "windSpeed": 3.4,
       "windDirection": 240.1,
-      "cloudCover": 80.5,
+      "cloudCover": [80.5, 65.0, 55.0, 45.0],
       "condition": "cloudy",
       "uvIndex": 5.0,
       "precipitation": 45.5
@@ -76,7 +76,7 @@ The service returns a JSON object.
       "temperature": 14.8,
       "windSpeed": 3.2,
       "windDirection": 235.0,
-      "cloudCover": 90.1,
+      "cloudCover": [90.1],
       "condition": "cloudy",
       "uvIndex": 4.5,
       "precipitation": 38.2
@@ -106,7 +106,7 @@ The service returns a JSON object.
     *   `temperature` (`float`, optional): The air temperature in degrees Celsius.
     *   `windSpeed` (`float`, optional): The wind speed in meters per second (m/s).
     *   `windDirection` (`float`, optional): The wind direction in degrees.
-    *   `cloudCover` (`float`, optional): The cloud cover as a percentage.
+    *   `cloudCover` (`array<float>`, optional): Cloud cover percentages ordered as `[total, low, medium, high]`. If the upstream data does not provide the layered values, only the total value is included.
     *   `condition` (`string`, optional): A simplified weather condition string. Possible values are: `clear`, `fair`, `partly cloudy`, `cloudy`, `light rain`, `rain`, `thunder`, `snow`, `hail`, `fog`.
     *   `uvIndex` (`float`, optional): The UV index, from 0 to 11+.
     *   `precipitation` (`float`, optional): Probability of precipitation over the next 12 hours as a percentage.
@@ -146,6 +146,7 @@ If the proxy encounters an internal error or receives an error from the upstream
     *   The `forecastPosition` is extracted from `geometry.coordinates`. Note that the order in the MET API response is `[longitude, latitude]`.
     *   The proxy fetches data from both the Ocean and Weather APIs and merges their `properties.timeseries` arrays based on the `time` field.
     *   For each of the first 24 hourly entries, it creates a `forecast` object containing the combined data.
+    *   The `cloudCover` field is assembled from the Location Forecast's `cloud_area_fraction` values, yielding `[total, low, medium, high]` when the layered fractions are provided; otherwise it contains only the total value.
     *   The `precipitation` value is sourced from the Location Forecast `next_12_hours.details` block when available. When the upstream data omits a precipitation probability, the proxy inspects the 12-hour `symbol_code`: if it contains precipitation keywords (`rain`, `sleet`, `snow`, `shower`, `thunder`, `hail`) the probability is set to `100`; otherwise it is set to `0`.
     *   Time fields (RFC3339 strings) are converted to a Unix timestamp (seconds).
 5.  If the MET API returns a non-successful status code or a non-JSON response, the proxy captures the error content and places it in the `error` field of its own response.
