@@ -208,7 +208,12 @@ class HellofaceView extends WatchUi.WatchFace {
         var cloudCover = self.models.weatherModel.cloudCover as Number;
         
         if (cloudCover >= 90) {
-          dc.drawBitmap(x, y, bitmaps.weatherCloud.getBitmap());
+          var cloudCoverLow = self.models.weatherModel.cloudCoverLow;
+          if (cloudCoverLow != null && cloudCoverLow >= 75) {
+            dc.drawBitmap(x, y, bitmaps.weatherClouds.getBitmap());
+          } else {
+            dc.drawBitmap(x, y, bitmaps.weatherCloud.getBitmap());
+          }
         } else {
           // Draw sun or moon
           var baseBitmap = isDaytime ? bitmaps.weatherSun : bitmaps.weatherMoon;
