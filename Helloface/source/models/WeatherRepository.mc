@@ -49,7 +49,20 @@ class WeatherRepository {
     model.waveDirection = forecast.get("waveDirection") as Numeric?;
     model.windDirection = forecast.get("windDirection") as Numeric?;
     model.condition = forecast.get("condition") as String?;
-    model.cloudCover = forecast.get("cloudCover") as Numeric?;
+
+    var cloudCover = forecast.get("cloudCover");
+    if (cloudCover instanceof Array) {
+      var size = cloudCover.size();
+      if (size >= 1) {
+        model.cloudCover = cloudCover[0] as Numeric?;
+      }
+      if (size >= 4) {
+        model.cloudCoverLow = cloudCover[1] as Numeric?;
+        model.cloudCoverMedium = cloudCover[2] as Numeric?;
+        model.cloudCoverHigh = cloudCover[3] as Numeric?;
+      }
+    }
+
     model.precipitation = forecast.get("precipitation") as Numeric?;
     var uvIndex = forecast.get("uvIndex") as Number?;
     if (uvIndex != null) {
@@ -74,4 +87,4 @@ class WeatherRepository {
     }
     return null;
   }
-} 
+}
