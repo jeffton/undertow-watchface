@@ -102,13 +102,28 @@ type Forecast struct {
 	Precipitation  *float64  `json:"precipitation,omitempty"`
 }
 
+const (
+	ForecastIdxTime = iota
+	ForecastIdxSeaTemperature
+	ForecastIdxWaveHeight
+	ForecastIdxWaveDirection
+	ForecastIdxTemperature
+	ForecastIdxWindSpeed
+	ForecastIdxWindDirection
+	ForecastIdxCloudCover
+	ForecastIdxCondition
+	ForecastIdxUvIndex
+	ForecastIdxPrecipitation
+	ForecastEntrySize
+)
+
 // ApiResponse is the structure of the JSON response we will serve.
 type ApiResponse struct {
 	RequestPosition       Position    `json:"requestPosition"`
 	ForecastPosition      *Position   `json:"forecastPosition,omitempty"`
 	OceanForecastPosition *Position   `json:"oceanForecastPosition,omitempty"`
 	RequestTime           int64       `json:"requestTime"`
-	Forecast              []Forecast  `json:"forecast,omitempty"`
+	Forecast              [][]any     `json:"forecast,omitempty"`
 	Error                 interface{} `json:"error,omitempty"`
 }
 
@@ -384,10 +399,14 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 		return forecastSlice[i].Time < forecastSlice[j].Time
 	})
 
-	if len(forecastSlice) > 8 {
-		apiResponse.Forecast = forecastSlice[:8]
-	} else {
-		apiResponse.Forecast = forecastSlice
+	limited := forecastSlice
+	if len(limited) > 8 {
+		limited = limited[:8]
+	}
+
+	apiResponse.Forecast = make([][]any, len(limited))
+	for i, f := range limited {
+		apiResponse.Forecast[i] = forecastToArray(f)
 	}
 
 	if apiResponse.Error == nil && len(apiResponse.Forecast) == 0 {
@@ -395,6 +414,44 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 	}
 
 	return apiResponse
+}
+
+func forecastToArray(f Forecast) []any {
+	entry := make([]any, ForecastEntrySize)
+	entry[ForecastIdxTime] = f.Time
+
+	if f.SeaTemperature != nil {
+		entry[ForecastIdxSeaTemperature] = *f.SeaTemperature
+	}
+	if f.WaveHeight != nil {
+		entry[ForecastIdxWaveHeight] = *f.WaveHeight
+	}
+	if f.WaveDirection != nil {
+		entry[ForecastIdxWaveDirection] = *f.WaveDirection
+	}
+	if f.Temperature != nil {
+		entry[ForecastIdxTemperature] = *f.Temperature
+	}
+	if f.WindSpeed != nil {
+		entry[ForecastIdxWindSpeed] = *f.WindSpeed
+	}
+	if f.WindDirection != nil {
+		entry[ForecastIdxWindDirection] = *f.WindDirection
+	}
+	if len(f.CloudCover) > 0 {
+		entry[ForecastIdxCloudCover] = f.CloudCover
+	}
+	if f.Condition != nil {
+		entry[ForecastIdxCondition] = *f.Condition
+	}
+	if f.UvIndex != nil {
+		entry[ForecastIdxUvIndex] = *f.UvIndex
+	}
+	if f.Precipitation != nil {
+		entry[ForecastIdxPrecipitation] = *f.Precipitation
+	}
+
+	return entry
 }
 
 func proxyHandler(w http.ResponseWriter, r *http.Request) {
