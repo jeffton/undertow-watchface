@@ -38,12 +38,12 @@ class WeatherService {
     }
   
     var lastRequestTime = lastData.get("requestTime");
-    var lastPosition = lastData.get("requestPosition");
+    var lastPosition = lastData.get("requestPosition") as Array<Numeric> or Null;
 
-    if (!(lastRequestTime instanceof Number && lastPosition instanceof Dictionary)) {
+    if (!(lastRequestTime instanceof Number) || lastPosition == null) {
       return true;
     }
-    
+
     var timeSinceLastRequest = Time.now().subtract(new Time.Moment(lastRequestTime)) as Time.Duration;
     var oneHour = new Time.Duration(3540); // 59 minutes really
 
@@ -51,10 +51,8 @@ class WeatherService {
       return true;
     }
 
-    var lastLat = lastPosition.get("lat");
-    var lastLon = lastPosition.get("lon");
     var latlon = position.toDegrees();
-    var distanceToLastRequest = distance(latlon[0], latlon[1], lastLat, lastLon);
+    var distanceToLastRequest = distance(latlon[0], latlon[1], lastPosition[0], lastPosition[1]);
     return (distanceToLastRequest >= 1);
   }
 
