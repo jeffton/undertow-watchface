@@ -87,6 +87,9 @@ type Position struct {
 	Lon float64 `json:"lon"`
 }
 
+// Coordinates is the serialized [lat, lon] pair used in API responses.
+type Coordinates [2]float64
+
 // Forecast represents a combined forecast entry.
 type Forecast struct {
 	Time           int64     `json:"time"`
@@ -119,12 +122,12 @@ const (
 
 // ApiResponse is the structure of the JSON response we will serve.
 type ApiResponse struct {
-	RequestPosition       Position    `json:"requestPosition"`
-	ForecastPosition      *Position   `json:"forecastPosition,omitempty"`
-	OceanForecastPosition *Position   `json:"oceanForecastPosition,omitempty"`
-	RequestTime           int64       `json:"requestTime"`
-	Forecast              [][]any     `json:"forecast,omitempty"`
-	Error                 interface{} `json:"error,omitempty"`
+	RequestPosition       Coordinates  `json:"requestPosition"`
+	ForecastPosition      *Coordinates `json:"forecastPosition,omitempty"`
+	OceanForecastPosition *Coordinates `json:"oceanForecastPosition,omitempty"`
+	RequestTime           int64        `json:"requestTime"`
+	Forecast              [][]any      `json:"forecast,omitempty"`
+	Error                 interface{}  `json:"error,omitempty"`
 }
 
 func main() {
@@ -279,7 +282,7 @@ func symbolImpliesPrecipitation(symbolCode string) bool {
 
 func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse, requestPos Position, errors []string) ApiResponse {
 	apiResponse := ApiResponse{
-		RequestPosition: requestPos,
+		RequestPosition: Coordinates{requestPos.Lat, requestPos.Lon},
 		RequestTime:     time.Now().Unix(),
 	}
 
@@ -292,9 +295,9 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 
 	if oceanData != nil {
 		if len(oceanData.Geometry.Coordinates) >= 2 {
-			apiResponse.OceanForecastPosition = &Position{
-				Lat: oceanData.Geometry.Coordinates[1],
-				Lon: oceanData.Geometry.Coordinates[0],
+			apiResponse.OceanForecastPosition = &Coordinates{
+				oceanData.Geometry.Coordinates[1],
+				oceanData.Geometry.Coordinates[0],
 			}
 		}
 
@@ -327,9 +330,9 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 
 	if weatherData != nil {
 		if len(weatherData.Geometry.Coordinates) >= 2 {
-			apiResponse.ForecastPosition = &Position{
-				Lat: weatherData.Geometry.Coordinates[1],
-				Lon: weatherData.Geometry.Coordinates[0],
+			apiResponse.ForecastPosition = &Coordinates{
+				weatherData.Geometry.Coordinates[1],
+				weatherData.Geometry.Coordinates[0],
 			}
 		}
 
@@ -400,8 +403,8 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 	})
 
 	limited := forecastSlice
-	if len(limited) > 8 {
-		limited = limited[:8]
+	if len(limited) > 24 {
+		limited = limited[:24]
 	}
 
 	apiResponse.Forecast = make([][]any, len(limited))
