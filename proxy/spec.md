@@ -41,18 +41,9 @@ The service returns a JSON object.
 
 ```json
 {
-  "requestPosition": {
-    "lat": 55.7122,
-    "lon": 12.5890
-  },
-  "forecastPosition": {
-    "lat": 55.71,
-    "lon": 12.58
-  },
-  "oceanForecastPosition": {
-    "lat": 55.7324,
-    "lon": 12.5926
-  },
+  "requestPosition": [55.7122, 12.5890],
+  "forecastPosition": [55.71, 12.58],
+  "oceanForecastPosition": [55.7324, 12.5926],
   "requestTime": 1750700771,
   "forecast": [
     [1750698000, 17.0, 2.5, 180.0, 15.2, 3.4, 240.1, [80.5, 65.0, 55.0, 45.0], "cloudy", 5.0, 45.5],
@@ -64,15 +55,9 @@ The service returns a JSON object.
 
 **Fields**:
 
-*   `requestPosition` (`object`): An object containing the latitude and longitude sent in the request.
-    *   `lat` (`float`): The request latitude.
-    *   `lon` (`float`): The request longitude.
-*   `forecastPosition` (`object | null`): The latitude and longitude used by the MET API for the weather forecast.
-    *   `lat` (`float`): The forecast latitude.
-    *   `lon` (`float`): The forecast longitude.
-*   `oceanForecastPosition` (`object | null`): The latitude and longitude used by the MET API for the ocean forecast. This may differ from the `forecastPosition` as the API snaps to the nearest ocean grid point.
-    *   `lat` (`float`): The ocean forecast latitude.
-    *   `lon` (`float`): The ocean forecast longitude.
+*   `requestPosition` (`array<float, float>`): `[lat, lon]` pair echoing the rounded request coordinates.
+*   `forecastPosition` (`array<float, float> | null`): `[lat, lon]` used by the MET Location Forecast API, or `null` if unavailable.
+*   `oceanForecastPosition` (`array<float, float> | null`): `[lat, lon]` used by the Ocean Forecast API grid, or `null`.
 *   `requestTime` (`integer`): The Unix timestamp (in seconds) indicating when the proxy processed the request.
 *   `forecast` (`array`): An array of forecast data points, containing a maximum of 24 hourly entries. Each entry is itself an array with fixed indexes. Values that are not applicable for a time step use `null`.
     *   `[0] time` (`integer`): Unix timestamp (seconds) for the forecast entry.
@@ -96,10 +81,7 @@ If the proxy encounters an internal error or receives an error from the upstream
 
 ```json
 {
-  "requestPosition": {
-    "lat": 55.7122,
-    "lon": 12.5890
-  },
+  "requestPosition": [55.7122, 12.5890],
   "forecastPosition": null,
   "oceanForecastPosition": null,
   "requestTime": 1750700771,
@@ -110,7 +92,7 @@ If the proxy encounters an internal error or receives an error from the upstream
 
 **Fields**:
 
-*   `requestPosition` (`object`): Will always be populated with the user-supplied latitude and longitude, as long as they are valid numbers.
+*   `requestPosition` (`array<float, float>`): Always populated `[lat, lon]` echo of the request coordinates.
 *   `error` (`object | string`): Contains details about the error. This could be a simple string (e.g., if the upstream API is unreachable) or a JSON object if the upstream API provides a structured error.
 
 #### **5. Data Transformation Logic**
@@ -119,7 +101,7 @@ If the proxy encounters an internal error or receives an error from the upstream
 2.  It constructs the request URL for the upstream MET API.
 3.  It populates the `requestPosition` and `requestTime` fields for its own response.
 4.  Upon receiving a successful response from the MET API, it parses the JSON.
-    *   The `forecastPosition` is extracted from `geometry.coordinates`. Note that the order in the MET API response is `[longitude, latitude]`.
+    *   The `forecastPosition` is extracted from `geometry.coordinates` and serialized as `[lat, lon]` (the MET response is `[lon, lat]`).
 *   The proxy fetches data from both the Ocean and Weather APIs and merges their `properties.timeseries` arrays based on the `time` field.
 *   For each of the first 24 hourly entries, it creates a `forecast` array using the indexes described above.
     *   The `cloudCover` field is assembled from the Location Forecast's `cloud_area_fraction` values, yielding `[total, low, medium, high]` when the layered fractions are provided; otherwise it contains only the total value.
