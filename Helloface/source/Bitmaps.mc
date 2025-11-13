@@ -25,7 +25,7 @@ class Bitmaps {
   var weatherSun as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherSun);
   var weatherMoon as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherMoon);
   var weatherCloud as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud);
-  var weatherClouds as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherClouds);
+  var weatherCloudyLow as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloudyLow);
   var weatherCloudyHigh as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloudyHigh);
   var weatherCloud20 as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud20);
   var weatherCloud40 as LazyBitmap = new LazyBitmap(Rez.Drawables.weatherCloud40);
