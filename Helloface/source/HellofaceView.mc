@@ -16,7 +16,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var previousSecond as SecondModel?;
 
   var isHighPowerMode = true;
-  var useDemoRepo = false;
+  var useDemoRepo = true;
 
   function initialize() {
     WatchFace.initialize();
@@ -139,7 +139,7 @@ class HellofaceView extends WatchUi.WatchFace {
     drawSteps(dc);
     drawActiveMinutes(dc);
     drawNotifications(dc);
-    drawActivityCount(dc);
+    // drawActivityCount(dc);
   }
 
   function drawDate(dc as Dc) {
@@ -286,18 +286,18 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawActivityCount(dc as Dc) {
-    var x = 132;
-    var y = 118;
+    var x = 136;
+    var y = 159;
 
     var daily = self.models.dayModel.activityCount;
 
     if (daily > 0) {
-      dc.drawBitmap(x, y, (daily == 1 ? bitmaps.star : bitmaps.stars).getBitmap());
+      dc.drawBitmap(x, y, (daily == 1 ? bitmaps.starTiny : bitmaps.starTiny).getBitmap());
     }
   }
 
   function drawSteps(dc as Dc) {
-    var x = 114;
+    var x = 144;
     var y = 130;
 
     var steps = self.models.minuteModel.steps;
