@@ -484,6 +484,9 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawSun(dc as Dc) {
     var sunModel = self.models.sunModel;
+    if (sunModel == null) {
+      return;
+    }
 
     var centerX = 44;
     var centerY = 92;
