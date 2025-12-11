@@ -17,7 +17,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var previousSecond as SecondModel?;
 
   var isHighPowerMode = true;
-  var useDemoRepo = true;
+  var useDemoRepo = false;
 
   function initialize() {
     WatchFace.initialize();
@@ -491,30 +491,26 @@ class HellofaceView extends WatchUi.WatchFace {
     var x = 113;
     var y = 130;
     
-    var radius = 11;
+    var radius = 12;
     var sunRadius = 4;
-
-    dc.setPenWidth(2);
-    dc.drawCircle(x, y, radius);
 
     var minAngle = sunModel.minSunAzimuth;
     var maxAngle = sunModel.maxSunAzimuth;
     var currentAngle = sunModel.currentSunAzimuth;
 
-    if (minAngle != maxAngle) {
-      dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-      var startArcAngle = 90 - minAngle;
-      var endArcAngle = 90 - maxAngle;
-      var direction = sunModel.isAzimuthClockwise ? Graphics.ARC_CLOCKWISE : Graphics.ARC_COUNTER_CLOCKWISE;
-      dc.setPenWidth(10);
-      dc.drawArc(x, y, radius-5, direction, startArcAngle, endArcAngle);
-    }
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    var startArcAngle = 90 - minAngle;
+    var endArcAngle = 90 - maxAngle;
+    var direction = sunModel.isAzimuthClockwise ? Graphics.ARC_CLOCKWISE : Graphics.ARC_COUNTER_CLOCKWISE;
+    dc.setPenWidth(radius);
+    dc.drawArc(x, y, radius/2, direction, startArcAngle, endArcAngle);
+    dc.drawBitmap(x-radius, y-radius, bitmaps.dither.getBitmap());
 
-    dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+    dc.setPenWidth(2);
+    dc.drawCircle(x, y, radius);
+
     var sunPoint = Utils.getPointAtAngle(x, y, radius-3, currentAngle);
     dc.fillCircle(sunPoint[0], sunPoint[1], sunRadius);
-    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-    dc.setPenWidth(1);
   }
 
   function drawSeaTemperature(dc as Dc) as Boolean {

@@ -37,4 +37,7 @@
     <bitmap dithering="none" id="weatherFog" filename="weather-fog.png" />
     <bitmap dithering="none" id="umbrella" filename="umbrella.png" />
 
+    <bitmap dithering="none" id="dither" filename="dither.png" />
+
+
 </drawables>
