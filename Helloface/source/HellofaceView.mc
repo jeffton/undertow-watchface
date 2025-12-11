@@ -17,7 +17,7 @@ class HellofaceView extends WatchUi.WatchFace {
   var previousSecond as SecondModel?;
 
   var isHighPowerMode = true;
-  var useDemoRepo = false;
+  var useDemoRepo = true;
 
   function initialize() {
     WatchFace.initialize();
@@ -492,7 +492,7 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 130;
     
     var radius = 12;
-    var sunRadius = 4;
+    var sunRadius = 3;
 
     var minAngle = sunModel.minSunAzimuth;
     var maxAngle = sunModel.maxSunAzimuth;
@@ -509,7 +509,7 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.setPenWidth(2);
     dc.drawCircle(x, y, radius);
 
-    var sunPoint = Utils.getPointAtAngle(x, y, radius-3, currentAngle);
+    var sunPoint = Utils.getPointAtAngle(x, y, radius-sunRadius, currentAngle);
     dc.fillCircle(sunPoint[0], sunPoint[1], sunRadius);
   }
 
@@ -540,7 +540,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 84;
+    var x = 83;
     var y = 130;
 
     /* If close to the sea (where sea temperature is available), use absolute pressure. Altitude is often
@@ -553,7 +553,7 @@ class HellofaceView extends WatchUi.WatchFace {
       return;
     }
 
-    var r = 11.0;
+    var r = 12.0;
     var rOpposite = 6.0;
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.fillCircle(x, y, r);
