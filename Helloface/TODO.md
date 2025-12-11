@@ -1,0 +1,2 @@
+- Fix sun display (dither, black or white, what to do)
+- New indicator for activity count (lightning or marks on both sides of minutes bar)
