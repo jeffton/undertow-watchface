@@ -5,11 +5,7 @@
     <bitmap dithering="none" id="heartStressLow" filename="heart-stress-low.png" />
     <bitmap dithering="none" id="heartStressMedium" filename="heart-stress-medium.png" />
     <bitmap dithering="none" id="heartStressHigh" filename="heart-stress-high.png" />
-
-    <bitmap dithering="none" id="star" filename="star.png" />
-    <bitmap dithering="none" id="stars" filename="stars.png" />
     <bitmap dithering="none" id="starTiny" filename="star-tiny.png" />
-
     <bitmap dithering="none" id="steps" filename="steps.png" />
     <bitmap dithering="none" id="sunrise" filename="sunrise.png" />
     <bitmap dithering="none" id="alarm" filename="alarm.png" />
@@ -20,7 +16,6 @@
     <bitmap dithering="none" id="mountains" filename="mountains.png" />
     <bitmap dithering="none" id="minutesLinearGrey" filename="minutes-linear-grey.png" />
     <bitmap dithering="none" id="minutesLinearBackground" filename="minutes-linear-background.png" />
-
     <bitmap dithering="none" id="weatherSun" filename="weather-sun.png" />
     <bitmap dithering="none" id="weatherCloud" filename="weather-cloud.png" />
     <bitmap dithering="none" id="weatherCloudyLow" filename="weather-cloudy-low.png" />

@@ -9,8 +9,6 @@ class Bitmaps {
   var heartStressHigh as LazyBitmap = new LazyBitmap(Rez.Drawables.heartStressHigh);
 
   var steps as LazyBitmap = new LazyBitmap(Rez.Drawables.steps);
-  var star as LazyBitmap = new LazyBitmap(Rez.Drawables.star);
-  var stars as LazyBitmap = new LazyBitmap(Rez.Drawables.stars);
   var starTiny as LazyBitmap = new LazyBitmap(Rez.Drawables.starTiny);
 
   var sunrise as LazyBitmap = new LazyBitmap(Rez.Drawables.sunrise);
