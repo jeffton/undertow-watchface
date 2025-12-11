@@ -8,11 +8,14 @@ class DemoModelsRepository {
     var tenMinuteModel as TenMinuteModel;
     var weatherRepository as WeatherRepository?;
     var weatherModel as WeatherModel;
+    var sunRepository as SunRepository?;
+    var sunModel as SunModel;
     var minuteModel as MinuteModel;
     var secondModel as SecondModel;
 
     function initialize() {
         self.weatherRepository = null;
+        self.sunRepository = null;
         self.lastUpdateTime = new UpdateTime();
         self.dayModel = new DayModel(self.lastUpdateTime);
         self.dayModel.activityCount = 2;
@@ -39,6 +42,11 @@ class DemoModelsRepository {
         self.weatherModel.cloudCoverHigh = 10;
         self.weatherModel.uvIndex = "3";
         self.weatherModel.precipitation = 85.3;
+
+        self.sunModel = new SunModel();
+        self.sunModel.minSunAzimuth = 80.0f;
+        self.sunModel.maxSunAzimuth = 280.0f;
+        self.sunModel.currentSunAzimuth = 140.0f;
 
         self.secondModel = new SecondModel(self.lastUpdateTime);
         // self.secondModel.seconds = "00";

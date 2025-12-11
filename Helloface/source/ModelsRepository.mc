@@ -7,6 +7,8 @@ class ModelsRepository {
     var tenMinuteModel as TenMinuteModel;
     var weatherRepository as WeatherRepository;
     var weatherModel as WeatherModel;
+    var sunRepository as SunRepository;
+    var sunModel as SunModel;
     var minuteModel as MinuteModel;
     var secondModel as SecondModel;
 
@@ -17,6 +19,8 @@ class ModelsRepository {
         self.weatherRepository = new WeatherRepository();
         self.weatherRepository.update();
         self.weatherModel = self.weatherRepository.getWeatherModel();
+        self.sunRepository = new SunRepository();
+        self.sunModel = self.sunRepository.getSunModel(self.tenMinuteModel);
         self.secondModel = new SecondModel(lastUpdateTime);
         self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
     }
@@ -39,6 +43,7 @@ class ModelsRepository {
             self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
             self.weatherRepository.update();
             self.weatherModel = self.weatherRepository.getWeatherModel();
+            self.sunModel = self.sunRepository.getSunModel(self.tenMinuteModel);
         case UpdateTime.MINUTE:
             self.minuteModel = new MinuteModel(updateTime, self.tenMinuteModel);
         case UpdateTime.SECOND:
