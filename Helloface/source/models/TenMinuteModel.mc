@@ -24,6 +24,10 @@ class TenMinuteModel {
     self.sunset = Utils.formatTimeMoment(self.sunsetMoment);
   }
 
+  function hasSunTimes() as Boolean {
+    return self.sunriseMoment != null && self.sunsetMoment != null;
+  }
+
   function isDaytime(now as Moment) {
     if (self.sunriseMoment == null || self.sunsetMoment == null) {
       return true; // best guess
