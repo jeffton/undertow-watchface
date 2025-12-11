@@ -39,4 +39,5 @@ class Bitmaps {
   var umbrella as LazyBitmap = new LazyBitmap(Rez.Drawables.umbrella);
   var waves as LazyBitmap = new LazyBitmap(Rez.Drawables.waves);
   var mountains as LazyBitmap = new LazyBitmap(Rez.Drawables.mountains);
+  var dither as LazyBitmap = new LazyBitmap(Rez.Drawables.dither);
 }
