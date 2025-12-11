@@ -1,2 +1,4 @@
 - Fix sun display (dither, black or white, what to do)
+- Resize dither bitmap
+- Remove unused bitmaps (stars)
 - New indicator for activity count (lightning or marks on both sides of minutes bar)
