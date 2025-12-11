@@ -490,37 +490,22 @@ class HellofaceView extends WatchUi.WatchFace {
     var radius = 24;
     var sunRadius = 4;
 
-    var minAngle = normalizeAngle(sunModel.minSunAzimuth);
-    var maxAngle = normalizeAngle(sunModel.maxSunAzimuth);
-    var currentAngle = normalizeAngle(sunModel.currentSunAzimuth);
+    var minAngle = Utils.normalizeAngle(sunModel.minSunAzimuth);
+    var maxAngle = Utils.normalizeAngle(sunModel.maxSunAzimuth);
+    var currentAngle = Utils.normalizeAngle(sunModel.currentSunAzimuth);
 
     if (minAngle != maxAngle) {
       dc.setPenWidth(8);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-      var startArcAngle = normalizeAngle(90 - minAngle);
-      var endArcAngle = normalizeAngle(90 - maxAngle);
+      var startArcAngle = Utils.normalizeAngle(90 - minAngle);
+      var endArcAngle = Utils.normalizeAngle(90 - maxAngle);
       var direction = sunModel.isAzimuthClockwise ? Graphics.ARC_CLOCKWISE : Graphics.ARC_COUNTER_CLOCKWISE;
       dc.drawArc(centerX, centerY, radius, direction, startArcAngle, endArcAngle);
     }
 
-    var sunPoint = getPointAtAngle(centerX, centerY, radius, currentAngle);
+    var sunPoint = Utils.getPointAtAngle(centerX, centerY, radius, currentAngle);
     dc.fillCircle(sunPoint[0], sunPoint[1], sunRadius);
     dc.setPenWidth(1);
-  }
-
-  function normalizeAngle(angle as Float or Number) as Float {
-    var normalized = angle - 360.0 * Math.floor(angle / 360.0);
-    if (normalized < 0) {
-      normalized += 360;
-    }
-    return normalized.toFloat();
-  }
-
-  function getPointAtAngle(centerX as Number, centerY as Number, radius as Number, angle as Float or Number) as Array<Numeric> {
-    var radians = Math.toRadians(angle);
-    var x = centerX + radius * Math.sin(radians);
-    var y = centerY - radius * Math.cos(radians);
-    return [Math.round(x), Math.round(y)];
   }
 
   function drawSeaTemperature(dc as Dc) as Boolean {
