@@ -24,14 +24,6 @@ class Utils {
     return Math.round(value.toFloat() * newScale / oldScale).toNumber();
   }
 
-  static function normalizeAngle(angle as Float or Number) as Float {
-    var normalized = angle - 360.0 * Math.floor(angle / 360.0);
-    if (normalized < 0) {
-      normalized += 360;
-    }
-    return normalized.toFloat();
-  }
-
   static function getPointAtAngle(centerX as Number, centerY as Number, radius as Number, angle as Float or Number) as Array<Numeric> {
     var radians = Math.toRadians(angle);
     var x = centerX + radius * Math.sin(radians);

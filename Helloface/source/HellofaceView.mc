@@ -488,25 +488,25 @@ class HellofaceView extends WatchUi.WatchFace {
       return;
     }
 
-    var centerX = 44;
-    var centerY = 92;
+    var x = 44;
+    var y = 92;
     var radius = 24;
     var sunRadius = 4;
 
-    var minAngle = Utils.normalizeAngle(sunModel.minSunAzimuth);
-    var maxAngle = Utils.normalizeAngle(sunModel.maxSunAzimuth);
-    var currentAngle = Utils.normalizeAngle(sunModel.currentSunAzimuth);
+    var minAngle = sunModel.minSunAzimuth;
+    var maxAngle = sunModel.maxSunAzimuth;
+    var currentAngle = sunModel.currentSunAzimuth;
 
     if (minAngle != maxAngle) {
       dc.setPenWidth(8);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-      var startArcAngle = Utils.normalizeAngle(90 - minAngle);
-      var endArcAngle = Utils.normalizeAngle(90 - maxAngle);
+      var startArcAngle = 90 - minAngle;
+      var endArcAngle = 90 - maxAngle;
       var direction = sunModel.isAzimuthClockwise ? Graphics.ARC_CLOCKWISE : Graphics.ARC_COUNTER_CLOCKWISE;
-      dc.drawArc(centerX, centerY, radius, direction, startArcAngle, endArcAngle);
+      dc.drawArc(x, y, radius, direction, startArcAngle, endArcAngle);
     }
 
-    var sunPoint = Utils.getPointAtAngle(centerX, centerY, radius, currentAngle);
+    var sunPoint = Utils.getPointAtAngle(x, y, radius, currentAngle);
     dc.fillCircle(sunPoint[0], sunPoint[1], sunRadius);
     dc.setPenWidth(1);
   }
