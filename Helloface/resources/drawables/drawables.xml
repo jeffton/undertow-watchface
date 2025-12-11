@@ -31,8 +31,7 @@
     <bitmap dithering="none" id="weatherSnow" filename="weather-snow.png" />
     <bitmap dithering="none" id="weatherFog" filename="weather-fog.png" />
     <bitmap dithering="none" id="umbrella" filename="umbrella.png" />
-
     <bitmap dithering="none" id="dither" filename="dither.png" />
-
-
+    <bitmap dithering="none" id="activeLeft" filename="active-left.png" />
+    <bitmap dithering="none" id="activeRight" filename="active-right.png" />
 </drawables>
