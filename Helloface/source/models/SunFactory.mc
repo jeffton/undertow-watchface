@@ -10,12 +10,12 @@ class SunFactory {
       return null;
     }
 
-    var positionInfo = Position.getInfo();
-    if (positionInfo == null || positionInfo.position == null) {
+    var positionInfo = Position.getInfo().position;
+    if (positionInfo == null) {
       return null;
     }
 
-    var latLonRad = positionInfo.position.toRadians();
+    var latLonRad = positionInfo.toRadians();
     var latRad = latLonRad[0].toFloat();
     var lonRad = latLonRad[1].toFloat();
 
