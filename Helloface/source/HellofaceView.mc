@@ -16,7 +16,6 @@ class HellofaceView extends WatchUi.WatchFace {
 
   var previousSecond as SecondModel?;
 
-  var isHighPowerMode = true;
   var useDemoRepo = false;
 
   function initialize() {
@@ -695,13 +694,4 @@ class HellofaceView extends WatchUi.WatchFace {
   // memory.
   function onHide() as Void {}
 
-  // The user has just looked at their watch. Timers and animations may be started here.
-  function onExitSleep() as Void {
-    isHighPowerMode = true;
-  }
-
-  // Terminate any active timers and prepare for slow updates.
-  function onEnterSleep() as Void {
-    isHighPowerMode = false;
-  }
 }
