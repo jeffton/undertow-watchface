@@ -11,24 +11,30 @@ class SunFactory {
     }
 
     var positionInfo = Position.getInfo();
-    if (positionInfo.position == null) {
+    if (positionInfo == null || positionInfo.position == null) {
       return null;
     }
 
-    var latLon = positionInfo.position.toDegrees();
-    var latitude = latLon[0].toFloat();
-    var longitude = latLon[1].toFloat();
+    var latLonRad = positionInfo.position.toRadians();
+    var latRad = latLonRad[0].toFloat();
+    var lonRad = latLonRad[1].toFloat();
+
+    var latitude = Math.toDegrees(latRad);
+    var longitude = Math.toDegrees(lonRad);
 
     var sunPosition = calculateSunPosition(Time.now(), latitude, longitude);
     var declination = sunPosition[0];
     var hourAngle = sunPosition[1];
 
-    var sunTrack = calculateSunriseSunsetAzimuth(latitude, declination);
+    var decRad = Math.toRadians(declination);
+    var hourAngleRad = Math.toRadians(hourAngle);
+
+    var sunTrack = calculateSunriseSunsetAzimuthRad(latRad, decRad);
 
     var model = new SunModel();
     model.minSunAzimuth = sunTrack[0];
     model.maxSunAzimuth = sunTrack[1];
-    model.currentSunAzimuth = calculateSunAzimuth(latitude, declination, hourAngle);
+    model.currentSunAzimuth = hourAngleToAzimuth(hourAngleRad, latRad, decRad);
     model.isAzimuthClockwise = latitude >= 0;
 
     return model;
@@ -76,28 +82,18 @@ class SunFactory {
     return [declination, hourAngle];
   }
 
-  static function calculateSunAzimuth(latitude as Float, declination as Float, hourAngle as Float) as Float {
-    var latRad = Math.toRadians(latitude);
-    var decRad = Math.toRadians(declination);
-    var haRad = Math.toRadians(hourAngle);
-    return hourAngleToAzimuth(haRad, latRad, decRad);
-  }
-
-  static function calculateSunriseSunsetAzimuth(latitude as Float, declination as Float) as Array {
-    var latRad = Math.toRadians(latitude);
-    var decRad = Math.toRadians(declination);
+  private static function calculateSunriseSunsetAzimuthRad(latRad as Float, decRad as Float) as Array {
     var zenithRad = Math.toRadians(90.833);
     var cosH0 = (Math.cos(zenithRad) - Math.sin(latRad) * Math.sin(decRad)) / (Math.cos(latRad) * Math.cos(decRad));
 
     if (cosH0 > 1 || cosH0 < -1) {
-      var az = calculateSunAzimuth(latitude, declination, 0.0);
+      var az = hourAngleToAzimuth(0.0, latRad, decRad);
       return [az, az];
     }
 
-    var hourAngle = Math.acos(cosH0);
-    var hourAngleDegrees = Math.toDegrees(hourAngle);
-    var sunriseAz = calculateSunAzimuth(latitude, declination, -hourAngleDegrees);
-    var sunsetAz = calculateSunAzimuth(latitude, declination, hourAngleDegrees);
+    var hourAngleRad = Math.acos(cosH0);
+    var sunriseAz = hourAngleToAzimuth(-hourAngleRad, latRad, decRad);
+    var sunsetAz = hourAngleToAzimuth(hourAngleRad, latRad, decRad);
 
     return [sunriseAz, sunsetAz];
   }
