@@ -696,9 +696,4 @@ class HellofaceView extends WatchUi.WatchFace {
     return bitmaps.heartRest;
   }
 
-  // Called when this View is removed from the screen. Save the
-  // state of this View here. This includes freeing resources from
-  // memory.
-  function onHide() as Void {}
-
 }
