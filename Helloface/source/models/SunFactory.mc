@@ -1,30 +1,40 @@
 import Toybox.Math;
-import Toybox.Time;
 import Toybox.Lang;
+import Toybox.Position;
+import Toybox.Time;
 
-class SunPosition {
-  var declination as Float;
-  var hourAngle as Float;
+class SunFactory {
 
-  function initialize(declination as Float, hourAngle as Float) {
-    self.declination = declination;
-    self.hourAngle = hourAngle;
+  static function createSunModel(tenMinuteModel as TenMinuteModel) as SunModel? {
+    if (!tenMinuteModel.hasSunTimes()) {
+      return null;
+    }
+
+    var positionInfo = Position.getInfo();
+    if (positionInfo.position == null) {
+      return null;
+    }
+
+    var latLon = positionInfo.position.toDegrees();
+    var latitude = latLon[0].toFloat();
+    var longitude = latLon[1].toFloat();
+
+    var sunPosition = calculateSunPosition(Time.now(), latitude, longitude);
+    var declination = sunPosition[0];
+    var hourAngle = sunPosition[1];
+
+    var sunTrack = calculateSunriseSunsetAzimuth(latitude, declination);
+
+    var model = new SunModel();
+    model.minSunAzimuth = sunTrack[0];
+    model.maxSunAzimuth = sunTrack[1];
+    model.currentSunAzimuth = calculateSunAzimuth(latitude, declination, hourAngle);
+    model.isAzimuthClockwise = latitude >= 0;
+
+    return model;
   }
-}
 
-class SunTrack {
-  var sunrise as Float;
-  var sunset as Float;
-
-  function initialize(sunrise as Float, sunset as Float) {
-    self.sunrise = sunrise;
-    self.sunset = sunset;
-  }
-}
-
-class SunCalculator {
-
-  static function calculateSunPosition(moment as Moment, latitude as Float, longitude as Float) as SunPosition {
+  static function calculateSunPosition(moment as Moment, latitude as Float, longitude as Float) as Array {
     var jd = moment.value() / 86400.0 + 2440587.5;
     var T = (jd - 2451545.0) / 36525.0;
 
@@ -63,7 +73,7 @@ class SunCalculator {
       hourAngle += 360.0;
     }
 
-    return new SunPosition(declination, hourAngle);
+    return [declination, hourAngle];
   }
 
   static function calculateSunAzimuth(latitude as Float, declination as Float, hourAngle as Float) as Float {
@@ -73,7 +83,7 @@ class SunCalculator {
     return hourAngleToAzimuth(haRad, latRad, decRad);
   }
 
-  static function calculateSunriseSunsetAzimuth(latitude as Float, declination as Float) as SunTrack {
+  static function calculateSunriseSunsetAzimuth(latitude as Float, declination as Float) as Array {
     var latRad = Math.toRadians(latitude);
     var decRad = Math.toRadians(declination);
     var zenithRad = Math.toRadians(90.833);
@@ -81,7 +91,7 @@ class SunCalculator {
 
     if (cosH0 > 1 || cosH0 < -1) {
       var az = calculateSunAzimuth(latitude, declination, 0.0);
-      return new SunTrack(az, az);
+      return [az, az];
     }
 
     var hourAngle = Math.acos(cosH0);
@@ -89,7 +99,7 @@ class SunCalculator {
     var sunriseAz = calculateSunAzimuth(latitude, declination, -hourAngleDegrees);
     var sunsetAz = calculateSunAzimuth(latitude, declination, hourAngleDegrees);
 
-    return new SunTrack(sunriseAz, sunsetAz);
+    return [sunriseAz, sunsetAz];
   }
 
   private static function normalizeDegrees(value as Float) as Float {
