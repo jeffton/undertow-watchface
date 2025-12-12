@@ -18,6 +18,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   var useDemoRepo = false;
 
+  (:debug)
   function initialize() {
     WatchFace.initialize();
 
@@ -28,6 +29,15 @@ class HellofaceView extends WatchUi.WatchFace {
       self.models = new ModelsRepository() as IModelsRepository;
     }
   }
+
+  (:release)
+  function initialize() {
+    WatchFace.initialize();
+
+    self.bitmaps = new Bitmaps();
+    self.models = new ModelsRepository() as IModelsRepository;
+  }
+
 
   function onWeatherUpdated(data as Dictionary) {
     self.models.onWeatherUpdated(data);
@@ -191,7 +201,6 @@ class HellofaceView extends WatchUi.WatchFace {
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     }
   }
-
 
   function drawWeatherCondition(dc as Dc, isDaytime as Boolean) {
     var x = 10;
@@ -499,11 +508,9 @@ class HellofaceView extends WatchUi.WatchFace {
     var currentAngle = sunModel.currentSunAzimuth;
 
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-    var startArcAngle = 90 - minAngle;
-    var endArcAngle = 90 - maxAngle;
     var direction = sunModel.isAzimuthClockwise ? Graphics.ARC_CLOCKWISE : Graphics.ARC_COUNTER_CLOCKWISE;
     dc.setPenWidth(radius);
-    dc.drawArc(x, y, radius/2, direction, startArcAngle, endArcAngle);
+    dc.drawArc(x, y, radius/2, direction, 90 - minAngle, 90 - maxAngle);
     dc.drawBitmap(x-radius, y-radius, bitmaps.dither.getBitmap());
 
     dc.setPenWidth(2);

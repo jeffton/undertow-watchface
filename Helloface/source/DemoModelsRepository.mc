@@ -2,6 +2,7 @@ import Toybox.Time;
 import Toybox.Lang;
 import Toybox.System;
 
+(:debug)
 class DemoModelsRepository {
     var lastUpdateTime as UpdateTime;
     var dayModel as DayModel;
