@@ -403,8 +403,8 @@ func buildApiResponse(oceanData *OceanYrResponse, weatherData *WeatherYrResponse
 	})
 
 	limited := forecastSlice
-	if len(limited) > 24 {
-		limited = limited[:24]
+	if len(limited) > 12 {
+		limited = limited[:12]
 	}
 
 	apiResponse.Forecast = make([][]any, len(limited))
