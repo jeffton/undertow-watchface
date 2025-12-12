@@ -11,7 +11,6 @@
     <bitmap dithering="none" id="alarm" filename="alarm.png" />
     <bitmap dithering="none" id="battery" filename="battery.png" />
     <bitmap dithering="none" id="check" filename="check.png" />
-    <bitmap dithering="none" id="minutes" filename="minutes.png" />
     <bitmap dithering="none" id="waves" filename="waves3.png" />
     <bitmap dithering="none" id="mountains" filename="mountains.png" />
     <bitmap dithering="none" id="minutesLinearGrey" filename="minutes-linear-grey.png" />
