@@ -13,16 +13,16 @@ import Toybox.Time;
 class HellofaceView extends WatchUi.WatchFace {
   var models as IModelsRepository;
   var bitmaps as Bitmaps;
-
   var previousSecond as SecondModel?;
-
-  var useDemoRepo = false;
 
   (:debug)
   function initialize() {
     WatchFace.initialize();
 
     self.bitmaps = new Bitmaps();
+
+    var useDemoRepo = false;
+
     if (useDemoRepo) {
       self.models = new DemoModelsRepository() as IModelsRepository;
     } else {
@@ -43,14 +43,6 @@ class HellofaceView extends WatchUi.WatchFace {
     self.models.onWeatherUpdated(data);
     WatchUi.requestUpdate();
   }
-
-  // Load your resources here
-  function onLayout(dc as Dc) as Void {}
-
-  // Called when this View is brought to the foreground. Restore
-  // the state of this View and prepare it to be shown. This includes
-  // loading resources into memory.
-  function onShow() as Void {}
 
   // Update the view
   function onUpdate(dc as Dc) as Void {
