@@ -127,7 +127,7 @@ class HellofaceView extends WatchUi.WatchFace {
     // all of these need white on transparent
     drawDate(dc);
     drawWeather(dc, isDaytime);
-    // drawSunTime(dc);
+    drawSunTime(dc);
     drawSun(dc);
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
@@ -178,14 +178,14 @@ class HellofaceView extends WatchUi.WatchFace {
       drawWindBearing(dc, 68, 33, self.models.weatherModel.windDirection);
     }
 
-    // drawUvIndex(dc);
-    // drawPrecipitation(dc);
+    drawUvIndex(dc);
+    drawPrecipitation(dc);
   }
 
   function drawUvIndex(dc as Dc) {
     if (self.models.weatherModel.uvIndex != null) {
-      var x = 92;
-      var y = 40;
+      var x = 56;
+      var y = 127;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
@@ -288,8 +288,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSteps(dc as Dc) {
-    var x = 144;
-    var y = 130;
+    var x = 142;
+    var y = 132;
 
     var steps = self.models.minuteModel.steps;
 
@@ -460,8 +460,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawPrecipitation(dc as Dc) {
-    var x = 4;
-    var y = 48;
+    var x = 72;
+    var y = 134;
 
     var precipitation = self.models.weatherModel.precipitation;
     if (precipitation != null && precipitation >= 80) {
@@ -470,10 +470,10 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSunTime(dc as Dc) {
-    var x = 17;
-    var y = 40;
+    var x = 24;
+    var y = 110;
   
-    dc.drawBitmap(x, y + 8, bitmaps.sunrise.getBitmap());
+    // dc.drawBitmap(x, y + 8, bitmaps.sunrise.getBitmap());
     dc.drawText(
       x + 19,
       y,
@@ -489,11 +489,11 @@ class HellofaceView extends WatchUi.WatchFace {
       return;
     }
     
-    var x = 113;
-    var y = 130;
+    var x = 23;
+    var y = 132;
     
-    var radius = 12;
-    var sunRadius = 3;
+    var radius = 16;
+    var sunRadius = 4;
 
     var minAngle = sunModel.minSunAzimuth;
     var maxAngle = sunModel.maxSunAzimuth;
@@ -539,8 +539,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 83;
-    var y = 130;
+    var x = 106;
+    var y = 132;
 
     /* If close to the sea (where sea temperature is available), use absolute pressure. Altitude is often
     inaccurate so we're better off assuming it's close to zero.
