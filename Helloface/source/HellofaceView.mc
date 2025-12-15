@@ -21,7 +21,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     self.bitmaps = new Bitmaps();
 
-    var useDemoRepo = false;
+    var useDemoRepo = true;
 
     if (useDemoRepo) {
       self.models = new DemoModelsRepository() as IModelsRepository;
@@ -127,7 +127,7 @@ class HellofaceView extends WatchUi.WatchFace {
     // all of these need white on transparent
     drawDate(dc);
     drawWeather(dc, isDaytime);
-    drawSunTime(dc);
+    // drawSunTime(dc);
     drawSun(dc);
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
@@ -178,8 +178,8 @@ class HellofaceView extends WatchUi.WatchFace {
       drawWindBearing(dc, 68, 33, self.models.weatherModel.windDirection);
     }
 
-    drawUvIndex(dc);
-    drawPrecipitation(dc);
+    // drawUvIndex(dc);
+    // drawPrecipitation(dc);
   }
 
   function drawUvIndex(dc as Dc) {
@@ -518,15 +518,15 @@ class HellofaceView extends WatchUi.WatchFace {
       return false;
     }
     
-    var x = 8;
-    var y = 116;
+    var x = 44;
+    var y = 42;
 
-    dc.drawBitmap(x, y + 2, bitmaps.waves.getBitmap());
-    dc.drawText(x + 12 + 6, y - 6, Graphics.FONT_SMALL, temperature, Graphics.TEXT_JUSTIFY_LEFT);
+    // dc.drawBitmap(x, y + 2, bitmaps.waves.getBitmap());
+    dc.drawText(x - 4, y, Graphics.FONT_TINY, temperature, Graphics.TEXT_JUSTIFY_RIGHT);
     if (self.models.weatherModel.waveDirection != null) {
-      drawWindBearing(dc, x + 8, y + 26, self.models.weatherModel.waveDirection);
+      drawWindBearing(dc, x + 8, y + 12, self.models.weatherModel.waveDirection);
     }
-    dc.drawText(x + 21, y + 12, Graphics.FONT_TINY, self.models.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(x + 21, y, Graphics.FONT_TINY, self.models.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
     
     return true;
   }
