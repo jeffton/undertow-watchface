@@ -37,7 +37,10 @@ class WeatherRepository {
 
     var seaTemp = getForecastValue(forecast, FORECAST_IDX_SEA_TEMPERATURE);
     if (seaTemp != null) {
-      model.seaTemperature = (seaTemp as Float).format("%.1f") + "°";
+      // 1 decimal:
+      // model.seaTemperature = (seaTemp as Float).format("%.1f") + "°";
+      // 0 decimals:
+      model.seaTemperature = Math.round(seaTemp as Float).format("%i") + "°";
     }
 
     var temp = getForecastValue(forecast, FORECAST_IDX_TEMPERATURE);
@@ -52,7 +55,7 @@ class WeatherRepository {
 
     var waveHeight = getForecastValue(forecast, FORECAST_IDX_WAVE_HEIGHT);
     if (waveHeight != null) {
-      model.waveHeight = (waveHeight as Float).format("%.1f") + "m";
+      model.waveHeight = (waveHeight as Float).format("%.1f");
     }
 
     model.waveDirection = getForecastValue(forecast, FORECAST_IDX_WAVE_DIRECTION) as Numeric?;

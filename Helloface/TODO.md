@@ -1,1 +1,3 @@
-- New indicator for activity count (lightning or marks on both sides of minutes bar)
+- two suntimes if low UV and no rain?
+- weird/much blank space at bottom depending on data
+- not happy with activity marks

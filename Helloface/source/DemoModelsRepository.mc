@@ -28,12 +28,12 @@ class DemoModelsRepository {
         self.tenMinuteModel.sunset = "18:30";
 
         self.weatherModel = new WeatherModel();
-        self.weatherModel.seaTemperature = "12.3°";
+        self.weatherModel.seaTemperature = "12°";
         self.weatherModel.temperature = "15°";
         self.weatherModel.windSpeed = "12";
         self.weatherModel.windDirection = 45;
         self.weatherModel.condition = "clear";
-        self.weatherModel.waveHeight = "1.2m";
+        self.weatherModel.waveHeight = "1.2";
         self.weatherModel.waveDirection = 60;
         self.weatherModel.cloudCover = 10;
         self.weatherModel.cloudCoverLow = 5;

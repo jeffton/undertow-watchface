@@ -518,15 +518,15 @@ class HellofaceView extends WatchUi.WatchFace {
       return false;
     }
     
-    var x = 44;
-    var y = 42;
+    var x = 6;
+    var y = 49;
 
-    // dc.drawBitmap(x, y + 2, bitmaps.waves.getBitmap());
-    dc.drawText(x - 4, y, Graphics.FONT_TINY, temperature, Graphics.TEXT_JUSTIFY_RIGHT);
+    dc.drawBitmap(x, y, bitmaps.waves.getBitmap());
+    dc.drawText(x + 18, y - 8, Graphics.FONT_TINY, temperature, Graphics.TEXT_JUSTIFY_LEFT);
     if (self.models.weatherModel.waveDirection != null) {
-      drawWindBearing(dc, x + 8, y + 12, self.models.weatherModel.waveDirection);
+      drawWindBearing(dc, x + 54, y + 4, self.models.weatherModel.waveDirection);
     }
-    dc.drawText(x + 21, y, Graphics.FONT_TINY, self.models.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(x + 68, y - 8, Graphics.FONT_TINY, self.models.weatherModel.waveHeight, Graphics.TEXT_JUSTIFY_LEFT);
     
     return true;
   }
