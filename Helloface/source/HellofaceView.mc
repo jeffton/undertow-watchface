@@ -184,7 +184,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
   function drawUvIndex(dc as Dc) {
     if (self.models.weatherModel.uvIndex != null) {
-      var x = 56;
+      var x = 58;
       var y = 127;
 
       dc.fillRectangle(x-10, y+4, 20, 17);
@@ -288,7 +288,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSteps(dc as Dc) {
-    var x = 140;
+    var x = 138;
     var y = 132;
 
     var steps = self.models.minuteModel.steps;
@@ -451,8 +451,8 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBattery(dc as Dc) {
-    var x = 162;
-    var y = 121;
+    var x = 161;
+    var y = 122;
 
     dc.drawBitmap(x, y, bitmaps.battery.getBitmap());
     var height = Utils.scaleValue(self.models.minuteModel.battery, 100, 10);
@@ -460,7 +460,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawPrecipitation(dc as Dc) {
-    var x = 72;
+    var x = 74;
     var y = 134;
 
     var precipitation = self.models.weatherModel.precipitation;
@@ -470,7 +470,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSunTime(dc as Dc) {
-    var x = 24;
+    var x = 26;
     var y = 110;
   
     // dc.drawBitmap(x, y + 8, bitmaps.sunrise.getBitmap());
@@ -539,7 +539,7 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawBarometer(dc as Dc) {
-    var x = 106;
+    var x = 104;
     var y = 132;
 
     /* If close to the sea (where sea temperature is available), use absolute pressure. Altitude is often
