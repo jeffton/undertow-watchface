@@ -37,10 +37,13 @@ class WeatherRepository {
 
     var seaTemp = getForecastValue(forecast, FORECAST_IDX_SEA_TEMPERATURE);
     if (seaTemp != null) {
-      // 1 decimal:
-      // model.seaTemperature = (seaTemp as Float).format("%.1f") + "°";
-      // 0 decimals:
-      model.seaTemperature = Math.round(seaTemp as Float).format("%i") + "°";
+      if (seaTemp < 9.95) {
+        // 1 decimal:
+        model.seaTemperature = (seaTemp as Float).format("%.1f") + "°";
+      } else {
+        // 0 decimals:
+        model.seaTemperature = Math.round(seaTemp as Float).format("%i") + "°";
+      }
     }
 
     var temp = getForecastValue(forecast, FORECAST_IDX_TEMPERATURE);
