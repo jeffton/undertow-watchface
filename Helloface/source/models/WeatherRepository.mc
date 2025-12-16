@@ -81,7 +81,7 @@ class WeatherRepository {
     model.precipitation = getForecastValue(forecast, FORECAST_IDX_PRECIPITATION) as Numeric?;
     var uvIndex = getForecastValue(forecast, FORECAST_IDX_UV_INDEX) as Number?;
     if (uvIndex != null) {
-      model.uvIndex = Math.round(uvIndex).format("%i");
+      model.uvIndex = Math.round(uvIndex).toNumber();
     }
 
     return model;

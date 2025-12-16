@@ -12,7 +12,7 @@ class WeatherModel {
   var cloudCoverLow as Numeric?;
   var cloudCoverMedium as Numeric?;
   var cloudCoverHigh as Numeric?;
-  var uvIndex as String?;
+  var uvIndex as Number?;
   var precipitation as Numeric?;
 
   function initialize() {}
