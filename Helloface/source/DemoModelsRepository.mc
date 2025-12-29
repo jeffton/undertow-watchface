@@ -39,8 +39,8 @@ class DemoModelsRepository {
         self.weatherModel.cloudCoverLow = 5;
         self.weatherModel.cloudCoverMedium = 8;
         self.weatherModel.cloudCoverHigh = 10;
-        self.weatherModel.uvIndex = 3;
-        self.weatherModel.precipitation = 85.3;
+        self.weatherModel.uvIndex = 1;
+        self.weatherModel.precipitation = 50.3;
 
         self.sunModel = new SunModel();
         self.sunModel.minSunAzimuth = 80.0f;

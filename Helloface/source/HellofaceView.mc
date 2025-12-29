@@ -127,7 +127,6 @@ class HellofaceView extends WatchUi.WatchFace {
     // all of these need white on transparent
     drawDate(dc);
     drawWeather(dc, isDaytime);
-    drawSunTime(dc);
     drawSun(dc);
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
@@ -178,11 +177,13 @@ class HellofaceView extends WatchUi.WatchFace {
       drawWindBearing(dc, 68, 33, self.models.weatherModel.windDirection);
     }
 
-    drawUvIndex(dc);
-    drawPrecipitation(dc);
+    var showUvIndex = drawUvIndex(dc);
+    var showPrecipitation = drawPrecipitation(dc);
+    var showBothSunTimes = !showUvIndex && !showPrecipitation;
+    drawSunTime(dc, showBothSunTimes);
   }
 
-  function drawUvIndex(dc as Dc) {
+  function drawUvIndex(dc as Dc) as Boolean {
     var uvIndex = self.models.weatherModel.uvIndex;
     if (uvIndex != null && uvIndex > 0) {
       var x = 58;
@@ -192,7 +193,9 @@ class HellofaceView extends WatchUi.WatchFace {
       dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
       dc.drawText(x, y, Graphics.FONT_TINY, uvIndex, Graphics.TEXT_JUSTIFY_CENTER);
       dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+      return true;
     }
+    return false;
   }
 
   function drawWeatherCondition(dc as Dc, isDaytime as Boolean) {
@@ -460,28 +463,47 @@ class HellofaceView extends WatchUi.WatchFace {
     dc.fillRectangle(x + 2, y + 4 + 10 - height, 5, height);
   }
 
-  function drawPrecipitation(dc as Dc) {
+  function drawPrecipitation(dc as Dc) as Boolean {
     var x = 74;
     var y = 134;
 
     var precipitation = self.models.weatherModel.precipitation;
     if (precipitation != null && precipitation >= 80) {
       dc.drawBitmap(x, y, bitmaps.umbrella.getBitmap());
+      return true;
     }
+    return false;
   }
 
-  function drawSunTime(dc as Dc) {
+  function drawSunTime(dc as Dc, showBothSunTimes as Boolean) {
     var x = 26;
     var y = 110;
-  
-    // dc.drawBitmap(x, y + 8, bitmaps.sunrise.getBitmap());
-    dc.drawText(
-      x + 19,
-      y,
-      Graphics.FONT_TINY,
-      self.models.minuteModel.sunTime,
-      Graphics.TEXT_JUSTIFY_LEFT
-    );
+
+    if (showBothSunTimes) {
+      // Show both sunrise and sunset
+      dc.drawText(
+        x + 19,
+        y,
+        Graphics.FONT_TINY,
+        self.models.tenMinuteModel.sunrise,
+        Graphics.TEXT_JUSTIFY_LEFT
+      );
+      dc.drawText(
+        x + 19,
+        y + 17,
+        Graphics.FONT_TINY,
+        self.models.tenMinuteModel.sunset,
+        Graphics.TEXT_JUSTIFY_LEFT
+      );
+    } else {
+      dc.drawText(
+        x + 19,
+        y,
+        Graphics.FONT_TINY,
+        self.models.minuteModel.sunTime,
+        Graphics.TEXT_JUSTIFY_LEFT
+      );
+    }
   }
 
   function drawSun(dc as Dc) {
