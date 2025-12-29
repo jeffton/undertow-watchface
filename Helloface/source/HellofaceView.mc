@@ -480,20 +480,19 @@ class HellofaceView extends WatchUi.WatchFace {
     var y = 110;
 
     if (showBothSunTimes) {
-      // Show both sunrise and sunset
       dc.drawText(
-        x + 19,
+        x + 19 + 40,
         y,
         Graphics.FONT_TINY,
         self.models.tenMinuteModel.sunrise,
-        Graphics.TEXT_JUSTIFY_LEFT
+        Graphics.TEXT_JUSTIFY_RIGHT
       );
       dc.drawText(
-        x + 19,
+        x + 19 + 40,
         y + 17,
         Graphics.FONT_TINY,
         self.models.tenMinuteModel.sunset,
-        Graphics.TEXT_JUSTIFY_LEFT
+        Graphics.TEXT_JUSTIFY_RIGHT
       );
     } else {
       dc.drawText(
