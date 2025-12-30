@@ -476,31 +476,24 @@ class HellofaceView extends WatchUi.WatchFace {
   }
 
   function drawSunTime(dc as Dc, showBothSunTimes as Boolean) {
-    var x = 26;
+    var x = 85;
     var y = 110;
+    var sunTimes = self.models.minuteModel.sunTimes;
 
-    if (showBothSunTimes) {
+    dc.drawText(
+      x,
+      y,
+      Graphics.FONT_TINY,
+      sunTimes[0],
+      Graphics.TEXT_JUSTIFY_RIGHT
+    );
+    if (showBothSunTimes && sunTimes.size() > 1) {
       dc.drawText(
-        x + 19 + 40,
-        y,
-        Graphics.FONT_TINY,
-        self.models.tenMinuteModel.sunrise,
-        Graphics.TEXT_JUSTIFY_RIGHT
-      );
-      dc.drawText(
-        x + 19 + 40,
+        x,
         y + 17,
         Graphics.FONT_TINY,
-        self.models.tenMinuteModel.sunset,
+        sunTimes[1],
         Graphics.TEXT_JUSTIFY_RIGHT
-      );
-    } else {
-      dc.drawText(
-        x + 19,
-        y,
-        Graphics.FONT_TINY,
-        self.models.minuteModel.sunTime,
-        Graphics.TEXT_JUSTIFY_LEFT
       );
     }
   }

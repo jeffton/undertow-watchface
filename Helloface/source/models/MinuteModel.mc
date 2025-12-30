@@ -15,7 +15,7 @@ class MinuteModel {
   var activeMinutes as DailyWeekly;
   var steps as DailyWeekly;
   var battery as Number;
-  var sunTime as String?;
+  var sunTimes as Array<String>;
   var altitude as String;
   var pressure as Float?;
   var seaLevelPressure as Float?;
@@ -32,7 +32,7 @@ class MinuteModel {
     self.activeMinutes = getActiveMinutes(activityMonitorInfo);
     self.steps = getSteps(activityMonitorInfo);
     self.battery = getBattery();
-    self.sunTime = getNextSunTime(tenMinuteModel, now);
+    self.sunTimes = getNextSunTimes(tenMinuteModel, now);
     self.altitude = getAltitude(activityInfo);
     self.pressure = getPressure(activityInfo);
     self.seaLevelPressure = getSeaLevelPressure(activityInfo);
@@ -118,7 +118,7 @@ class MinuteModel {
     return System.getSystemStats().battery;
   }
 
-  private function getNextSunTime(tenMinuteModel as TenMinuteModel, now as Moment) as String {
-    return tenMinuteModel.getNextSunTime(now);
+  private function getNextSunTimes(tenMinuteModel as TenMinuteModel, now as Moment) as Array<String> {
+    return tenMinuteModel.getNextSunTimes(now);
   }
 }
