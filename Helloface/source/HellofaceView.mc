@@ -347,7 +347,7 @@ class HellofaceView extends WatchUi.WatchFace {
         [x+weekdayAsX + 6, y-8]
       ]);
 
-      if (weekdayAsX > valueAsX || true) {
+      if (weekdayAsX > valueAsX) {
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon([
           [x + weekdayAsX, y-4],
