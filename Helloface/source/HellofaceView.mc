@@ -361,7 +361,7 @@ class HellofaceView extends WatchUi.WatchFace {
 
     if (daily > 0) {
       dc.drawBitmap(x - 15, y, bitmaps.activeLeft.getBitmap());
-      dc.drawBitmap(x + 94, y, bitmaps.activeRight.getBitmap());
+      dc.drawBitmap(x + 96, y, bitmaps.activeRight.getBitmap());
     }
   }
 
