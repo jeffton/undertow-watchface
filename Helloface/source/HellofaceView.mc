@@ -346,6 +346,16 @@ class HellofaceView extends WatchUi.WatchFace {
         [x+weekdayAsX - 6, y-8],
         [x+weekdayAsX + 6, y-8]
       ]);
+
+      if (weekdayAsX > valueAsX || true) {
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([
+          [x + weekdayAsX, y-4],
+          [x+weekdayAsX-3, y-7],
+          [x+weekdayAsX+3, y-7]
+        ]);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+      }
     } else {
       for (var i = 0; i < fullBars && i <= 10; i++) {
         dc.drawBitmap(x + i * 10, y-10, bitmaps.starTiny.getBitmap());
