@@ -9,5 +9,5 @@ go build -o yrproxy
 ## Run
 
 ```bash
-PORT=8080 YRPROXY_API_KEY=... ./yrproxy
+YRPROXY_PORT=8080 YRPROXY_API_KEY=... ./yrproxy
 ```
