@@ -142,8 +142,8 @@ const apiKeyHeader = "X-Api-Key"
 
 func main() {
 	// Require a configured API key since David doesn't want any public endpoints.
-	if os.Getenv("YRPROXY_API_KEY") == "" {
-		log.Fatal("YRPROXY_API_KEY is required")
+	if os.Getenv("API_KEY") == "" {
+		log.Fatal("API_KEY is required")
 	}
 
 	http.HandleFunc("/", proxyHandler)
@@ -160,7 +160,7 @@ func main() {
 }
 
 func requireApiKey(r *http.Request) bool {
-	expected := os.Getenv("YRPROXY_API_KEY")
+	expected := os.Getenv("API_KEY")
 	provided := r.Header.Get(apiKeyHeader)
 	if provided == "" {
 		provided = r.URL.Query().Get("key")
