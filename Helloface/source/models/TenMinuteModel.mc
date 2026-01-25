@@ -7,9 +7,11 @@ class TenMinuteModel {
   private var sunriseMoment as Moment?;
   private var sunriseTomorrowMoment as Moment?;
   private var sunsetMoment as Moment?;
+  private var sunsetTomorrowMoment as Moment?;
   var sunrise as String;
   var sunriseTomorrow as String;
   var sunset as String;
+  var sunsetTomorrow as String;
 
   function initialize(today as Moment) {
     var here = Position.getInfo().position;
@@ -18,10 +20,12 @@ class TenMinuteModel {
     self.sunriseMoment = Weather.getSunrise(here, today);
     self.sunriseTomorrowMoment = Weather.getSunrise(here, tomorrow);
     self.sunsetMoment = Weather.getSunset(here, today);
+    self.sunsetTomorrowMoment = Weather.getSunset(here, tomorrow);
 
     self.sunrise = Utils.formatTimeMoment(self.sunriseMoment);
     self.sunriseTomorrow = Utils.formatTimeMoment(self.sunriseTomorrowMoment);
     self.sunset = Utils.formatTimeMoment(self.sunsetMoment);
+    self.sunsetTomorrow = Utils.formatTimeMoment(self.sunsetTomorrowMoment);
   }
 
   function hasSunTimes() as Boolean {
@@ -39,23 +43,24 @@ class TenMinuteModel {
     return isAfterSunrise && isBeforeSunset;
   }
 
-  function getNextSunTime(now as Moment) as String {
+  function getNextSunTimes(now as Moment) as Array<String> {
     var anHourAgo = now.subtract(new Time.Duration(Gregorian.SECONDS_PER_HOUR));
 
     if (
       self.sunriseMoment == null ||
       self.sunsetMoment == null ||
-      self.sunriseTomorrowMoment == null
+      self.sunriseTomorrowMoment == null ||
+      self.sunsetTomorrowMoment == null
     ) {
-      return "-:--";
+      return ["-:--"];
     }
 
     if (self.sunriseMoment.greaterThan(anHourAgo)) {
-      return self.sunrise;
+      return [self.sunrise, self.sunset];
     }
     if (self.sunsetMoment.greaterThan(anHourAgo)) {
-      return self.sunset;
+      return [self.sunset, self.sunriseTomorrow];
     }
-    return self.sunriseTomorrow;
+    return [self.sunriseTomorrow, self.sunsetTomorrow];
   }
 }
