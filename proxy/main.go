@@ -527,9 +527,11 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Best-effort location logging (should not break forecasts).
-	if err := writeLocation(pos); err != nil {
-		log.Printf("Failed to write location: %v", err)
+	if r.URL.Query().Get("test") == "" {
+		// Best-effort location logging (should not break forecasts).
+		if err := writeLocation(pos); err != nil {
+			log.Printf("Failed to write location: %v", err)
+		}
 	}
 
 	var wg sync.WaitGroup
