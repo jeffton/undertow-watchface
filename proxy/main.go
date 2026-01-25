@@ -148,7 +148,7 @@ func main() {
 
 	http.HandleFunc("/", proxyHandler)
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("YRPROXY_PORT")
 	if port == "" {
 		port = "8080"
 	}
