@@ -26,6 +26,7 @@ class DemoModelsRepository {
         self.tenMinuteModel.sunrise = "6:30";
         self.tenMinuteModel.sunriseTomorrow = "6:31";
         self.tenMinuteModel.sunset = "18:30";
+        self.tenMinuteModel.sunsetTomorrow = "18:29";
 
         self.weatherModel = new WeatherModel();
         self.weatherModel.seaTemperature = "12°";
@@ -61,7 +62,7 @@ class DemoModelsRepository {
         self.minuteModel.activeMinutes = new DailyWeekly(50, 150, 300);
         self.minuteModel.steps = new DailyWeekly(8000, 8000, 10000);
         self.minuteModel.battery = 88;
-        self.minuteModel.sunTime = "18:30";
+        self.minuteModel.sunTimes = ["18:30", "6:31"];
         self.minuteModel.altitude = "2200m";
         self.minuteModel.pressure = 1030.0;
         self.minuteModel.seaLevelPressure = 1030.0;
