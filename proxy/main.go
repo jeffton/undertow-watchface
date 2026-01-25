@@ -162,9 +162,6 @@ func main() {
 func requireApiKey(r *http.Request) bool {
 	expected := os.Getenv("API_KEY")
 	provided := r.Header.Get(apiKeyHeader)
-	if provided == "" {
-		provided = r.URL.Query().Get("key")
-	}
 	if expected == "" || provided == "" {
 		return false
 	}
