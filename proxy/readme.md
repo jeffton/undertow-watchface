@@ -1,7 +1,13 @@
-# Deployment to google cloud run
+# YR Proxy
 
-gcloud run deploy yrproxy --source . --region europe-north2 --allow-unauthenticated
+## Build
 
-# URL
+```bash
+go build -o yrproxy
+```
 
-https://yrproxy-418768340557.europe-north2.run.app/
+## Run
+
+```bash
+PORT=8080 YRPROXY_API_KEY=... ./yrproxy
+```
