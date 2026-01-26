@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -8,6 +9,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -130,10 +132,23 @@ type ApiResponse struct {
 	Error                 interface{}  `json:"error,omitempty"`
 }
 
+type LocationLog struct {
+	Lat float64 `json:"lat"`
+	Lon float64 `json:"lon"`
+	Ts  int64   `json:"ts"`
+}
+
+const apiKeyHeader = "X-Api-Key"
+
 func main() {
+	// Require a configured API key since David doesn't want any public endpoints.
+	if os.Getenv("YRPROXY_API_KEY") == "" {
+		log.Fatal("YRPROXY_API_KEY is required")
+	}
+
 	http.HandleFunc("/", proxyHandler)
 
-	port := os.Getenv("PORT")
+	port := os.Getenv("YRPROXY_PORT")
 	if port == "" {
 		port = "8080"
 	}
@@ -142,6 +157,47 @@ func main() {
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func requireApiKey(r *http.Request) bool {
+	expected := os.Getenv("YRPROXY_API_KEY")
+	provided := r.Header.Get(apiKeyHeader)
+	if expected == "" || provided == "" {
+		return false
+	}
+	// Constant-time compare.
+	return subtle.ConstantTimeCompare([]byte(expected), []byte(provided)) == 1
+}
+
+func locationFilePath() string {
+	p := os.Getenv("YRPROXY_LOCATION_FILE")
+	if p == "" {
+		p = "/var/lib/yrproxy/location.json"
+	}
+	return p
+}
+
+func writeLocation(pos Position) error {
+	path := locationFilePath()
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("mkdir location dir: %w", err)
+	}
+
+	payload := LocationLog{Lat: pos.Lat, Lon: pos.Lon, Ts: time.Now().Unix()}
+	b, err := json.MarshalIndent(payload, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal location: %w", err)
+	}
+
+	tmp := fmt.Sprintf("%s.tmp.%d", path, time.Now().UnixNano())
+	if err := os.WriteFile(tmp, b, 0o644); err != nil {
+		return fmt.Errorf("write temp location file: %w", err)
+	}
+	if err := os.Rename(tmp, path); err != nil {
+		_ = os.Remove(tmp)
+		return fmt.Errorf("rename temp location file: %w", err)
+	}
+	return nil
 }
 
 func getPosition(r *http.Request) (Position, error) {
@@ -460,10 +516,22 @@ func forecastToArray(f Forecast) []any {
 func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	if !requireApiKey(r) {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	pos, err := getPosition(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	}
+
+	if r.URL.Query().Get("test") == "" {
+		// Best-effort location logging (should not break forecasts).
+		if err := writeLocation(pos); err != nil {
+			log.Printf("Failed to write location: %v", err)
+		}
 	}
 
 	var wg sync.WaitGroup
