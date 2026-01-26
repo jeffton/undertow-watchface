@@ -9,7 +9,7 @@ This document specifies a proxy service that sits in front of the MET Norway Oce
 *   **API**: MET Norway Ocean Forecast API
 *   **Endpoint**: `https://api.met.no/weatherapi/oceanforecast/2.0/complete`
 *   **Authentication**: The proxy must include a descriptive `User-Agent` header in its requests to the upstream API.
-    *   Example: `User-Agent: Helloface/1.0 (yourapp@example.com)`
+    *   Example: `User-Agent: Undertow/1.0 (yourapp@example.com)`
 
 ##### **Upstream Service: Weather Forecast**
 

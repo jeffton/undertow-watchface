@@ -10,7 +10,7 @@ import Toybox.Media;
 import Toybox.Time.Gregorian;
 import Toybox.Time;
 
-class HellofaceView extends WatchUi.WatchFace {
+class UndertowView extends WatchUi.WatchFace {
   var models as IModelsRepository;
   var bitmaps as Bitmaps;
   var previousSecond as SecondModel?;

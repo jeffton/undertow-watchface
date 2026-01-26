@@ -4,8 +4,8 @@ import Toybox.WatchUi;
 import Toybox.System;
 
 (:background)
-class HellofaceApp extends Application.AppBase {
-  var view as HellofaceView?;
+class UndertowApp extends Application.AppBase {
+  var view as UndertowView?;
 
   function initialize() {
     AppBase.initialize();
@@ -13,7 +13,7 @@ class HellofaceApp extends Application.AppBase {
   }
 
   public function getServiceDelegate() as [System.ServiceDelegate] {
-    return [new HellofaceBackgroundDelegate()];
+    return [new UndertowBackgroundDelegate()];
   }
 
   function onBackgroundData(data) {
@@ -28,12 +28,12 @@ class HellofaceApp extends Application.AppBase {
   // Return the initial view of your application here
   function getInitialView() as [Views] or [Views, InputDelegates] {
     if (self.view == null) {
-      self.view = new HellofaceView();
+      self.view = new UndertowView();
     }
     return [self.view];
   }
 }
 
-function getApp() as HellofaceApp {
-  return Application.getApp() as HellofaceApp;
+function getApp() as UndertowApp {
+  return Application.getApp() as UndertowApp;
 }
