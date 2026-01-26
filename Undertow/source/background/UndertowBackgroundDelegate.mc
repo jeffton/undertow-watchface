@@ -7,7 +7,7 @@ import Toybox.Application.Storage;
 
 
 (:background)
-class HellofaceBackgroundDelegate extends Toybox.System.ServiceDelegate {
+class UndertowBackgroundDelegate extends Toybox.System.ServiceDelegate {
 
   function initialize() {
     ServiceDelegate.initialize();

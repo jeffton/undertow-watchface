@@ -176,7 +176,7 @@ func getOceanData(pos Position) (*OceanYrResponse, []byte, error) {
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create request for ocean data: %w", err)
 	}
-	req.Header.Set("User-Agent", "Helloface/1.0 (davidat@gmail.com)")
+	req.Header.Set("User-Agent", "Undertow/1.0 (davidat@gmail.com)")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -205,7 +205,7 @@ func getWeatherForecastData(pos Position) (*WeatherYrResponse, []byte, error) {
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create request for weather data: %w", err)
 	}
-	req.Header.Set("User-Agent", "Helloface/1.0 (davidat@gmail.com)")
+	req.Header.Set("User-Agent", "Undertow/1.0 (davidat@gmail.com)")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
