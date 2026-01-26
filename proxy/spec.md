@@ -113,5 +113,5 @@ If the proxy encounters an internal error or receives an error from the upstream
 
 The service is designed to be a self-contained, stateless application.
 
-*   **Packaging**: It should be packaged as a Docker container.
-*   **Configuration**: It listens for HTTP traffic on the port specified by the `PORT` environment variable, defaulting to `8080`. 
+*   **Packaging**: Build a Go binary (`go build -o yrproxy`) and run it under a process manager (e.g. systemd).
+*   **Configuration**: It listens for HTTP traffic on the port specified by the `PORT` environment variable, defaulting to `8080`.

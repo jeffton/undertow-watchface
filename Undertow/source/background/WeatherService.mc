@@ -7,6 +7,8 @@ import Toybox.Application;
 
 (:background)
 class WeatherService {
+  const PROXY_URL as String = "https://yrproxy.roybot.se/";
+  const PROXY_API_KEY as String = "3972292700dc527d113d0ae5bddf7f1ef762a644105faf51";
 
   function onTemporalEvent() {
     var positionInfo = Position.getInfo();
@@ -38,7 +40,7 @@ class WeatherService {
     }
   
     var lastRequestTime = lastData.get("requestTime");
-    var lastPosition = lastData.get("requestPosition") as Array<Numeric> or Null;
+    var lastPosition = lastData.get("requestPosition") as [Double, Double] or Null;
 
     if (!(lastRequestTime instanceof Number) || lastPosition == null) {
       return true;
@@ -65,19 +67,42 @@ class WeatherService {
 
   function requestData(position as Position.Location, accuracy as Position.Quality) {
     var latlon = position.toDegrees();
-    
-    var params = {
+
+    var params = getParams(latlon, accuracy);
+
+    var headers = {
+      "x-api-key" => PROXY_API_KEY
+    };
+
+    var options = {
+      :headers => headers
+    };
+
+    Communications.makeWebRequest(
+        PROXY_URL,
+        params,
+        options,
+        method(:onResponse)
+    );
+  }
+
+  (:debug)
+  function getParams(latlon as [Double, Double], accuracy as Position.Quality) as Dictionary {
+    return {
+      "lat" => latlon[0],
+      "lon" => latlon[1],
+      "accuracy" => accuracy,
+      "test" => 1
+    };
+  }
+
+  (:release)
+  function getParams(latlon as [Double, Double], accuracy as Position.Quality) as Dictionary {
+    return {
       "lat" => latlon[0],
       "lon" => latlon[1],
       "accuracy" => accuracy
     };
-
-    Communications.makeWebRequest(
-        "https://yrproxy-418768340557.europe-north2.run.app/",
-        params,
-        {},
-        method(:onResponse)
-    );
   }
 
   function onResponse(
