@@ -170,15 +170,16 @@ func requireApiKey(r *http.Request) bool {
 }
 
 func locationFilePath() string {
-	p := os.Getenv("YRPROXY_LOCATION_FILE")
-	if p == "" {
-		p = "/var/lib/yrproxy/location.json"
-	}
-	return p
+	// Location logging is opt-in. If YRPROXY_LOCATION_FILE is unset/empty,
+	// location logging is disabled.
+	return strings.TrimSpace(os.Getenv("YRPROXY_LOCATION_FILE"))
 }
 
 func writeLocation(pos Position) error {
 	path := locationFilePath()
+	if path == "" {
+		return nil
+	}
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return fmt.Errorf("mkdir location dir: %w", err)
 	}
