@@ -88,9 +88,7 @@ class WeatherService {
     return {
       "lat" => latlon[0],
       "lon" => latlon[1],
-      "accuracy" => accuracy,
-      "logLocation" => 1,
-      "test" => 1
+      "accuracy" => accuracy
     };
   }
 
