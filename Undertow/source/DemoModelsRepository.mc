@@ -33,13 +33,9 @@ class DemoModelsRepository {
         self.weatherModel.temperature = "15°";
         self.weatherModel.windSpeed = "12";
         self.weatherModel.windDirection = 45;
-        self.weatherModel.condition = "clear";
+        self.weatherModel.condition = "partly cloudy 40";
         self.weatherModel.waveHeight = "1.2";
         self.weatherModel.waveDirection = 60;
-        self.weatherModel.cloudCover = 10;
-        self.weatherModel.cloudCoverLow = 5;
-        self.weatherModel.cloudCoverMedium = 8;
-        self.weatherModel.cloudCoverHigh = 10;
         self.weatherModel.uvIndex = 0;
         self.weatherModel.precipitation = 50.3;
 

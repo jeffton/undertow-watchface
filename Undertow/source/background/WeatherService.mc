@@ -7,9 +7,6 @@ import Toybox.Application;
 
 (:background)
 class WeatherService {
-  const PROXY_URL as String = "https://yrproxy.roybot.se/";
-  const PROXY_API_KEY as String = "3972292700dc527d113d0ae5bddf7f1ef762a644105faf51";
-
   function onTemporalEvent() {
     var positionInfo = Position.getInfo();
 
@@ -71,7 +68,7 @@ class WeatherService {
     var params = getParams(latlon, accuracy);
 
     var headers = {
-      "x-api-key" => PROXY_API_KEY
+      "x-api-key" => WakeServiceSettings.API_KEY
     };
 
     var options = {
@@ -79,7 +76,7 @@ class WeatherService {
     };
 
     Communications.makeWebRequest(
-        PROXY_URL,
+        WakeServiceSettings.URL,
         params,
         options,
         method(:onResponse)
