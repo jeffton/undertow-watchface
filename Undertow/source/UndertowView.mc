@@ -294,7 +294,6 @@ class UndertowView extends WatchUi.WatchFace {
       case "hail":
         return bitmaps.weatherRain;
       case "thunder":
-      case "storm":
         return bitmaps.weatherThunder;
       case "snow":
         return bitmaps.weatherSnow;
