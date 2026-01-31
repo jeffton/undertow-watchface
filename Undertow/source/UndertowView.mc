@@ -202,49 +202,62 @@ class UndertowView extends WatchUi.WatchFace {
     var x = 10;
     var y = 24;
 
-    if (self.models.weatherModel.condition != null) {
-      var condition = self.models.weatherModel.condition as String;
-
-      if (
-        condition.equals("clear") ||
-        condition.equals("fair") ||
-        condition.equals("partly cloudy") ||
-        condition.equals("cloudy")
-      ) {
-        var cloudCover = self.models.weatherModel.cloudCover as Number;
-        
-        if (cloudCover >= 90) {
-          var cloudCoverLow = self.models.weatherModel.cloudCoverLow;
-          var cloudCoverMedium = self.models.weatherModel.cloudCoverMedium;
-          if (cloudCoverLow != null && cloudCoverLow >= 70) {
-            dc.drawBitmap(x, y, bitmaps.weatherCloudyLow.getBitmap());
-          } else if (cloudCoverLow != null && cloudCoverLow < 50 && 
-                     cloudCoverMedium != null && cloudCoverMedium < 50) {
-            dc.drawBitmap(x, y, bitmaps.weatherCloudyHigh.getBitmap());
-          } else {
-            dc.drawBitmap(x, y, bitmaps.weatherCloud.getBitmap());
-          }
-        } else {
-          // Draw sun or moon
-          var baseBitmap = isDaytime ? bitmaps.weatherSun : bitmaps.weatherMoon;
-          dc.drawBitmap(x, y, baseBitmap.getBitmap());
-
-          // Draw cloud overlay
-          if (cloudCover >= 70) {
-            dc.drawBitmap(x, y, bitmaps.weatherCloud80.getBitmap());
-          } else if (cloudCover >= 50) {
-            dc.drawBitmap(x, y, bitmaps.weatherCloud60.getBitmap());
-          } else if (cloudCover >= 30) {
-            dc.drawBitmap(x, y, bitmaps.weatherCloud40.getBitmap());
-          } else if (cloudCover >= 10) {
-            dc.drawBitmap(x, y, bitmaps.weatherCloud20.getBitmap());
-          }
-        }
-      } else {
-        var bitmap = getFallbackWeatherBitmap(condition);
-        dc.drawBitmap(x, y, bitmap.getBitmap());
-      }
+    var conditionValue = self.models.weatherModel.condition;
+    if (conditionValue == null) {
+      return;
     }
+
+    var condition = conditionValue as String;
+
+    if (condition.equals("clear") || condition.equals("fair")) {
+      var baseBitmap = isDaytime ? bitmaps.weatherSun : bitmaps.weatherMoon;
+      dc.drawBitmap(x, y, baseBitmap.getBitmap());
+      return;
+    }
+
+    var overlayBitmap = getCloudOverlayBitmap(condition);
+    if (overlayBitmap != null) {
+      var baseBitmap = isDaytime ? bitmaps.weatherSun : bitmaps.weatherMoon;
+      dc.drawBitmap(x, y, baseBitmap.getBitmap());
+      dc.drawBitmap(x, y, overlayBitmap.getBitmap());
+      return;
+    }
+
+    var cloudBitmap = getCloudBitmap(condition);
+    if (cloudBitmap != null) {
+      dc.drawBitmap(x, y, cloudBitmap.getBitmap());
+      return;
+    }
+
+    var fallbackBitmap = getFallbackWeatherBitmap(condition);
+    dc.drawBitmap(x, y, fallbackBitmap.getBitmap());
+  }
+
+  function getCloudOverlayBitmap(condition as String) as LazyBitmap? {
+    switch (condition) {
+      case "partly cloudy":
+      case "partly cloudy 40":
+        return bitmaps.weatherCloud40;
+      case "partly cloudy 20":
+        return bitmaps.weatherCloud20;
+      case "partly cloudy 60":
+        return bitmaps.weatherCloud60;
+      case "partly cloudy 80":
+        return bitmaps.weatherCloud80;
+    }
+    return null;
+  }
+
+  function getCloudBitmap(condition as String) as LazyBitmap? {
+    switch (condition) {
+      case "cloudy":
+        return bitmaps.weatherCloud;
+      case "heavy clouds":
+        return bitmaps.weatherCloudyLow;
+      case "high clouds":
+        return bitmaps.weatherCloudyHigh;
+    }
+    return null;
   }
 
   function drawWindBearing(dc as Dc, x, y, angle) {
@@ -281,6 +294,7 @@ class UndertowView extends WatchUi.WatchFace {
       case "hail":
         return bitmaps.weatherRain;
       case "thunder":
+      case "storm":
         return bitmaps.weatherThunder;
       case "snow":
         return bitmaps.weatherSnow;
