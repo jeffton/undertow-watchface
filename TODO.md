@@ -1,6 +1,0 @@
-- two suntimes if low UV and no rain?
-- weird/much blank space at bottom depending on data
-- not happy with activity marks
-- not happy with step counter
-- watch face lacks cuteness and character
-- battery could be removed
