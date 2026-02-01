@@ -71,7 +71,7 @@ class ActivityCountService {
   function readStoredState() as Dictionary? {
     var stored = Storage.getValue(STORAGE_KEY);
     if (stored instanceof Dictionary) {
-      return stored;
+      return stored as Dictionary;
     }
     return null;
   }
