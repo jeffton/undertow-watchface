@@ -102,7 +102,7 @@ class WeatherService {
     return (distanceToLastRequest >= 1);
   }
 
-  function distance(lat1 as Numeric, lon1 as Numeric, lat2 as Numeric, lon2 as Numeric) as Numeric {
+  function distance(lat1 as Double, lon1 as Double, lat2 as Double, lon2 as Double) as Double {
     var x = Math.toRadians((lon2 - lon1)) * Math.cos(Math.toRadians((lat1 + lat2) / 2));
     var y = Math.toRadians(lat2 - lat1);
     var distance = Math.sqrt(x * x + y * y) * 6371;
