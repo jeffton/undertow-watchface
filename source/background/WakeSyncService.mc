@@ -8,7 +8,7 @@ import Toybox.Activity;
 
 
 (:background)
-class WeatherService {
+class WakeSyncService {
   function onTemporalEvent() as Void {
     var positionInfo = Position.getInfo();
     var position = positionInfo.position;
