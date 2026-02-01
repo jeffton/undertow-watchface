@@ -21,6 +21,6 @@ class UndertowBackgroundDelegate extends Toybox.System.ServiceDelegate {
     :sport as $.Toybox.Activity.Sport,
     :subSport as $.Toybox.Activity.SubSport
     }) as Void {
-      new ActivityCountService().onActivityCompleted(activity);
+      new WeatherService().onActivityCompleted(activity);
   }
 }

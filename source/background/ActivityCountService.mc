@@ -7,45 +7,108 @@ import Toybox.Time;
 
 (:background)
 class ActivityCountService {
+  const STORAGE_KEY as String = "activity-count";
+  const DATE_KEY as String = "date";
+  const COUNT_KEY as String = "count";
+  const LAST_WORKOUT_KEY as String = "lastWorkout";
+  const PENDING_SYNC_KEY as String = "pendingSync";
 
   function onActivityCompleted(activity as {
     :sport as Activity.Sport,
     :subSport as Activity.SubSport
-    }) as Void 
+    }) as Boolean
   {
     if (!activityTypeIsValid(activity)) {
-      Background.exit(null);
-      return; 
+      return false;
     }
 
+    var now = Time.now();
     var today = Time.today();
-    var storedCount = readStoredCount(today);
-    writeStoredCount(today, storedCount + 1);
+    var storedState = readStoredState();
+    var storedCount = readStoredCountFromState(storedState, today);
+    var nextState = buildState(today, storedCount + 1, now.value(), true, storedState);
 
-    Background.exit(null);
+    Storage.setValue(STORAGE_KEY, nextState);
+    return true;
   }
 
   function readStoredCount(today as Moment) as Number {
-    var stored = Storage.getValue("activity-count");
-    if (stored instanceof Dictionary && stored.hasKey("date")) {
-      var storedDate = stored.get("date") as Number;
+    var storedState = readStoredState();
+    return readStoredCountFromState(storedState, today);
+  }
+
+  function readLastWorkout() as Number {
+    var storedState = readStoredState();
+    if (storedState != null && storedState.hasKey(LAST_WORKOUT_KEY)) {
+      var storedLastWorkout = storedState.get(LAST_WORKOUT_KEY);
+      if (storedLastWorkout instanceof Number) {
+        return storedLastWorkout;
+      }
+    }
+    return 0;
+  }
+
+  function hasPendingSync() as Boolean {
+    var storedState = readStoredState();
+    if (storedState != null && storedState.hasKey(PENDING_SYNC_KEY)) {
+      var pending = storedState.get(PENDING_SYNC_KEY);
+      if (pending instanceof Boolean) {
+        return pending;
+      }
+    }
+    return false;
+  }
+
+  function clearPendingSync() as Void {
+    var storedState = readStoredState();
+    if (storedState == null) {
+      return;
+    }
+    storedState.put(PENDING_SYNC_KEY, false);
+    Storage.setValue(STORAGE_KEY, storedState);
+  }
+
+  function readStoredState() as Dictionary? {
+    var stored = Storage.getValue(STORAGE_KEY);
+    if (stored instanceof Dictionary) {
+      return stored;
+    }
+    return null;
+  }
+
+  function readStoredCountFromState(storedState as Dictionary?, today as Moment) as Number {
+    if (storedState != null && storedState.hasKey(DATE_KEY)) {
+      var storedDate = storedState.get(DATE_KEY) as Number;
       if (storedDate == today.value()) {
-        var storedCount = stored.get("count") as Number;
+        var storedCount = storedState.get(COUNT_KEY) as Number;
         return storedCount;
       }
     }
     return 0;
   }
 
-  function writeStoredCount(today as Moment, count as Number) {
-    var stored = { "date" => today.value(), "count" => count };
-    Storage.setValue("activity-count", stored);
+  function buildState(
+    today as Moment,
+    count as Number,
+    lastWorkout as Number,
+    pendingSync as Boolean,
+    storedState as Dictionary?
+  ) as Dictionary {
+    var state = storedState;
+    if (state == null) {
+      state = {};
+    }
+    state.put(DATE_KEY, today.value());
+    state.put(COUNT_KEY, count);
+    state.put(LAST_WORKOUT_KEY, lastWorkout);
+    state.put(PENDING_SYNC_KEY, pendingSync);
+    return state;
   }
 
   function activityTypeIsValid(activity as {
     :sport as Activity.Sport,
     :subSport as Activity.SubSport
-    })
+    }) as Boolean
   {
     switch (activity.get(:sport)) {
       case Activity.SPORT_HEALTH_MONITORING:
@@ -91,6 +154,4 @@ class ActivityCountService {
     return today.subtract(new Time.Duration(secondsToGarminEpoch));
   }
 */
-  
-
 }
