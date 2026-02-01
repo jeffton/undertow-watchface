@@ -20,12 +20,12 @@ class WeatherService {
     var lastData = Storage.getValue("weather") as Dictionary?;
     var activityService = new ActivityCountService();
     var hasPendingSync = activityService.hasPendingSync();
-    if (!shouldUpdateForecast(position, lastData, hasPendingSync)) {
+    if (!shouldSync(position, lastData, hasPendingSync)) {
       Background.exit(null);
       return;
     }
 
-    requestData(position, positionInfo.accuracy);
+    requestData(position);
   }
 
   function onActivityCompleted(activity as {
@@ -48,19 +48,19 @@ class WeatherService {
     }
 
     var lastData = Storage.getValue("weather") as Dictionary?;
-    if (!shouldUpdateForecast(position, lastData, true)) {
+    if (!shouldSync(position, lastData, true)) {
       Background.exit(null);
       return;
     }
 
-    requestData(position, positionInfo.accuracy);
+    requestData(position);
   }
 
   function update(lastData as Dictionary?) as Void {
     var here = Position.getInfo().position;
     var activityService = new ActivityCountService();
     var hasPendingSync = activityService.hasPendingSync();
-    if (shouldUpdateForecast(here, lastData, hasPendingSync)) {
+    if (shouldSync(here, lastData, hasPendingSync)) {
       try {
         Background.registerForTemporalEvent(Time.now());
       } catch (e) {
@@ -68,7 +68,7 @@ class WeatherService {
     }
   }
 
-  function shouldUpdateForecast(
+  function shouldSync(
     position as Position.Location?,
     lastData as Dictionary?,
     hasPendingSync as Boolean
@@ -109,10 +109,10 @@ class WeatherService {
     return distance;
   }
 
-  function requestData(position as Position.Location, accuracy as Position.Quality) as Void {
+  function requestData(position as Position.Location) as Void {
     var latlon = position.toDegrees();
     var lastWorkout = new ActivityCountService().readLastWorkout();
-    var params = getParams(latlon, accuracy, lastWorkout);
+    var params = getParams(latlon, lastWorkout);
 
     var headers = {
       "x-api-key" => WakeServiceSettings.API_KEY,
@@ -133,7 +133,6 @@ class WeatherService {
   (:debug)
   function getParams(
     latlon as [Double, Double],
-    accuracy as Position.Quality,
     lastWorkout as Number
   ) as Dictionary {
     return {
@@ -147,7 +146,6 @@ class WeatherService {
   (:release)
   function getParams(
     latlon as [Double, Double],
-    accuracy as Position.Quality,
     lastWorkout as Number
   ) as Dictionary {
     return {
