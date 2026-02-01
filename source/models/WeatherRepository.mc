@@ -20,7 +20,7 @@ class WeatherRepository {
   }
 
   function update() {
-    new WeatherService().update(self.weatherData);
+    new WakeSyncService().update(self.weatherData);
   }
 
   function onWeatherUpdated(data as Dictionary) {

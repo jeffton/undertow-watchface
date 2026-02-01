@@ -14,13 +14,13 @@ class UndertowBackgroundDelegate extends Toybox.System.ServiceDelegate {
   }
 
   function onTemporalEvent() {
-    new WeatherService().onTemporalEvent();
+    new WakeSyncService().onTemporalEvent();
   }
 
   function onActivityCompleted(activity as {
     :sport as $.Toybox.Activity.Sport,
     :subSport as $.Toybox.Activity.SubSport
     }) as Void {
-      new ActivityCountService().onActivityCompleted(activity);
+      new WakeSyncService().onActivityCompleted(activity);
   }
 }
