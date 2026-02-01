@@ -21,7 +21,7 @@ class UndertowView extends WatchUi.WatchFace {
 
     self.bitmaps = new Bitmaps();
 
-    var useDemoRepo = true;
+    var useDemoRepo = false;
 
     if (useDemoRepo) {
       self.models = new DemoModelsRepository() as IModelsRepository;

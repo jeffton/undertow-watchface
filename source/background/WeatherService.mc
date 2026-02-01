@@ -68,7 +68,7 @@ class WeatherService {
     var params = getParams(latlon, accuracy);
 
     var headers = {
-      "x-api-key" => WakeServiceSettings.API_KEY
+      "x-api-key" => WakeServiceSettings.API_KEY,
     };
 
     var options = {
@@ -88,7 +88,7 @@ class WeatherService {
     return {
       "lat" => latlon[0],
       "lon" => latlon[1],
-      "accuracy" => accuracy
+      "format" => "compact",
     };
   }
 
@@ -97,7 +97,7 @@ class WeatherService {
     return {
       "lat" => latlon[0],
       "lon" => latlon[1],
-      "accuracy" => accuracy,
+      "format" => "compact",
       "logLocation" => 1
     };
   }
