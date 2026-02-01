@@ -139,7 +139,7 @@ class WeatherService {
       "lat" => latlon[0],
       "lon" => latlon[1],
       "format" => "compact",
-      "lastWorkout" => lastWorkout
+      "lastWorkout" => 0
     };
   }
 
