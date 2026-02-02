@@ -1,49 +1,49 @@
 # Undertow
 
-Garmin watchface for Instinct 2 med vejr, havdata og aktivitetssporing.
+Garmin watchface for Instinct 2 with weather, ocean data and activity tracking.
 
 ## Features
 
 ### Time & Date
-- Digital tid med live sekunder (partial screen updates)
-- Dag og dato
+- Digital time with live seconds (partial screen updates)
+- Day and date
 
 ### Weather & Ocean Data
-Data hentes fra [Wake Service](https://github.com/jeffton/wake-service):
-- Temperatur og vejrikoner
-- Vind (hastighed + animeret kompaspil)
-- UV-index (vises når > 0)
-- Nedbørsvarsel (paraply-ikon ved ≥80% chance)
-- Solopgang/solnedgang
-- Havtemperatur 🌊 (nær kysten, ellers vises højde)
-- Bølgehøjde og -retning
+Fetched from [Wake Service](https://github.com/jeffton/wake-service):
+- Temperature and weather icons
+- Wind speed and animated compass arrow
+- UV index (shown when > 0)
+- Precipitation warning (umbrella icon at ≥80% chance)
+- Sunrise/sunset times
+- Sea water temperature 🌊 (near coast, otherwise shows altitude)
+- Wave height and direction
 
 ### Activity Tracking
-- Skridt med goal progress ring
-- Ugentlige aktive minutter (bar med daglig progress)
-- Workout-indikator når aktivitet registreret i dag
-- Recovery time bar (skalerer fra 24h til 96h)
+- Step count with goal progress ring
+- Weekly active minutes bar with daily progress
+- Workout indicator when activity recorded today
+- Recovery time bar (scales from 24h to 96h)
 
 ### Health Metrics
-- Real-time puls
-- Body Battery (cirkulær progress)
+- Real-time heart rate
+- Body Battery (circular progress)
 - Stress level
 
 ### Environmental
-- Barometrisk tryk (nål viser høj/lav)
-- Højde (når havtemperatur ikke vises)
-- Sol-arc med aktuel position mellem solopgang/solnedgang
+- Barometric pressure gauge (needle indicates high/low)
+- Altitude (when not showing sea temperature)
+- Sun position arc between sunrise and sunset
 
 ### Device Status
-- Batteriniveau
-- Notifikationstæller + telefonforbindelse
-- Do Not Disturb / Alarm indikatorer
+- Battery level
+- Notification count and phone connection status
+- Do Not Disturb / Alarm indicators
 
 ### Background Sync
-Synkroniserer med Wake Service:
-- Vejr og havdata
-- GPS-lokationslog
-- Workout-notifikationer til AI-assistent
+Syncs with Wake Service for:
+- Weather and ocean data
+- GPS location logging
+- Workout notifications to AI assistant
 
 ## Setup
 
