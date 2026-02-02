@@ -380,9 +380,9 @@ class UndertowView extends WatchUi.WatchFace {
     var x = 42;
     var y = 159;
 
-    var daily = self.models.dayModel.activityCount;
+    var hasWorkoutToday = self.models.dayModel.hasWorkoutToday;
 
-    if (daily > 0) {
+    if (hasWorkoutToday) {
       dc.drawBitmap(x - 15, y, bitmaps.activeLeft.getBitmap());
       dc.drawBitmap(x + 96, y, bitmaps.activeRight.getBitmap());
     }

@@ -17,7 +17,7 @@ class DemoModelsRepository {
         self.weatherRepository = null;
         self.lastUpdateTime = new UpdateTime();
         self.dayModel = new DayModel(self.lastUpdateTime);
-        self.dayModel.activityCount = 2;
+        self.dayModel.hasWorkoutToday = true;
         self.dayModel.date = "ONS 8";
         self.dayModel.alarm = true;
         self.dayModel.weekday = 3;
