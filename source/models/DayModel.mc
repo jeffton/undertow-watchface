@@ -4,7 +4,7 @@ import Toybox.Time.Gregorian;
 import Toybox.System;
 
 class DayModel {
-  var activityCount as Number;
+  var hasWorkoutToday as Boolean;
   var date as String;
   var alarm as Boolean;
   var weekday as Number;
@@ -14,7 +14,7 @@ class DayModel {
     var activityCountService = new ActivityCountService();
 
     self.date = getDate(updateTime.today);
-    self.activityCount = activityCountService.readStoredCount(updateTime.today);
+    self.hasWorkoutToday = activityCountService.hasWorkoutToday(updateTime.today);
     self.alarm = getAlarm(deviceSettings);
     self.weekday = getWeekday(updateTime.today);
   }

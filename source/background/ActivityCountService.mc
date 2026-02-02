@@ -1,15 +1,13 @@
-import Toybox.Lang;
 import Toybox.Application;
 import Toybox.Application.Storage;
 import Toybox.Activity;
+import Toybox.Lang;
 import Toybox.Time;
 
 
 (:background)
 class ActivityCountService {
   const STORAGE_KEY as String = "activity-count";
-  const DATE_KEY as String = "date";
-  const COUNT_KEY as String = "count";
   const LAST_WORKOUT_KEY as String = "lastWorkout";
   const PENDING_SYNC_KEY as String = "pendingSync";
 
@@ -23,18 +21,19 @@ class ActivityCountService {
     }
 
     var now = Time.now();
-    var today = Time.today();
     var storedState = readStoredState();
-    var storedCount = readStoredCountFromState(storedState, today);
-    var nextState = buildState(today, storedCount + 1, now.value(), true, storedState);
+    var nextState = buildState(now.value(), true, storedState);
 
     Storage.setValue(STORAGE_KEY, nextState);
     return true;
   }
 
-  function readStoredCount(today as Moment) as Number {
-    var storedState = readStoredState();
-    return readStoredCountFromState(storedState, today);
+  function hasWorkoutToday(today as Moment) as Boolean {
+    var lastWorkout = readLastWorkout();
+    if (lastWorkout <= 0) {
+      return false;
+    }
+    return lastWorkout >= today.value();
   }
 
   function readLastWorkout() as Number {
@@ -76,20 +75,7 @@ class ActivityCountService {
     return null;
   }
 
-  function readStoredCountFromState(storedState as Dictionary?, today as Moment) as Number {
-    if (storedState != null && storedState.hasKey(DATE_KEY)) {
-      var storedDate = storedState.get(DATE_KEY) as Number;
-      if (storedDate == today.value()) {
-        var storedCount = storedState.get(COUNT_KEY) as Number;
-        return storedCount;
-      }
-    }
-    return 0;
-  }
-
   function buildState(
-    today as Moment,
-    count as Number,
     lastWorkout as Number,
     pendingSync as Boolean,
     storedState as Dictionary?
@@ -98,8 +84,6 @@ class ActivityCountService {
     if (state == null) {
       state = {};
     }
-    state.put(DATE_KEY, today.value());
-    state.put(COUNT_KEY, count);
     state.put(LAST_WORKOUT_KEY, lastWorkout);
     state.put(PENDING_SYNC_KEY, pendingSync);
     return state;
@@ -119,39 +103,4 @@ class ActivityCountService {
         return true;
     }
   }
-
-/*
-  private function getActivityCount(today as Moment) as Number {
-    var userActivityIterator = UserProfile.getUserActivityHistory();
-    
-    var dayCount = 0;
-    var todayFit = getMidnightAsFitDate(today);
-
-    var activityData = userActivityIterator.next();
-    while (activityData != null && dayCount < 99) {
-      var type = activityData.type;
-      var startTime = activityData.startTime;
-
-      if (
-        type != null && 
-        startTime != null && 
-        startTime.greaterThan(todayFit) && 
-        type != Activity.SPORT_HEALTH_MONITORING &&
-        type != Activity.SPORT_VIDEO_GAMING &&
-        type != Activity.SPORT_INVALID
-      ) {
-        dayCount++;
-      }
-  
-      activityData = userActivityIterator.next();
-    }
-
-    return dayCount;
-  }
-
-  private function getMidnightAsFitDate(today as Moment) as Moment {
-    var secondsToGarminEpoch = 631065600;
-    return today.subtract(new Time.Duration(secondsToGarminEpoch));
-  }
-*/
 }
