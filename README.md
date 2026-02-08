@@ -1,6 +1,6 @@
 # Undertow
 
-Garmin watchface for Instinct 2 with weather, ocean data and activity tracking.
+Garmin watchface for Instinct 2 with weather, ocean data, plenty of stats and a bit of OpenClaw integration.
 
 <p align="center">
   <img src="screenshot.png" alt="Undertow watchface screenshot" style="width: 100%; max-width: 640px; height: auto;" />
@@ -43,7 +43,7 @@ Garmin watchface for Instinct 2 with weather, ocean data and activity tracking.
 
 - Built for Garmin Instinct 2 (176x176 display). Should be trivial to add support for other Instinct models with the same resolution. Other Garmin watches would require reworking the view as everything is drawn in black and white at fixed coordinates.
 
-### AI usage
+## AI usage
 - Most of this watchface is hand-coded (made it before the recent AI explosion)
 - Later features have been prompted with Codex & carefully reviewed
 
