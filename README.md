@@ -3,7 +3,7 @@
 Garmin watchface for Instinct 2 with weather, ocean data and activity tracking.
 
 <p align="center">
-  <img src="screenshot.png" alt="Undertow watchface screenshot" width="320" />
+  <img src="screenshot.png" alt="Undertow watchface screenshot" style="width: 100%; max-width: 640px; height: auto;" />
 </p>
 
 ## Features
