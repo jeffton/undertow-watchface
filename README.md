@@ -17,7 +17,7 @@ Garmin watchface for Instinct 2 with weather, ocean data, plenty of stats and a 
 - Ocean data falls back to altidude display when far from the ocean
 
 ### OpenClaw integration
-- Can ping your [OpenClaw](https://openclaw.ai) bot via [Wake Service](https://github.com/jeffton/wake-service) once you save an activity, so that your bot can check stats on Garmin Connect and give feedback.
+- Can ping your [OpenClaw](https://openclaw.ai) bot via [Wake Service](https://github.com/jeffton/wake-service) once you save an activity, so that your bot can check stats on Garmin Connect and give feedback. My OpenClaw skill for Garmin Connect is [here](https://github.com/jeffton/garmin-skill), but you can use any available Garmin skill for this.
 
 ## Settings
 
@@ -47,6 +47,3 @@ Garmin watchface for Instinct 2 with weather, ocean data, plenty of stats and a 
 - Most of this watchface is hand-coded (made it before the recent AI explosion)
 - Later features have been prompted with Codex & carefully reviewed
 
-## License
-
-MIT
