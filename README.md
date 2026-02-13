@@ -16,6 +16,8 @@ Garmin watchface for Instinct 2 with weather, ocean data, plenty of stats and a 
 - Weather & ocean data provided by [YR](https://www.yr.no/) via [Wake Service](https://github.com/jeffton/wake-service)
 - Ocean data falls back to altidude display when far from the ocean
 
+A larger version of the sun position is [available as a widget](https://github.com/jeffton/daylight-widget).
+
 ### OpenClaw integration
 - **Location awareness**: Can log your location when fetching weather via [Wake Service](https://github.com/jeffton/wake-service), so that your [OpenClaw](https://openclaw.ai) bot knows where you are.
 - **Activity feedback**: Can ping your Wake Service when you save an activity, so that your bot can check stats on Garmin Connect and give feedback. My OpenClaw skill for Garmin Connect is [here](https://github.com/jeffton/garmin-skill), but you can use any available Garmin skill for this.
