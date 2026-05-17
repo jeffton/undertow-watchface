@@ -1,6 +1,5 @@
 import Toybox.Math;
 import Toybox.Lang;
-import Toybox.Position;
 import Toybox.Time;
 
 class SunFactory {
@@ -10,12 +9,12 @@ class SunFactory {
       return null;
     }
 
-    var positionInfo = Position.getInfo().position;
-    if (positionInfo == null) {
+    var here = WakeLocation.fromStoredWeather();
+    if (here == null) {
       return null;
     }
 
-    var latLonRad = positionInfo.toRadians();
+    var latLonRad = here.toRadians();
     var latRad = latLonRad[0].toFloat();
     var lonRad = latLonRad[1].toFloat();
 

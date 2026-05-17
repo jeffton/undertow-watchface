@@ -23,9 +23,12 @@ class ModelsRepository {
         self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
     }
 
-    function onWeatherUpdated(data as Dictionary) {
+    function onWeatherUpdated(data as Dictionary) as Void {
         self.weatherRepository.onWeatherUpdated(data);
         self.weatherModel = self.weatherRepository.getWeatherModel();
+        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
+        self.sunModel = SunFactory.createSunModel(self.tenMinuteModel);
+        self.minuteModel = new MinuteModel(lastUpdateTime, self.tenMinuteModel);
     }
 
     function updateModels() as Boolean {
