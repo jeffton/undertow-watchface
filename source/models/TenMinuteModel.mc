@@ -1,7 +1,8 @@
 import Toybox.Time;
 import Toybox.Lang;
-import Toybox.Application.Storage;
 import Toybox.Time.Gregorian;
+import Toybox.Position;
+import Toybox.Weather;
 
 class TenMinuteModel {
   private var sunriseMoment as Moment?;
@@ -13,8 +14,15 @@ class TenMinuteModel {
   var sunset as String;
   var sunsetTomorrow as String;
 
-  function initialize(today as Moment) {
-    var here = Position.getInfo().position;
+  function initialize(today as Moment, here as Position.Location?) {
+    if (here == null) {
+      self.sunrise = "-:--";
+      self.sunriseTomorrow = "-:--";
+      self.sunset = "-:--";
+      self.sunsetTomorrow = "-:--";
+      return;
+    }
+
     var tomorrow = today.add(new Time.Duration(Gregorian.SECONDS_PER_DAY));
 
     self.sunriseMoment = Weather.getSunrise(here, today);
@@ -32,9 +40,9 @@ class TenMinuteModel {
     return self.sunriseMoment != null && self.sunsetMoment != null;
   }
 
-  function isDaytime(now as Moment) {
+  function isDaytime(now as Moment) as Boolean {
     if (self.sunriseMoment == null || self.sunsetMoment == null) {
-      return true; // best guess
+      return true;
     }
 
     var isAfterSunrise = now.compare(self.sunriseMoment) >= 0;

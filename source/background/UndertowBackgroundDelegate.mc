@@ -1,4 +1,3 @@
-import Toybox.Position;
 import Toybox.Time;
 import Toybox.Lang;
 import Toybox.PersistedContent;

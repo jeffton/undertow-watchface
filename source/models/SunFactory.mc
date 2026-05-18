@@ -5,17 +5,16 @@ import Toybox.Time;
 
 class SunFactory {
 
-  static function createSunModel(tenMinuteModel as TenMinuteModel) as SunModel? {
+  static function createSunModel(tenMinuteModel as TenMinuteModel, here as Position.Location?) as SunModel? {
     if (!tenMinuteModel.hasSunTimes()) {
       return null;
     }
 
-    var positionInfo = Position.getInfo().position;
-    if (positionInfo == null) {
+    if (here == null) {
       return null;
     }
 
-    var latLonRad = positionInfo.toRadians();
+    var latLonRad = here.toRadians();
     var latRad = latLonRad[0].toFloat();
     var lonRad = latLonRad[1].toFloat();
 
