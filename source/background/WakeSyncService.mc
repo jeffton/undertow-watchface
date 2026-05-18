@@ -73,8 +73,8 @@ class WakeSyncService {
     }
 
     var timeSinceLastRequest = Time.now().subtract(new Time.Moment(lastRequestTime)) as Time.Duration;
-    var oneHour = new Time.Duration(3540);
-    return timeSinceLastRequest.greaterThan(oneHour);
+    var syncInterval = new Time.Duration(1740);
+    return timeSinceLastRequest.greaterThan(syncInterval);
   }
 
   function requestData() as Void {
