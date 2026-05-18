@@ -29,7 +29,16 @@ class WeatherRepository {
   }
 
   function getLocation() as Position.Location? {
-    return WakeLocation.fromWeatherData(self.weatherData);
+    if (self.weatherData == null) {
+      return null;
+    }
+
+    var requestPosition = self.weatherData.get("requestPosition") as [Double, Double];
+    return new Position.Location({
+      :latitude => requestPosition[0],
+      :longitude => requestPosition[1],
+      :format => :degrees
+    });
   }
 
   function getWeatherModel() as WeatherModel {
