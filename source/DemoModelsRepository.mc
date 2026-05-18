@@ -31,7 +31,7 @@ class DemoModelsRepository {
         self.dayModel.alarm = true;
         self.dayModel.weekday = 3;
 
-        self.tenMinuteModel = new TenMinuteModel(self.lastUpdateTime.today);
+        self.tenMinuteModel = new TenMinuteModel(self.lastUpdateTime.today, null);
         self.tenMinuteModel.sunrise = "6:01";
         self.tenMinuteModel.sunriseTomorrow = "6:02";
         self.tenMinuteModel.sunset = "20:03";

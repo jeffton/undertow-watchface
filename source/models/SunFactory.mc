@@ -1,15 +1,15 @@
 import Toybox.Math;
 import Toybox.Lang;
+import Toybox.Position;
 import Toybox.Time;
 
 class SunFactory {
 
-  static function createSunModel(tenMinuteModel as TenMinuteModel) as SunModel? {
+  static function createSunModel(tenMinuteModel as TenMinuteModel, here as Position.Location?) as SunModel? {
     if (!tenMinuteModel.hasSunTimes()) {
       return null;
     }
 
-    var here = WakeLocation.fromStoredWeather();
     if (here == null) {
       return null;
     }

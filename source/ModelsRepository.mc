@@ -1,6 +1,5 @@
 import Toybox.Time;
 import Toybox.Lang;
-
 class ModelsRepository {
     var lastUpdateTime as UpdateTime;
     var dayModel as DayModel;
@@ -14,20 +13,22 @@ class ModelsRepository {
     function initialize() {
         self.lastUpdateTime = new UpdateTime();
         self.dayModel = new DayModel(lastUpdateTime);
-        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
         self.weatherRepository = new WeatherRepository();
+        var location = self.weatherRepository.getLocation();
+        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, location);
         self.weatherRepository.update();
         self.weatherModel = self.weatherRepository.getWeatherModel();
-        self.sunModel = SunFactory.createSunModel(self.tenMinuteModel);
+        self.sunModel = SunFactory.createSunModel(self.tenMinuteModel, location);
         self.secondModel = new SecondModel(lastUpdateTime);
-        self.minuteModel = new MinuteModel(lastUpdateTime, tenMinuteModel);
+        self.minuteModel = new MinuteModel(lastUpdateTime, self.tenMinuteModel);
     }
 
     function onWeatherUpdated(data as Dictionary) as Void {
         self.weatherRepository.onWeatherUpdated(data);
+        var location = self.weatherRepository.getLocation();
         self.weatherModel = self.weatherRepository.getWeatherModel();
-        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
-        self.sunModel = SunFactory.createSunModel(self.tenMinuteModel);
+        self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, location);
+        self.sunModel = SunFactory.createSunModel(self.tenMinuteModel, location);
         self.minuteModel = new MinuteModel(lastUpdateTime, self.tenMinuteModel);
     }
 
@@ -37,20 +38,20 @@ class ModelsRepository {
         lastUpdateTime = updateTime;
 
         switch (diff) {
-        // Cases intentionally fall through
         case UpdateTime.DAY:
             self.dayModel = new DayModel(updateTime);
         case UpdateTime.TEN_MINUTES:
-            self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today);
+            var location = self.weatherRepository.getLocation();
+            self.tenMinuteModel = new TenMinuteModel(lastUpdateTime.today, location);
             self.weatherRepository.update();
             self.weatherModel = self.weatherRepository.getWeatherModel();
-            self.sunModel = SunFactory.createSunModel(self.tenMinuteModel);
+            self.sunModel = SunFactory.createSunModel(self.tenMinuteModel, location);
         case UpdateTime.MINUTE:
             self.minuteModel = new MinuteModel(updateTime, self.tenMinuteModel);
         case UpdateTime.SECOND:
             self.secondModel = new SecondModel(updateTime);
             return true;
-        default: // that's case EQUAL
+        default:
             return false;
         }
     }

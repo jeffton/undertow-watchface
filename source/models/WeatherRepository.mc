@@ -1,6 +1,7 @@
 import Toybox.Time;
 import Toybox.Lang;
 import Toybox.Application.Storage;
+import Toybox.Position;
 
 class WeatherRepository {
   var weatherData as Dictionary?;
@@ -23,8 +24,12 @@ class WeatherRepository {
     new WakeSyncService().update(self.weatherData);
   }
 
-  function onWeatherUpdated(data as Dictionary) {
+  function onWeatherUpdated(data as Dictionary) as Void {
     self.weatherData = data;
+  }
+
+  function getLocation() as Position.Location? {
+    return WakeLocation.fromWeatherData(self.weatherData);
   }
 
   function getWeatherModel() as WeatherModel {

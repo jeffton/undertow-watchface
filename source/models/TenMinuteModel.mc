@@ -1,6 +1,7 @@
 import Toybox.Time;
 import Toybox.Lang;
 import Toybox.Time.Gregorian;
+import Toybox.Position;
 import Toybox.Weather;
 
 class TenMinuteModel {
@@ -13,8 +14,7 @@ class TenMinuteModel {
   var sunset as String;
   var sunsetTomorrow as String;
 
-  function initialize(today as Moment) {
-    var here = WakeLocation.fromStoredWeather();
+  function initialize(today as Moment, here as Position.Location?) {
     if (here == null) {
       self.sunrise = "-:--";
       self.sunriseTomorrow = "-:--";
