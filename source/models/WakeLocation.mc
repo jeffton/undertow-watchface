@@ -5,7 +5,7 @@ import Toybox.Position;
 class WakeLocation {
   static function fromStoredWeather() as Position.Location? {
     var data = Storage.getValue("weather") as Dictionary?;
-    if (data == null || !data.hasKey("requestPosition")) {
+    if (data == null) {
       return null;
     }
 

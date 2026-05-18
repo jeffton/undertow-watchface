@@ -62,7 +62,7 @@ class WakeSyncService {
     if (hasPendingSync) {
       return true;
     }
-    if (!(lastData instanceof Dictionary) || !lastData.hasKey("requestPosition")) {
+    if (!(lastData instanceof Dictionary)) {
       return true;
     }
   
@@ -121,7 +121,7 @@ class WakeSyncService {
     responseCode as Number,
     data as Null or Dictionary or String or PersistedContent.Iterator) as Void
   {
-    if (data instanceof Dictionary && data.hasKey("forecast") && data.hasKey("requestPosition")) {
+    if (data instanceof Dictionary && data.hasKey("forecast")) {
       new ActivityCountService().clearPendingSync();
       Background.exit(data);
     } else {
