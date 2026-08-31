@@ -91,7 +91,8 @@ class WeatherRepository {
     if (self.weatherData != null && self.weatherData.hasKey("forecast")) {
       var hours = self.weatherData.get("forecast");
       if (hours instanceof Array && hours.size() > 0) {
-        var now = Time.now().value();
+        var now as Number = Time.now().value();
+        now -= now % 3600;
         for (var i = 0; i < hours.size(); i++) {
           var entry = hours[i];
           if (entry instanceof Array && entry.size() > FORECAST_IDX_TIME) {
