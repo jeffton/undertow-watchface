@@ -6,10 +6,10 @@ Use typing for everything the compiler permits. Monkey C 3.4 rejects explicit ty
 
 This server has:
 
-- Connect IQ SDK 9.2.0 in `/root/.Garmin/ConnectIQ/Sdks/`
-- Instinct 2 device support in `/root/.Garmin/ConnectIQ/Devices/instinct2/`
+- Connect IQ SDK 9.2.0 in `/home/roy/.Garmin/ConnectIQ/Sdks/`
+- Instinct 2 device support in `/home/roy/.Garmin/ConnectIQ/Devices/instinct2/`
 - `monkeyc` and `monkeydo` wrappers in `/usr/local/bin/`
-- a local sideload signing key at `/root/.Garmin/ConnectIQ/Keys/developer_key.der`
+- a local sideload signing key at `/home/roy/.Garmin/ConnectIQ/Keys/developer_key.der`
 - `connect-iq-sdk-manager` 0.8.4 installed for headless SDK/device management
 
 Check the latest stable SDK on Garmin's official SDK page before installing a version. The official Linux SDK Manager requires a GUI; use `connect-iq-sdk-manager` for headless setup:
@@ -29,11 +29,11 @@ connect-iq-sdk-manager device download --manifest=manifest.xml
 Generate a local signing key if it is missing:
 
 ```bash
-mkdir -p /root/.Garmin/ConnectIQ/Keys
+mkdir -p /home/roy/.Garmin/ConnectIQ/Keys
 umask 077
 openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out /tmp/garmin-key.pem
 openssl pkcs8 -topk8 -inform PEM -outform DER -in /tmp/garmin-key.pem \
-  -out /root/.Garmin/ConnectIQ/Keys/developer_key.der -nocrypt
+  -out /home/roy/.Garmin/ConnectIQ/Keys/developer_key.der -nocrypt
 rm /tmp/garmin-key.pem
 ```
 
@@ -72,7 +72,7 @@ Always compile after changes:
 mkdir -p bin
 monkeyc -o bin/Undertow.prg \
   -f monkey.jungle \
-  -y /root/.Garmin/ConnectIQ/Keys/developer_key.der \
+  -y /home/roy/.Garmin/ConnectIQ/Keys/developer_key.der \
   -d instinct2_sim \
   -l 1 \
   -w
@@ -84,7 +84,7 @@ Build a sideloadable release with the real Wake configuration:
 mkdir -p dist
 monkeyc -o dist/Undertow.prg \
   -f monkey.jungle \
-  -y /root/.Garmin/ConnectIQ/Keys/developer_key.der \
+  -y /home/roy/.Garmin/ConnectIQ/Keys/developer_key.der \
   -d instinct2_sim \
   -l 1 \
   -w \
@@ -113,7 +113,7 @@ Install simulator fonts with the device package. The Garmin API cannot download 
 
 ```bash
 connect-iq-sdk-manager device download --manifest=manifest.xml --include-fonts
-F=/root/.Garmin/ConnectIQ/Fonts
+F=/home/roy/.Garmin/ConnectIQ/Fonts
 cp "$F/FNT_006B388800_0000_GARMIN_16.cft" "$F/bitstreamVeraSans 16.cft"
 cp "$F/FNT_006B388800_0000_GARMIN_20.cft" "$F/bitstreamVeraSans 21.cft"
 cp "$F/FNT_006B388800_0000_GARMIN_30.cft" "$F/bitstreamVeraSans 27.cft"
@@ -130,9 +130,9 @@ cleanup() { docker rm -f undertow-simulator >/dev/null 2>&1 || true; }
 trap cleanup EXIT
 
 docker run -d --rm --network none --name undertow-simulator \
-  -v /root/.Garmin/ConnectIQ/Sdks:/root/.Garmin/ConnectIQ/Sdks:ro \
-  -v /root/.Garmin/ConnectIQ/Devices:/root/.Garmin/ConnectIQ/Devices:ro \
-  -v /root/.Garmin/ConnectIQ/Fonts:/root/.Garmin/ConnectIQ/Fonts:ro \
+  -v /home/roy/.Garmin/ConnectIQ/Sdks:/root/.Garmin/ConnectIQ/Sdks:ro \
+  -v /home/roy/.Garmin/ConnectIQ/Devices:/root/.Garmin/ConnectIQ/Devices:ro \
+  -v /home/roy/.Garmin/ConnectIQ/Fonts:/root/.Garmin/ConnectIQ/Fonts:ro \
   -v "$PWD/bin":/app/bin:ro \
   -v /tmp/undertow-simulator:/out \
   garmin-connectiq-sim:22.04 bash -lc '
