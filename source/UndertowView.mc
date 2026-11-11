@@ -14,6 +14,8 @@ class UndertowView extends WatchUi.WatchFace {
   var models as IModelsRepository;
   var bitmaps as Bitmaps;
   var previousSecond as SecondModel?;
+  const NIGHT_TIME_BOTTOM_PADDING as Number = 7;
+  const NIGHT_TIME_TOP_PADDING as Number = 11;
 
   (:debug)
   function initialize() {
@@ -50,14 +52,18 @@ class UndertowView extends WatchUi.WatchFace {
 
     dc.setClip(0, 0, 176, 176);
 
-    drawMainScreen(dc);
-    drawSubScreen(dc);
+    if (models.minuteModel.awake) {
+      drawMainScreen(dc);
+      drawSubScreen(dc);
+    } else {
+      drawNightScreen(dc);
+    }
 
     previousSecond = models.secondModel;
   }
 
   function onPartialUpdate(dc as Graphics.Dc) as Void {
-    if (!models.updateModelsPartial()) {
+    if (!models.minuteModel.awake || !models.updateModelsPartial()) {
       return;
     }
 
@@ -94,6 +100,53 @@ class UndertowView extends WatchUi.WatchFace {
     }
   }
 
+  function drawNightScreen(dc as Dc) as Void {
+    dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+    dc.clear();
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    var width = dc.getWidth();
+    var height = dc.getHeight();
+    var timeTop = 65;
+    var timeDimensions = dc.getTextDimensions(models.minuteModel.time, Graphics.FONT_NUMBER_THAI_HOT);
+    var timeRight = (width + timeDimensions[0]) / 2;
+    var timeBottom = timeTop + timeDimensions[1] - NIGHT_TIME_BOTTOM_PADDING;
+    var clockTime = models.secondModel.clockTime;
+    var firstDigit = clockTime.hour >= 10 ? clockTime.hour / 10 : clockTime.hour;
+    var lastDigit = clockTime.min % 10;
+    var leftPadding = 2;
+    if (firstDigit == 1) {
+      leftPadding = 6;
+    } else if (firstDigit == 2 || firstDigit == 3 || firstDigit == 5 || firstDigit == 7) {
+      leftPadding = 3;
+    }
+    var rightPadding = 2;
+    if (lastDigit == 1) {
+      rightPadding = 5;
+    } else if (lastDigit == 2 || lastDigit == 8) {
+      rightPadding = 1;
+    } else if (lastDigit == 4) {
+      rightPadding = 0;
+    }
+    var timeLeft = (width - timeDimensions[0]) / 2 + (rightPadding - leftPadding) / 2;
+    dc.drawText(
+      timeLeft,
+      timeTop,
+      Graphics.FONT_NUMBER_THAI_HOT,
+      models.minuteModel.time,
+      Graphics.TEXT_JUSTIFY_LEFT
+    );
+    if (System.getDeviceSettings().alarmCount > 0) {
+      var alarm = bitmaps.alarm.getBitmap();
+      dc.drawBitmap(
+        (timeRight + width - alarm.getWidth()) / 2,
+        (timeTop + NIGHT_TIME_TOP_PADDING + timeBottom - alarm.getHeight()) / 2,
+        alarm
+      );
+    }
+    drawSun(dc, width / 2, (timeBottom + height) / 2);
+    drawBodyBattery(dc);
+  }
+
   function drawSeconds(dc as Dc, setClip as Boolean) {
     var x = 176 - 67;
     var y = 80;
@@ -127,7 +180,7 @@ class UndertowView extends WatchUi.WatchFace {
     // all of these need white on transparent
     drawDate(dc);
     drawWeather(dc, isDaytime);
-    drawSun(dc);
+    drawSun(dc, 23, 132);
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
     }
@@ -521,14 +574,11 @@ class UndertowView extends WatchUi.WatchFace {
     }
   }
 
-  function drawSun(dc as Dc) {
+  function drawSun(dc as Dc, x as Number, y as Number) {
     var sunModel = self.models.sunModel;
     if (sunModel == null) {
       return;
     }
-    
-    var x = 23;
-    var y = 132;
     
     var radius = 16;
     var sunRadius = 4;
@@ -676,8 +726,6 @@ class UndertowView extends WatchUi.WatchFace {
 
   function drawSubScreen(dc as Dc) {    
     var subscreen = WatchUi.getSubscreen(); // 113,0  62x62
-    var radius = subscreen.width / 2;
-
     var heart = getHeartBitmap();
 
     dc.drawBitmap(
@@ -687,8 +735,12 @@ class UndertowView extends WatchUi.WatchFace {
     );
 
     drawPulse(dc);
+    drawBodyBattery(dc);
+  }
 
-    // Body battery
+  function drawBodyBattery(dc as Dc) as Void {
+    var subscreen = WatchUi.getSubscreen();
+    var radius = subscreen.width / 2;
     var bodyBattery = self.models.minuteModel.bodyBattery;
     if (bodyBattery != null) {
       dc.setPenWidth(6);

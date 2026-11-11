@@ -9,6 +9,7 @@ import Toybox.PersistedContent;
 
 class MinuteModel {
   var time as String;
+  var awake as Boolean;
   var bodyBattery as Number?;
   var stress as Numeric?;
   var recoveryTime as Number;
@@ -26,6 +27,7 @@ class MinuteModel {
     var activityInfo = Activity.getActivityInfo();
 
     self.time = getTime(updateTime.clockTime);
+    self.awake = !activityMonitorInfo.isSleepMode;
     self.bodyBattery = getBodyBattery();
     self.stress = getStress();
     self.recoveryTime = getRecoveryTime(activityMonitorInfo);
