@@ -15,6 +15,7 @@ class UndertowView extends WatchUi.WatchFace {
   var bitmaps as Bitmaps;
   var previousSecond as SecondModel?;
   var nightMode as Boolean = false;
+  const NIGHT_TIME_BOTTOM_PADDING as Number = 7;
 
   (:debug)
   function initialize() {
@@ -109,13 +110,31 @@ class UndertowView extends WatchUi.WatchFace {
     var timeTop = 65;
     var timeDimensions = dc.getTextDimensions(models.minuteModel.time, Graphics.FONT_NUMBER_THAI_HOT);
     var timeRight = (width + timeDimensions[0]) / 2;
-    var timeBottom = timeTop + timeDimensions[1];
+    var timeBottom = timeTop + timeDimensions[1] - NIGHT_TIME_BOTTOM_PADDING;
+    var clockTime = models.secondModel.clockTime;
+    var firstDigit = clockTime.hour >= 10 ? clockTime.hour / 10 : clockTime.hour;
+    var lastDigit = clockTime.min % 10;
+    var leftPadding = 2;
+    if (firstDigit == 1) {
+      leftPadding = 6;
+    } else if (firstDigit == 2 || firstDigit == 3 || firstDigit == 5 || firstDigit == 7) {
+      leftPadding = 3;
+    }
+    var rightPadding = 2;
+    if (lastDigit == 1) {
+      rightPadding = 5;
+    } else if (lastDigit == 2 || lastDigit == 8) {
+      rightPadding = 1;
+    } else if (lastDigit == 4) {
+      rightPadding = 0;
+    }
+    var timeLeft = (width - timeDimensions[0]) / 2 + (rightPadding - leftPadding) / 2;
     dc.drawText(
-      width / 2,
+      timeLeft,
       timeTop,
       Graphics.FONT_NUMBER_THAI_HOT,
       models.minuteModel.time,
-      Graphics.TEXT_JUSTIFY_CENTER
+      Graphics.TEXT_JUSTIFY_LEFT
     );
     if (System.getDeviceSettings().alarmCount > 0) {
       var alarm = bitmaps.alarm.getBitmap();
