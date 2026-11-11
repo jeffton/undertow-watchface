@@ -1,0 +1,7 @@
+FROM docker.io/library/ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qq && apt-get install -y -qq \
+    openjdk-17-jre-headless xvfb imagemagick xdotool openbox dbus-x11 \
+    libsecret-1-0 libwebkit2gtk-4.0-37 libjavascriptcoregtk-4.0-18 libsoup2.4-1 \
+    libxkbcommon0 libsm6 libgtk-3-0 libusb-1.0-0 \
+    && apt-get clean
