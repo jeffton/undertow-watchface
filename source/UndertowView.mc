@@ -104,18 +104,28 @@ class UndertowView extends WatchUi.WatchFace {
     dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
     dc.clear();
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    var width = dc.getWidth();
+    var height = dc.getHeight();
+    var timeTop = 65;
+    var timeDimensions = dc.getTextDimensions(models.minuteModel.time, Graphics.FONT_NUMBER_THAI_HOT);
+    var timeRight = (width + timeDimensions[0]) / 2;
+    var timeBottom = timeTop + timeDimensions[1];
     dc.drawText(
-      104,
-      65,
+      width / 2,
+      timeTop,
       Graphics.FONT_NUMBER_THAI_HOT,
       models.minuteModel.time,
-      Graphics.TEXT_JUSTIFY_RIGHT
+      Graphics.TEXT_JUSTIFY_CENTER
     );
     if (System.getDeviceSettings().alarmCount > 0) {
-      dc.drawBitmap(176-61, 73, bitmaps.alarm.getBitmap());
+      var alarm = bitmaps.alarm.getBitmap();
+      dc.drawBitmap(
+        (timeRight + width - alarm.getWidth()) / 2,
+        timeTop + (timeDimensions[1] - alarm.getHeight()) / 2,
+        alarm
+      );
     }
-    var timeWidth = dc.getTextWidthInPixels(models.minuteModel.time, Graphics.FONT_NUMBER_THAI_HOT);
-    drawSun(dc, 104 - timeWidth / 2, 132);
+    drawSun(dc, width / 2, (timeBottom + height) / 2);
     drawBodyBattery(dc);
   }
 
