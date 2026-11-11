@@ -105,24 +105,17 @@ class UndertowView extends WatchUi.WatchFace {
     dc.clear();
     dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
     dc.drawText(
-      88,
+      104,
       65,
       Graphics.FONT_NUMBER_THAI_HOT,
       models.minuteModel.time,
-      Graphics.TEXT_JUSTIFY_CENTER
+      Graphics.TEXT_JUSTIFY_RIGHT
     );
     if (System.getDeviceSettings().alarmCount > 0) {
-      dc.drawBitmap(82, 128, bitmaps.alarm.getBitmap());
+      dc.drawBitmap(176-61, 73, bitmaps.alarm.getBitmap());
     }
-    drawSun(dc);
-    var bodyBattery = models.minuteModel.bodyBattery;
-    dc.drawText(
-      144,
-      31,
-      Graphics.FONT_NUMBER_MILD,
-      bodyBattery == null ? "-" : bodyBattery.toNumber().toString(),
-      Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
-    );
+    var timeWidth = dc.getTextWidthInPixels(models.minuteModel.time, Graphics.FONT_NUMBER_THAI_HOT);
+    drawSun(dc, 104 - timeWidth / 2, 132);
     drawBodyBattery(dc);
   }
 
@@ -159,7 +152,7 @@ class UndertowView extends WatchUi.WatchFace {
     // all of these need white on transparent
     drawDate(dc);
     drawWeather(dc, isDaytime);
-    drawSun(dc);
+    drawSun(dc, 23, 132);
     if (!drawSeaTemperature(dc)) {
       drawAltitude(dc);
     }
@@ -553,14 +546,11 @@ class UndertowView extends WatchUi.WatchFace {
     }
   }
 
-  function drawSun(dc as Dc) {
+  function drawSun(dc as Dc, x as Number, y as Number) {
     var sunModel = self.models.sunModel;
     if (sunModel == null) {
       return;
     }
-    
-    var x = 23;
-    var y = 132;
     
     var radius = 16;
     var sunRadius = 4;

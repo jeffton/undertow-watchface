@@ -12,7 +12,7 @@ Garmin watchface for Instinct 2 with weather, ocean data, plenty of stats and a 
 - Partial updates every second for seconds, heart rate & notifications
 - Battery-optimized updates of everything
 - Minimal sleep-mode display: time, alarm indicator, sun position and Body Battery
-- Wake sync reports the device's sleep-mode flag when available
+- Wake sync uses the SDK sleep flag when available; [physical Sleep Mode support is unverified](docs/sleep-mode.md)
 
 [Sleep-mode API support and resource measurements](docs/sleep-mode.md).
 
