@@ -1,12 +1,14 @@
 # Sleep mode
 
-The face uses [`ActivityMonitor.Info.isSleepMode`](https://developer.garmin.com/connect-iq/api-docs/Toybox/ActivityMonitor/Info.html#isSleepMode-var) for both night rendering and Wake sync. This deprecated, nullable SDK flag is a candidate signal: the simulator exposes it, but its connection to modern Sleep Mode on physical Instinct 2 firmware is unverified. It is not physiological sleep detection.
+The face uses [`ActivityMonitor.Info.isSleepMode`](https://developer.garmin.com/connect-iq/api-docs/Toybox/ActivityMonitor/Info.html#isSleepMode-var) directly for night rendering and Wake sync. Physical Sleep Mode behavior remains unverified; this is not physiological sleep detection.
 
 - `true`: night display and `awake=0` at sync.
 - `false`: day display and `awake=1` at sync.
-- Missing/null: day display, with the optional `awake` field omitted. No sleep status is inferred from time, gestures or Do Not Disturb.
+- **Breaking:** the sleep-mode API is required. Missing/null data produces an error; there is no guard or alternate signal. Sync always includes `awake`.
 
-Night mode shows hours/minutes centered on the dial, the alarm-enabled icon centered in the space to the right of the time, the sun-position graphic centered in the space below the time, and the Body Battery ring without a number. Missing Body Battery leaves the ring absent. It reuses existing bitmaps and skips partial-update model creation/drawing. Full model refreshes and the existing sync cadence are unchanged. Mode/alarm changes are visible at the next full update (up to one minute in low-power mode).
+Foreground state is stored as a nonnullable `awake` Boolean in `MinuteModel`, reusing its existing ActivityMonitor read at startup, minute refreshes and weather-model rebuilds. Second redraws use the stored value. Background sync independently reads the current API value for each request. There is no sleep-state wrapper or polling timer.
+
+Night mode shows hours/minutes centered on the dial, the alarm-enabled icon centered in the space to the right of the time, the sun-position graphic centered in the space below the time, and the Body Battery ring without a number. Missing Body Battery leaves the ring absent. It reuses existing bitmaps and skips partial-update model creation/drawing. Full model refreshes and the existing sync cadence are unchanged. Sleep-mode changes are visible at the next minute-model refresh or app initialization; alarm changes are visible at the next full update.
 
 [`WatchFace.onEnterSleep`](https://developer.garmin.com/connect-iq/api-docs/Toybox/WatchUi/WatchFace.html#onEnterSleep-instance_function) only indicates low-power rendering and is not used as the user's sleep status.
 
@@ -31,26 +33,26 @@ The alarm bitmap is 8×10 px with no transparent padding. Its visible y-bounds a
 
 SDK 9.3.0, Instinct 2 simulator (API 3.4.2), release models/builds, isolated Ubuntu simulator container. No physical watch validation, watch installation or Wake-service deployment.
 
-Layout resource comparison against `6f6b517`:
+Resource comparison against `a64e37d`:
 
-| Measurement | `6f6b517` | Layout branch |
+| Measurement | `a64e37d` | Branch |
 | --- | ---: | ---: |
-| Release PRG, empty Wake template | 33,836 B | 33,836 B |
-| Foreground compiled code + data | 23,086 B | 23,086 B |
-| Background compiled code + data | 2,867 B | 2,867 B |
-| First post-render RAM sample, night start | 37,832 B | 37,832 B |
-| Median night full-update time | 1 ms | 1 ms |
+| Release PRG, empty Wake template | 33,836 B | 33,740 B |
+| Foreground compiled code + data | 23,086 B | 22,990 B |
+| Background compiled code + data | 2,867 B | 2,755 B |
+| First post-render RAM sample, day start | 39,600 B | 39,456 B |
+| Median day full-update time | 1 ms | 1 ms |
 
-Matched cold-start samples use release models, one compact weather forecast at 55.6°N/13.0°E, one enabled alarm and simulator health values. Temporary copies log `System.getSystemStats().usedMemory/freeMemory` immediately after `onUpdate`, timed with `System.getTimer()`. Fixtures and logging are not included in shipped code. The correction adds no bitmap, lookup array or mutable persistent state. The first night RAM sample is unchanged, with **23.4 kB free**. Both timing runs have a 1 ms median.
+Matched cold-start samples use release models, one compact weather forecast at 55.6°N/13.0°E, one enabled alarm and simulator health values. Temporary copies log `System.getSystemStats().usedMemory/freeMemory` immediately after `onUpdate`, timed with `System.getTimer()`. Fixtures and logging are not included in shipped code. No bitmap, lookup array or polling timer is added. The first day RAM sample is **144 B smaller**, with **21.8 kB free**. Both timing runs have a 1 ms median. Over the first 43 full redraws, foreground sleep-status reads drop from **43 to 1**; later reads follow the existing minute-model refresh.
 
 These are simulator samples, not heap-peak or battery-life guarantees. Real forecast size, health history, firmware and model-update transients affect headroom. Day/night transitions were exercised; loaded day bitmaps are retained rather than allocating another screen buffer. The simulator runtime budget is about 59.8 kB; the compiler's printed 96 kB foreground percentage does not represent the watchface heap limit (the device file specifies 64 KiB).
 
 Verified:
 
-- Simulator Settings → Sleep Mode switches day → night → day using release models; time advances across minute boundaries.
+- Simulator Settings → Sleep Mode switches day/night using release models at the next minute refresh; time advances across minute boundaries.
 - Rendered night layouts at `0:00`, `6:05`, `10:10`, `11:11`, `12:24`, `20:21` and `23:59` have no time/alarm/sun overlap. Pixel bounds confirm the horizontal font correction and the sun's 3 px upward shift. Additional alarm checks at `7:47` and `17:57` cover the shorter visible glyph height. Alarm/time centers align within half a pixel. Pixel differences against `6f6b517` at the shared test times are confined to the alarm: time, sun and Body Battery pixels are identical. Daytime rendering is unchanged.
 - Real background temporal callbacks construct `awake=0` and `awake=1` with the simulator flag enabled/disabled. A temporary transport interception records the body and exits before the web request; no requests reach Wake.
-- The Monkey C unit test checks compact-format payloads, workout preservation and true/false/unknown sleep states.
+- The Monkey C unit test checks compact-format payloads, workout preservation and the awake/asleep Boolean states.
 - Debug, release and test builds succeed with the expected deprecated-API warning.
 
 To run the unit test with a running simulator:

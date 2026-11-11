@@ -4,13 +4,11 @@ import Toybox.Test;
 (:test)
 function wakeSyncContract(logger as Test.Logger) as Boolean {
   var service = new WakeSyncService();
-  var sleeping = service.buildBody(1770000000, true);
-  var awake = service.buildBody(1770000000, false);
-  var unknown = service.buildBody(1770000000, null);
+  var sleeping = service.buildBody(1770000000, false);
+  var awake = service.buildBody(1770000000, true);
   Test.assertEqual(sleeping["awake"], 0);
   Test.assertEqual(awake["awake"], 1);
-  Test.assert(!unknown.hasKey("awake"));
-  var bodies = [sleeping, awake, unknown];
+  var bodies = [sleeping, awake];
   for (var i = 0; i < bodies.size(); i++) {
     var body = bodies[i];
     Test.assertEqual(body["format"], "compact");

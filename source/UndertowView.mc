@@ -14,7 +14,6 @@ class UndertowView extends WatchUi.WatchFace {
   var models as IModelsRepository;
   var bitmaps as Bitmaps;
   var previousSecond as SecondModel?;
-  var nightMode as Boolean = false;
   const NIGHT_TIME_BOTTOM_PADDING as Number = 7;
   const NIGHT_TIME_TOP_PADDING as Number = 11;
 
@@ -53,19 +52,18 @@ class UndertowView extends WatchUi.WatchFace {
 
     dc.setClip(0, 0, 176, 176);
 
-    nightMode = SleepMode.read() == true;
-    if (nightMode) {
-      drawNightScreen(dc);
-    } else {
+    if (models.minuteModel.awake) {
       drawMainScreen(dc);
       drawSubScreen(dc);
+    } else {
+      drawNightScreen(dc);
     }
 
     previousSecond = models.secondModel;
   }
 
   function onPartialUpdate(dc as Graphics.Dc) as Void {
-    if (nightMode || !models.updateModelsPartial()) {
+    if (!models.minuteModel.awake || !models.updateModelsPartial()) {
       return;
     }
 

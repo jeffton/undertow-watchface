@@ -101,23 +101,20 @@ class WakeSyncService {
 
   (:debug)
   function getBody(lastWorkout as Number) as Dictionary {
-    return buildBody(0, SleepMode.read());
+    return buildBody(0, !ActivityMonitor.getInfo().isSleepMode);
   }
 
   (:release)
   function getBody(lastWorkout as Number) as Dictionary {
-    return buildBody(lastWorkout, SleepMode.read());
+    return buildBody(lastWorkout, !ActivityMonitor.getInfo().isSleepMode);
   }
 
-  function buildBody(lastWorkout as Number, sleeping as Boolean?) as Dictionary {
-    var body = {
+  function buildBody(lastWorkout as Number, awake as Boolean) as Dictionary {
+    return {
       "format" => "compact",
-      "lastWorkout" => lastWorkout
+      "lastWorkout" => lastWorkout,
+      "awake" => awake ? 1 : 0
     };
-    if (sleeping != null) {
-      body["awake"] = sleeping ? 0 : 1;
-    }
-    return body;
   }
 
   function onResponse(
