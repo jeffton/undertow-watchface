@@ -16,6 +16,7 @@ class UndertowView extends WatchUi.WatchFace {
   var previousSecond as SecondModel?;
   var nightMode as Boolean = false;
   const NIGHT_TIME_BOTTOM_PADDING as Number = 7;
+  const NIGHT_TIME_TOP_PADDING as Number = 11;
 
   (:debug)
   function initialize() {
@@ -140,7 +141,7 @@ class UndertowView extends WatchUi.WatchFace {
       var alarm = bitmaps.alarm.getBitmap();
       dc.drawBitmap(
         (timeRight + width - alarm.getWidth()) / 2,
-        timeTop + (timeDimensions[1] - alarm.getHeight()) / 2,
+        (timeTop + NIGHT_TIME_TOP_PADDING + timeBottom - alarm.getHeight()) / 2,
         alarm
       );
     }

@@ -23,30 +23,32 @@ Calibration uses rendered `FONT_NUMBER_THAI_HOT` glyph pixels on the Instinct 2 
 | 4 | 2 | 0 |
 | 8 | 2 | 1 |
 
-Horizontal placement uses the first and last digit's insets rather than centering the advance box. In the original centered rendering, `10:10` had visible x-bounds 45–134 and an ink center **2 px right** of the dial center. Its corrected bounds are 43–132. `6:05` needed no horizontal shift; `11:11` and `23:59` are left unchanged because their half-pixel difference cannot be improved on the pixel grid. Seven rendered time samples and calculations over all 1,440 minute values place the ink center within half a pixel of the dial center. Alarm coordinates and Body Battery rendering are unchanged.
+Horizontal placement uses the first and last digit's insets rather than centering the advance box. In the original centered rendering, `10:10` had visible x-bounds 45–134 and an ink center **2 px right** of the dial center. Its corrected bounds are 43–132. `6:05` needed no horizontal shift; `11:11` and `23:59` are left unchanged because their half-pixel difference cannot be improved on the pixel grid. Seven rendered time samples and calculations over all 1,440 minute values place the ink center within half a pixel of the dial center.
+
+The alarm bitmap is 8×10 px with no transparent padding. Its visible y-bounds are **90–99**, centered at **94.5** to match typical time glyphs at y=76–113. Times containing only the digits 1, 4, 5 and 7 have glyph bounds y=77–113 and a center at y=95, leaving an unavoidable half-pixel rounding difference. Vertical alarm positioning uses the font's visible bounds, excluding its blank top and bottom rows.
 
 ## Validation — 11 November 2026
 
 SDK 9.3.0, Instinct 2 simulator (API 3.4.2), release models/builds, isolated Ubuntu simulator container. No physical watch validation, watch installation or Wake-service deployment.
 
-Layout resource comparison against `e018738`:
+Layout resource comparison against `6f6b517`:
 
-| Measurement | `e018738` | Layout branch |
+| Measurement | `6f6b517` | Layout branch |
 | --- | ---: | ---: |
-| Release PRG, empty Wake template | 33,564 B | 33,836 B |
-| Foreground compiled code + data | 22,816 B | 23,086 B |
+| Release PRG, empty Wake template | 33,836 B | 33,836 B |
+| Foreground compiled code + data | 23,086 B | 23,086 B |
 | Background compiled code + data | 2,867 B | 2,867 B |
-| First post-render RAM sample, night start | 37,552 B | 37,824 B |
+| First post-render RAM sample, night start | 37,832 B | 37,832 B |
 | Median night full-update time | 1 ms | 1 ms |
 
-Matched cold-start samples use release models, one compact weather forecast at 55.6°N/13.0°E, one enabled alarm and simulator health values. Temporary copies log `System.getSystemStats().usedMemory/freeMemory` immediately after `onUpdate`, timed with `System.getTimer()`. Fixtures and logging are not included in shipped code. The correction adds no bitmap, lookup array or mutable persistent state. The first night RAM sample increases by **272 B**, with **23.4 kB free**. Both timing runs have a 1 ms median.
+Matched cold-start samples use release models, one compact weather forecast at 55.6°N/13.0°E, one enabled alarm and simulator health values. Temporary copies log `System.getSystemStats().usedMemory/freeMemory` immediately after `onUpdate`, timed with `System.getTimer()`. Fixtures and logging are not included in shipped code. The correction adds no bitmap, lookup array or mutable persistent state. The first night RAM sample is unchanged, with **23.4 kB free**. Both timing runs have a 1 ms median.
 
 These are simulator samples, not heap-peak or battery-life guarantees. Real forecast size, health history, firmware and model-update transients affect headroom. Day/night transitions were exercised; loaded day bitmaps are retained rather than allocating another screen buffer. The simulator runtime budget is about 59.8 kB; the compiler's printed 96 kB foreground percentage does not represent the watchface heap limit (the device file specifies 64 KiB).
 
 Verified:
 
 - Simulator Settings → Sleep Mode switches day → night → day using release models; time advances across minute boundaries.
-- Rendered night layouts at `0:00`, `6:05`, `10:10`, `11:11`, `12:24`, `20:21` and `23:59` have no time/alarm/sun overlap. Pixel bounds confirm the horizontal font correction and the sun's 3 px upward shift. The alarm retains its SDK line-box positioning; daytime rendering is unchanged.
+- Rendered night layouts at `0:00`, `6:05`, `10:10`, `11:11`, `12:24`, `20:21` and `23:59` have no time/alarm/sun overlap. Pixel bounds confirm the horizontal font correction and the sun's 3 px upward shift. Additional alarm checks at `7:47` and `17:57` cover the shorter visible glyph height. Alarm/time centers align within half a pixel. Pixel differences against `6f6b517` at the shared test times are confined to the alarm: time, sun and Body Battery pixels are identical. Daytime rendering is unchanged.
 - Real background temporal callbacks construct `awake=0` and `awake=1` with the simulator flag enabled/disabled. A temporary transport interception records the body and exits before the web request; no requests reach Wake.
 - The Monkey C unit test checks compact-format payloads, workout preservation and true/false/unknown sleep states.
 - Debug, release and test builds succeed with the expected deprecated-API warning.
