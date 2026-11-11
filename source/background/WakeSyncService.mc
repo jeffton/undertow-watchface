@@ -101,20 +101,23 @@ class WakeSyncService {
 
   (:debug)
   function getBody(lastWorkout as Number) as Dictionary {
-    return {
-      "format" => "compact",
-      "awake" => 1,
-      "lastWorkout" => 0
-    };
+    return buildBody(0, SleepMode.read());
   }
 
   (:release)
   function getBody(lastWorkout as Number) as Dictionary {
-    return {
+    return buildBody(lastWorkout, SleepMode.read());
+  }
+
+  function buildBody(lastWorkout as Number, sleeping as Boolean?) as Dictionary {
+    var body = {
       "format" => "compact",
-      "awake" => 1,
       "lastWorkout" => lastWorkout
     };
+    if (sleeping != null) {
+      body["awake"] = sleeping ? 0 : 1;
+    }
+    return body;
   }
 
   function onResponse(

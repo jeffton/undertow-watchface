@@ -60,6 +60,7 @@ class DemoModelsRepository {
         self.secondModel.doNotDisturb = false;
 
         self.minuteModel = new MinuteModel(self.lastUpdateTime, self.tenMinuteModel);
+        self.minuteModel.time = Utils.formatTime(self.demoHour, self.demoMinute);
         self.minuteModel.bodyBattery = 88;
         self.minuteModel.stress = 33;
         self.minuteModel.recoveryTime = 17;

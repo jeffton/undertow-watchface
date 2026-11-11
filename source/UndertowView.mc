@@ -14,6 +14,7 @@ class UndertowView extends WatchUi.WatchFace {
   var models as IModelsRepository;
   var bitmaps as Bitmaps;
   var previousSecond as SecondModel?;
+  var nightMode as Boolean = false;
 
   (:debug)
   function initialize() {
@@ -50,14 +51,19 @@ class UndertowView extends WatchUi.WatchFace {
 
     dc.setClip(0, 0, 176, 176);
 
-    drawMainScreen(dc);
-    drawSubScreen(dc);
+    nightMode = SleepMode.read() == true;
+    if (nightMode) {
+      drawNightScreen(dc);
+    } else {
+      drawMainScreen(dc);
+      drawSubScreen(dc);
+    }
 
     previousSecond = models.secondModel;
   }
 
   function onPartialUpdate(dc as Graphics.Dc) as Void {
-    if (!models.updateModelsPartial()) {
+    if (nightMode || !models.updateModelsPartial()) {
       return;
     }
 
@@ -92,6 +98,32 @@ class UndertowView extends WatchUi.WatchFace {
           drawNotifications(dc);
         break;
     }
+  }
+
+  function drawNightScreen(dc as Dc) as Void {
+    dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
+    dc.clear();
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+    dc.drawText(
+      88,
+      65,
+      Graphics.FONT_NUMBER_THAI_HOT,
+      models.minuteModel.time,
+      Graphics.TEXT_JUSTIFY_CENTER
+    );
+    if (System.getDeviceSettings().alarmCount > 0) {
+      dc.drawBitmap(82, 128, bitmaps.alarm.getBitmap());
+    }
+    drawSun(dc);
+    var bodyBattery = models.minuteModel.bodyBattery;
+    dc.drawText(
+      144,
+      31,
+      Graphics.FONT_NUMBER_MILD,
+      bodyBattery == null ? "-" : bodyBattery.toNumber().toString(),
+      Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER
+    );
+    drawBodyBattery(dc);
   }
 
   function drawSeconds(dc as Dc, setClip as Boolean) {
@@ -676,8 +708,6 @@ class UndertowView extends WatchUi.WatchFace {
 
   function drawSubScreen(dc as Dc) {    
     var subscreen = WatchUi.getSubscreen(); // 113,0  62x62
-    var radius = subscreen.width / 2;
-
     var heart = getHeartBitmap();
 
     dc.drawBitmap(
@@ -687,8 +717,12 @@ class UndertowView extends WatchUi.WatchFace {
     );
 
     drawPulse(dc);
+    drawBodyBattery(dc);
+  }
 
-    // Body battery
+  function drawBodyBattery(dc as Dc) as Void {
+    var subscreen = WatchUi.getSubscreen();
+    var radius = subscreen.width / 2;
     var bodyBattery = self.models.minuteModel.bodyBattery;
     if (bodyBattery != null) {
       dc.setPenWidth(6);
